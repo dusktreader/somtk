@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>579</width>
+    <height>629</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Image</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="ImageView" name="rawImageBox">
+          <property name="zoomMin">
+           <double>0.900000000000000</double>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Detection Parameters</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="MegaSlider" name="granularitySlider">
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>4.000000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Granularity</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="MegaSlider" name="sensitivitySlider">
+          <property name="maximum">
+           <double>6.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.400000000000000</double>
+          </property>
+          <property name="step">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Sensitivity</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="MegaSlider" name="minSlider">
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>20.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>50.000000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Minimum Detection Width</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="MegaSlider" name="maxSlider">
+          <property name="maximum">
+           <double>200.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>8.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>120.000000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Maximum Detection Width</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="MegaSlider" name="scaleSlider">
+          <property name="maximum">
+           <double>3.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>1.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.500000000000000</double>
+          </property>
+          <property name="step">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Scale Step</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>579</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Image"/>
+   </widget>
+   <widget class="QMenu" name="menuExecution">
+    <property name="title">
+     <string>Execution</string>
+    </property>
+    <addaction name="actionGo"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuExecution"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOpen_Image">
+   <property name="text">
+    <string>Open Image</string>
+   </property>
+  </action>
+  <action name="actionGo">
+   <property name="text">
+    <string>Go</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ImageView</class>
+   <extends>QGraphicsView</extends>
+   <header>imageview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MegaSlider</class>
+   <extends>QFrame</extends>
+   <header>megaslider.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
