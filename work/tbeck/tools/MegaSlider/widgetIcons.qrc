@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="end">icons/end.png</file>
+        <file alias="begin">icons/begin.png</file>
+        <file alias="left">icons/left.png</file>
+        <file alias="right">icons/right.png</file>
+    </qresource>
+</RCC>
