@@ -28,15 +28,15 @@ SOURCES += \
     detector.cpp \
     fasthoughdetector.cpp \
     tophatdetector.cpp \
-    cascadedetector.cpp \
-    stardetector.cpp \
+    cascadedetector.cpp
+#    stardetector.cpp
 
 HEADERS += detector.h \
     fasthoughdetector.h \
     tophatdetector.h \
     cascadedetector.h \
-    stardetector.h \
-    ../tools/cvtypesplus.hpp \
+    ../tools/cvtypesplus.hpp
+#    stardetector.h
 
 QMAKE_CXXFLAGS_RELEASE += -fopenmp
 QMAKE_LFLAGS_RELEASE += -fopenmp

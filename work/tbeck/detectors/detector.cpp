@@ -94,7 +94,7 @@ void Detector::isolateMaxima2( cv::Mat src, cv::Size detectionSize, vector<cv::R
             if( maximum > 0 )
             {
                 roi.centerOn( currPoint + p );
-                cv::rectangle( wrk, roi, 0, CV_FILLED );
+                cv::rectangle( wrk, roi.ul(), roi.lr(), 0, CV_FILLED );
                 roi.move( -w, -w );
                 detections.push_back( roi );
             }
