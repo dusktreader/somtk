@@ -16,129 +16,16 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>0</number>
+     <widget class="ImageView" name="rawImageBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>2</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Image</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="ImageView" name="rawImageBox">
-          <property name="zoomMin">
-           <double>0.900000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Detection Parameters</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="MegaSlider" name="granularitySlider">
-          <property name="minimum">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>4.000000000000000</double>
-          </property>
-          <property name="tracking">
-           <bool>true</bool>
-          </property>
-          <property name="label">
-           <string>Granularity</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="MegaSlider" name="sensitivitySlider">
-          <property name="maximum">
-           <double>6.000000000000000</double>
-          </property>
-          <property name="minimum">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.400000000000000</double>
-          </property>
-          <property name="step">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="tracking">
-           <bool>true</bool>
-          </property>
-          <property name="label">
-           <string>Sensitivity</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="MegaSlider" name="minSlider">
-          <property name="maximum">
-           <double>100.000000000000000</double>
-          </property>
-          <property name="minimum">
-           <double>20.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>50.000000000000000</double>
-          </property>
-          <property name="tracking">
-           <bool>true</bool>
-          </property>
-          <property name="label">
-           <string>Minimum Detection Width</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="MegaSlider" name="maxSlider">
-          <property name="maximum">
-           <double>200.000000000000000</double>
-          </property>
-          <property name="minimum">
-           <double>8.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>120.000000000000000</double>
-          </property>
-          <property name="tracking">
-           <bool>true</bool>
-          </property>
-          <property name="label">
-           <string>Maximum Detection Width</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="MegaSlider" name="scaleSlider">
-          <property name="maximum">
-           <double>3.000000000000000</double>
-          </property>
-          <property name="minimum">
-           <double>1.100000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.500000000000000</double>
-          </property>
-          <property name="step">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="tracking">
-           <bool>true</bool>
-          </property>
-          <property name="label">
-           <string>Scale Step</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+      <property name="zoomMin">
+       <double>0.900000000000000</double>
+      </property>
      </widget>
     </item>
    </layout>
@@ -163,19 +50,208 @@
      <string>Execution</string>
     </property>
     <addaction name="actionGo"/>
+    <addaction name="actionClear"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionShow_Adjustments"/>
+    <addaction name="actionHide_Adjustments"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuExecution"/>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="adjustmentsDock">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>1</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>10</width>
+     <height>544</height>
+    </size>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Adjustments</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Detection Algorithm</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="MegaSlider" name="granularitySlider">
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>4.000000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Granularity</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="MegaSlider" name="minSlider">
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>20.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>50.000000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Minimum Radius</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="2">
+         <widget class="MegaSlider" name="scaleSlider">
+          <property name="maximum">
+           <double>3.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>1.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.500000000000000</double>
+          </property>
+          <property name="step">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Scale Step</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="MegaSlider" name="sensitivitySlider">
+          <property name="maximum">
+           <double>3.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.400000000000000</double>
+          </property>
+          <property name="step">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Sensitivity</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="MegaSlider" name="maxSlider">
+          <property name="maximum">
+           <double>200.000000000000000</double>
+          </property>
+          <property name="minimum">
+           <double>8.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>120.000000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="label">
+           <string>Maximum Radius</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Detection Box</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="1" column="1">
+         <widget class="QLabel" name="boxColorLbl">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Panel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
+          </property>
+          <property name="text">
+           <string>Line Color</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QToolButton" name="boxColorBtn">
+          <property name="text">
+           <string>&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="MegaSlider" name="boxWidthSlider">
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>3.000000000000000</double>
+          </property>
+          <property name="tracking">
+           <bool>false</bool>
+          </property>
+          <property name="label">
+           <string>Line Width</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionOpen_Image">
    <property name="text">
     <string>Open Image</string>
@@ -184,6 +260,27 @@
   <action name="actionGo">
    <property name="text">
     <string>Go</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="text">
+    <string>Clear</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionShow_Adjustments">
+   <property name="text">
+    <string>Show Adjustments</string>
+   </property>
+  </action>
+  <action name="actionHide_Adjustments">
+   <property name="text">
+    <string>Hide Adjustments</string>
    </property>
   </action>
  </widget>

@@ -8,11 +8,48 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->boxColorLbl->setAutoFillBackground( true );
+    setDetectBoxColor( Qt::green );
+    this->connect( ui->boxWidthSlider, SIGNAL(valueChanged(double)), SLOT(redrawBoxes()));
+    this->connect( ui->actionClear, SIGNAL(triggered()), SLOT(clearBoxes()));
+    connect( ui->adjustmentsDock, SIGNAL(visibilityChanged(bool)), ui->actionShow_Adjustments, SLOT(setDisabled(bool)));
+    connect( ui->actionShow_Adjustments, SIGNAL(triggered()), ui->adjustmentsDock, SLOT(show()));
+    connect( ui->adjustmentsDock, SIGNAL(visibilityChanged(bool)), ui->actionHide_Adjustments, SLOT(setEnabled(bool)));
+    connect( ui->actionHide_Adjustments, SIGNAL(triggered()), ui->adjustmentsDock, SLOT(close()));
+    ui->adjustmentsDock->close();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::clearBoxes()
+{
+    foreach( QGraphicsRectItem* r, detectBoxes )
+    {
+        ui->rawImageBox->scene()->removeItem( r );
+        delete r;
+    }
+    detectBoxes.clear();
+}
+
+void MainWindow::redrawBoxes()
+{
+    foreach( QGraphicsRectItem* b, detectBoxes )
+    {
+        b->setPen( QPen( QBrush(detectBoxColor), ui->boxWidthSlider->intValue() ) );
+    }
+
+}
+
+void MainWindow::setDetectBoxColor( const QColor& color )
+{
+    detectBoxColor = color;
+    QPalette pal( ui->boxColorLbl->palette() );
+    pal.setColor( QPalette::Window, detectBoxColor );
+    ui->boxColorLbl->setPalette( pal );
+    redrawBoxes();
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -39,11 +76,11 @@ void MainWindow::on_actionOpen_Image_triggered()
     cv::split( ycc, channels );
     gry = ~channels[0];
     ui->rawImageBox->loadImage( fileName );
+    clearBoxes();
 }
 
 void MainWindow::on_actionGo_triggered()
 {
-    ui->tabWidget->setCurrentIndex(0);
     TophatDetector detector;
     vector<double> params( 4, 0.0 );
     double detectionWidth = ui->minSlider->value();
@@ -88,12 +125,7 @@ void MainWindow::on_actionGo_triggered()
     }
     pgrs.hide();
 
-    foreach( QGraphicsRectItem* r, detectBoxes )
-    {
-        ui->rawImageBox->scene()->removeItem( r );
-        delete r;
-    }
-    detectBoxes.clear();
+    clearBoxes();
 
     for( unsigned int i=0; i<detections.size(); i++ )
     {
@@ -103,5 +135,14 @@ void MainWindow::on_actionGo_triggered()
         ui->rawImageBox->scene()->addItem( r );
         detectBoxes.push_back( r );
     }
+    redrawBoxes();
     ui->statusBar->showMessage( QString( "Found %1 objects").arg(detections.size() ) );
+}
+
+void MainWindow::on_boxColorBtn_clicked()
+{
+    QColor color = QColorDialog::getColor( detectBoxColor, this, "Select Detection Box Color" );
+    if( !color.isValid() )
+        return;
+    setDetectBoxColor( color );
 }
