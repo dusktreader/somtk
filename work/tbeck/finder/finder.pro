@@ -50,5 +50,5 @@ LIBS += \
 
 
 
-QMAKE_CXXFLAGS_RELEASE += -fopenmp
-QMAKE_LFLAGS_RELEASE += -fopenmp
+QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
+QMAKE_LFLAGS_RELEASE += -fopenmp -g

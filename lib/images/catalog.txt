@@ -5,9 +5,9 @@ Tucker Beck, Russell Jensen, and Bob Lewis
 ------------------------------------------
 
 These are the images currently in our catalog of test images for the
-Astronomical Computer Vision project.
+Astronomical Computer Vision project.  Entries are chronological.
 
-* hs-2004-07-a-full_jpg.jpg
+1. hs-2004-07-a-full_jpg.jpg
 
   source web site
     HS04site_
@@ -27,3 +27,26 @@ Astronomical Computer Vision project.
 
 .. _HS04: http://imgsrc.hubblesite.org/hu/db/images/hs-2004-07-a-full_jpg.jpg
 .. _HS04site: http://hubblesite.org/newscenter/archive/releases/2004/07/image/a/warn
+
+2. galaxy-cluster-abell1689-desk-1280.jpg
+
+  source web site
+    Abell1689site_
+
+  original image file
+    Abell1689_
+
+  dimensions
+    1280 x 1024
+
+  format
+    JPEG
+
+  This very (most?) massive cluster clearly shows the effect of
+  gravitational lensing.
+
+
+.. _Abell1689: http://scienceblogs.com/startswithabang/upload/2009/07/the_last_100_years_1998_and_th/galaxy-cluster-abell1689-desk-1280.jpg
+.. _Abell1689site: http://scienceblogs.com/startswithabang/2009/07/the_last_100_years_1998_and_th.php
+
+

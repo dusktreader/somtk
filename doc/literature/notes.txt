@@ -1,0 +1,63 @@
+Astronomical Computer Vision Group Notes
+========================================
+
+Tucker Beck, Russell Jensen, and Bob Lewis; WSU Tri-Cities
+----------------------------------------------------------
+
+Last edited: 5/12/10 (BL)
+
+Overview
+........
+
+These are notes on the readings for the Astronomical Computer Vision
+Group at WSU Tri-Cities.  Group members are free to maintain this file
+(``literature/notes.txt`` in the repository tree).  Please use
+ReStructuredText (most of which you can figure out from this example).
+
+Discussed
+.........
+
+These are the papers we have discussed with our comments, in
+chronological order.
+
+* TBD
+
+Scheduled for Discussion
+........................
+
+These are the papers we plan to discuss, in reverse chronological
+order.
+
+* TBD
+
+Not Yet Scheduled for Discussion
+................................
+
+Resources in this section are listed in alphabetical order of author.
+Comments may be identified by the commenter's initials.
+
+* Frei, "Semi–Automatic Removal of Foreground Stars from Images of Galaxies"
+  FRE96_
+
+  + RJ: a bit dated, but seems like it might have some useful research
+    that we can leverage.
+
+* Ouzounis and Wilkinson, "Hyperconnected Attribute Filters Based on k-Flat Zones"
+  OUW10_
+
+  + RJ: interesting in that they are able to remove the stars and
+    still keep the detail of the galaxy behind them.
+
+  + RJ: The applications to historical documents are interesting to me
+    as well.
+
+* Moore, et al. "Mathematical Morphology: Star/Galaxy Differentiation
+  & Galaxy Morphology Classification" MPD06_
+
+  + RJ: talks about separating galaxies from stars, as well as
+    classifying the galaxies.
+
+
+.. _OUW10: HyperconnectedAttributeFilters.pdf
+.. _FRE96: SemiAutomaticStarRemoval.pdf
+.. _MPD06: StarGalaxyDifferentiation.pdf
