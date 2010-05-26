@@ -55,6 +55,10 @@ Not Yet Scheduled for Discussion
 Resources in this section are listed in alphabetical order of author.
 Comments may be identified by the commenter's initials.
 
+* Abraham, et al., "The Morphologies of Distant Galaxies.
+  II. Classification from the Hubble Space Telescope Medium Deep
+  Survey", Ap. J. Suppl. 107, 1--17 AVG96_
+
 * Frei, "Semi–Automatic Removal of Foreground Stars from Images of Galaxies"
   FRE96_
 
@@ -72,6 +76,7 @@ Comments may be identified by the commenter's initials.
 
 
 .. _AVY94: 1994ApJ...432...75A.pdf
+.. _AVG96: 1996ApJS..107....1A.pdf
 .. _OUW10: HyperconnectedAttributeFilters.pdf
 .. _FRE96: SemiAutomaticStarRemoval.pdf
 .. _MPD06: StarGalaxyDifferentiation.pdf
