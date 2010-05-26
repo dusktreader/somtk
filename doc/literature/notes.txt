@@ -4,15 +4,24 @@ Astronomical Computer Vision Group Notes
 Tucker Beck, Russell Jensen, and Bob Lewis; WSU Tri-Cities
 ----------------------------------------------------------
 
-Last edited: 5/12/10 (BL)
+Last edited: 5/25/10 (BL)
 
 Overview
 ........
 
 These are notes on the readings for the Astronomical Computer Vision
-Group at WSU Tri-Cities.  Group members are free to maintain this file
-(``literature/notes.txt`` in the repository tree).  Please use
-ReStructuredText (most of which you can figure out from this example).
+Group at WSU Tri-Cities.
+
+Access
+......
+
+Group members are free to maintain this file (``literature/notes.txt``
+in the repository tree).  Please use ReStructuredText (most of which
+you can figure out from this example).
+
+The repository itself can be reached via::
+
+  $ svn checkout svn+ssh://peacock.tricity.wsu.edu/home/bobl/svn/astrocv
 
 Discussed
 .........
@@ -20,7 +29,14 @@ Discussed
 These are the papers we have discussed with our comments, in
 chronological order.
 
-* TBD
+* Moore, et al. "Mathematical Morphology: Star/Galaxy Differentiation
+  & Galaxy Morphology Classification," Pub. Astr. Soc. Aus., 23(4),
+  135--146 MPD06_
+
+  + RJ: talks about separating galaxies from stars, as well as
+    classifying the galaxies.
+
+  + discussed 5/25/10
 
 Scheduled for Discussion
 ........................
@@ -28,7 +44,10 @@ Scheduled for Discussion
 These are the papers we plan to discuss, in reverse chronological
 order.
 
-* TBD
+* Abraham, et al., "The Morphologies of Distant Galaxies.  I. An
+  Automated Classification System", Ap. J. 432(75) AVY94_
+
+  + to be discussed 6/1/10
 
 Not Yet Scheduled for Discussion
 ................................
@@ -51,13 +70,8 @@ Comments may be identified by the commenter's initials.
   + RJ: The applications to historical documents are interesting to me
     as well.
 
-* Moore, et al. "Mathematical Morphology: Star/Galaxy Differentiation
-  & Galaxy Morphology Classification" MPD06_
 
-  + RJ: talks about separating galaxies from stars, as well as
-    classifying the galaxies.
-
-
+.. _AVY94: 1994ApJ...432...75A.pdf
 .. _OUW10: HyperconnectedAttributeFilters.pdf
 .. _FRE96: SemiAutomaticStarRemoval.pdf
 .. _MPD06: StarGalaxyDifferentiation.pdf
