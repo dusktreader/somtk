@@ -1,9 +1,12 @@
 from numpy import ones, zeros, array, arange
 
 def octantWedgeSums(a):
+    """
+    returns the octant wedge sums of an array `a`.  If `a` is `N` x
+    `M`, the result is 8 x `N` x `M`.
+    """
     (N,M) = a.shape
     ows = zeros((8, N, M), a.dtype)
-    # fill in the octant tables
     for j in range(M):
         jc = M - 1 - j # "j complement"
         for i in range(N):
@@ -85,9 +88,9 @@ def octantWedgeSums(a):
 
 def applyOctangonalKernel(ows, H, W, d, i, j):
     """
-    This applies a 2`H`+1 x 2`W`+1 octagonal kernel to element (`i`,
+    applies an `H` x `W` (both odd) octagonal kernel to element (`i`,
     `j`) of an array whose octagonal wedge table is `ows`.  `d` (which
-    is between 0 and min(`H`, `W`)) is the inset of the octagon.
+    is between 0 and min(`H`//2, `W`//2)) is the inset of the octagon.
     """
     assert H % 2 == 1 and H > 0
     assert W % 2 == 1 and W > 0
@@ -108,7 +111,11 @@ def applyOctangonalKernel(ows, H, W, d, i, j):
     return sumAll - sum(ows[oijs])
 
 
-def maskOctagon(N, M, H, W, d):
+def maskOctagon(N, M, H, W, d, i, j):
+    """
+    returns an octagonal bit mask of shape `H` x `W` with an inset of
+    `d` centered on `(i, j)` on an array of size `N` x `M`.
+    """
     mask = zeros((N, M), int)
     mask[i-H//2:i+H//2+1, j-W//2:j+W//2+1] = 1
     for k in range(d):
@@ -123,6 +130,7 @@ def maskOctagon(N, M, H, W, d):
 if __name__ == '__main__':
     N = 9
     M = 9
+    print 'original array:'
     if 1:
         a = arange(N*M).reshape((N,M))
     else:
@@ -136,8 +144,17 @@ if __name__ == '__main__':
     # given W.
     i = N//2
     j = M//2
-    print applyOctangonalKernel(ows, H, W, d, i, j)
+    sFast = applyOctangonalKernel(ows, H, W, d, i, j)
 
-    b = maskOctagon(N, M, H, W, d) * a
+    print 'octagonally-masked array:'
+    b = maskOctagon(N, M, H, W, d, i, j) * a
     print b
-    print sum(b.flat)
+    sSlow = sum(b.flat)
+
+    print '     octal wedge sum:', sFast
+    print 'actual octagonal sum:', sSlow
+    if sFast == sSlow:
+        print 'OK -- results match'
+    else:
+        print 'ERROR -- results do not match'
+        
