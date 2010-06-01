@@ -111,7 +111,7 @@ def applyOctangonalKernel(ows, H, W, d, i, j):
     return sumAll - sum(ows[oijs])
 
 
-def maskOctagon(N, M, H, W, d, i, j):
+def octagonalMask(N, M, H, W, d, i, j):
     """
     returns an octagonal bit mask of shape `H` x `W` with an inset of
     `d` centered on `(i, j)` on an array of size `N` x `M`.
@@ -147,7 +147,7 @@ if __name__ == '__main__':
     sFast = applyOctangonalKernel(ows, H, W, d, i, j)
 
     print 'octagonally-masked array:'
-    b = maskOctagon(N, M, H, W, d, i, j) * a
+    b = octagonalMask(N, M, H, W, d, i, j) * a
     print b
     sSlow = sum(b.flat)
 
