@@ -36,6 +36,17 @@ chronological order.
   + RJ: talks about separating galaxies from stars, as well as
     classifying the galaxies.
 
+  + TB:  Differentiation relies on simple numerical descriptors in individual
+    2 dimensional space.  Furthermore, the author uses linear seperation for
+    classification.  It seems quite strange that the author uses a MLP Neural
+    Network to calculate a linear seperator when a Neural Network specializes in
+    non-linear seperation of classes.  Additionally, the author uses diamond
+    shaped structuring elements for his morphological operations, which should
+    produce undesired aliasing effects as these operators are not robust to
+    rotation.  Overall, I find the classification approach here over simplistic.
+    It may work well for galaxy/star differentiation, however, for galaxy type
+    classification we can do better.
+
   + discussed 5/25/10
 
 Scheduled for Discussion
