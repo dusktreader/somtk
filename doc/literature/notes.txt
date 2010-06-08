@@ -85,9 +85,16 @@ Comments may be identified by the commenter's initials.
   + RJ: The applications to historical documents are interesting to me
     as well.
 
+* Banerji, et al., "Galaxy Zoo: Reproducing Galaxy Morphologies Via Machine Learning"
+  BAN10_
+
+  + RJ: This is the paper related to the news article sent out by Dr. Lewis. We ought to
+    see if the galaxy zoo people would be willing to collaborate and share data.
 
 .. _AVY94: 1994ApJ...432...75A.pdf
 .. _AVG96: 1996ApJS..107....1A.pdf
 .. _OUW10: HyperconnectedAttributeFilters.pdf
 .. _FRE96: SemiAutomaticStarRemoval.pdf
 .. _MPD06: StarGalaxyDifferentiation.pdf
+.. _BAN10: 2010GalaxyZoo.pdf
+
