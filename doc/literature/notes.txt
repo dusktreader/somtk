@@ -87,14 +87,30 @@ Comments may be identified by the commenter's initials.
 
 * Banerji, et al., "Galaxy Zoo: Reproducing Galaxy Morphologies Via Machine Learning"
   BAN10_
-
+  
   + RJ: This is the paper related to the news article sent out by Dr. Lewis. We ought to
     see if the galaxy zoo people would be willing to collaborate and share data.
+
+
+* Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
+  AVI97_
+  
+  + TB: Discusses inhistory of galaxy classification.  Suggests that the current
+    historical segmentations are non-optimal and non-intiuitive, and have been
+    over-refined.  Suggests application of an SOM to naturally create an
+    intuitive mapping of galaxies into a 2 dimensional topology where adjacent
+    map locations indicate feature commonality.
+
+* Miller and Coe, "Star/galaxy classification using Kohonen self-organizing maps"
+  MIL95_
+
+  + TB: Applies SOM to binary segmentation between stars and galaxies.
 
 .. _AVY94: 1994ApJ...432...75A.pdf
 .. _AVG96: 1996ApJS..107....1A.pdf
 .. _OUW10: HyperconnectedAttributeFilters.pdf
 .. _FRE96: SemiAutomaticStarRemoval.pdf
 .. _MPD06: StarGalaxyDifferentiation.pdf
+   _AVI97: GalaxyMorphologyWithoutClassification.pdf
+   _MIL95: StarGalaxyClassificationUsingKohonenSelfOrganizingMaps.pdf
 .. _BAN10: 2010GalaxyZoo.pdf
-

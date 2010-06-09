@@ -9,9 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->boxColorLbl->setAutoFillBackground( true );
-    setDetectBoxColor( Qt::green );
-    this->connect( ui->boxWidthSlider, SIGNAL(valueChanged(double)), SLOT(redrawBoxes()));
-    this->connect( ui->actionClear, SIGNAL(triggered()), SLOT(clearBoxes()));
+    setDetectionColor( Qt::green );
+    this->connect( ui->boxWidthSlider, SIGNAL(valueChanged(double)), SLOT(redrawDetections()));
+    this->connect( ui->actionClear, SIGNAL(triggered()), SLOT(clearDetections()));
+    this->connect( ui->ringRadio, SIGNAL(toggled(bool)), SLOT(redrawDetections()) );
     connect( ui->adjustmentsDock, SIGNAL(visibilityChanged(bool)), ui->actionShow_Adjustments, SLOT(setDisabled(bool)));
     connect( ui->actionShow_Adjustments, SIGNAL(triggered()), ui->adjustmentsDock, SLOT(show()));
     connect( ui->adjustmentsDock, SIGNAL(visibilityChanged(bool)), ui->actionHide_Adjustments, SLOT(setEnabled(bool)));
@@ -24,32 +25,49 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::clearBoxes()
+void MainWindow::clearDetections()
 {
-    foreach( QGraphicsRectItem* r, detectBoxes )
+    foreach( QGraphicsItem* r, detectionItems )
     {
         ui->rawImageBox->scene()->removeItem( r );
         delete r;
     }
-    detectBoxes.clear();
+    detectionItems.clear();
 }
 
-void MainWindow::redrawBoxes()
+void MainWindow::redrawDetections()
 {
-    foreach( QGraphicsRectItem* b, detectBoxes )
+    clearDetections();
+    for( unsigned int i=0; i<detections.size(); i++ )
     {
-        b->setPen( QPen( QBrush(detectBoxColor), ui->boxWidthSlider->intValue() ) );
-    }
+        QGraphicsItem* r;
 
+
+        if( ui->ringRadio->isChecked() )
+        {
+            r = new QGraphicsEllipseItem( cvRectToQRect(detections[i]) );
+            ((QGraphicsEllipseItem*)r)->setPen( QPen( QBrush(detectionColor), ui->boxWidthSlider->intValue() ) );
+        }
+        else
+        {
+            r = new QGraphicsRectItem( cvRectToQRect( detections[i]) );
+            ((QGraphicsRectItem*)r)->setPen( QPen( QBrush(detectionColor), ui->boxWidthSlider->intValue() ) );
+        }
+
+        r->setZValue( 1 );
+        ui->rawImageBox->scene()->addItem( r );
+        detectionItems.push_back( r );
+    }
 }
 
-void MainWindow::setDetectBoxColor( const QColor& color )
+void MainWindow::setDetectionColor( const QColor& color )
 {
-    detectBoxColor = color;
+    detectionColor = color;
     QPalette pal( ui->boxColorLbl->palette() );
-    pal.setColor( QPalette::Window, detectBoxColor );
+    pal.setColor( QPalette::Window, detectionColor );
+    ui->lineColorFrame->setPalette( pal );
     ui->boxColorLbl->setPalette( pal );
-    redrawBoxes();
+    redrawDetections();
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -76,7 +94,7 @@ void MainWindow::on_actionOpen_Image_triggered()
     cv::split( ycc, channels );
     gry = ~channels[0];
     ui->rawImageBox->loadImage( fileName );
-    clearBoxes();
+    clearDetections();
 }
 
 void MainWindow::on_actionGo_triggered()
@@ -84,8 +102,6 @@ void MainWindow::on_actionGo_triggered()
     TophatDetector detector;
     vector<double> params( 4, 0.0 );
     double detectionWidth = ui->minSlider->value();
-
-    vector<cv::Rect> detections;
 
     int i=0;
     QProgressDialog pgrs( this, Qt::Popup );
@@ -125,24 +141,14 @@ void MainWindow::on_actionGo_triggered()
     }
     pgrs.hide();
 
-    clearBoxes();
-
-    for( unsigned int i=0; i<detections.size(); i++ )
-    {
-        QGraphicsRectItem* r = new QGraphicsRectItem( cvRectToQRect( detections[i]) );
-        r->setPen( QPen( QBrush(Qt::red), 3 ) );
-        r->setZValue( 1 );
-        ui->rawImageBox->scene()->addItem( r );
-        detectBoxes.push_back( r );
-    }
-    redrawBoxes();
+    redrawDetections();
     ui->statusBar->showMessage( QString( "Found %1 objects").arg(detections.size() ) );
 }
 
 void MainWindow::on_boxColorBtn_clicked()
 {
-    QColor color = QColorDialog::getColor( detectBoxColor, this, "Select Detection Box Color" );
+    QColor color = QColorDialog::getColor( detectionColor, this, "Select Detection Box Color" );
     if( !color.isValid() )
         return;
-    setDetectBoxColor( color );
+    setDetectionColor( color );
 }

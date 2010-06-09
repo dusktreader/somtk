@@ -31,9 +31,9 @@ public:
     ~MainWindow();
 
 public slots:
-    void setDetectBoxColor( const QColor& color );
-    void redrawBoxes();
-    void clearBoxes();
+    void setDetectionColor( const QColor& color );
+    void redrawDetections();
+    void clearDetections();
 
 protected:
     void changeEvent(QEvent *e);
@@ -44,8 +44,9 @@ private:
     cv::Mat ycc;
     cv::Mat gry;
 
-    QVector<QGraphicsRectItem*> detectBoxes;
-    QColor detectBoxColor;
+    std::vector< cv::Rect > detections;
+    QVector<QGraphicsItem*> detectionItems;
+    QColor detectionColor;
 
 private slots:
     void on_boxColorBtn_clicked();
