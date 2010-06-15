@@ -4,7 +4,7 @@ Astronomical Computer Vision Group Notes
 Tucker Beck, Russell Jensen, and Bob Lewis; WSU Tri-Cities
 ----------------------------------------------------------
 
-Last edited: 5/25/10 (BL)
+Last edited: 6/15/10 (BL)
 
 Overview
 ........
@@ -49,6 +49,24 @@ chronological order.
 
   + discussed 5/25/10
 
+* Doi, et al. "Morphological classification of galaxies using simple
+  photometric parameters" DOI93_
+
+  + discussed 6/8/10
+
+  + method strictly photometric, consistent with then-contemporary
+    technology
+
+* Frei, "Semi–Automatic Removal of Foreground Stars from Images of Galaxies"
+  FRE96_
+
+  + RJ: a bit dated, but seems like it might have some useful research
+    that we can leverage.
+
+  + discussed 6/8/10
+
+  + kinda ad-hoc, not automated
+
 Scheduled for Discussion
 ........................
 
@@ -58,7 +76,29 @@ order.
 * Abraham, et al., "The Morphologies of Distant Galaxies.  I. An
   Automated Classification System", Ap. J. 432(75) AVY94_
 
-  + to be discussed 6/1/10
+  + discussed 6/1/10, will continue on 6/15/10
+
+* Banerji, et al., "Galaxy Zoo: Reproducing Galaxy Morphologies Via
+  Machine Learning" BAN10_
+
+  + RJ: This is the paper related to the news article sent out by
+    Dr. Lewis. We ought to see if the galaxy zoo people would be
+    willing to collaborate and share data.
+
+  + web site: http://www.galaxyzoo.org
+
+  + RJ: This is the paper related to the news article sent out by
+    Dr. Lewis. We ought to see if the galaxy zoo people would be
+    willing to collaborate and share data.
+
+  + to be discussed on 6/15/10
+
+Additional Action Items
+.......................
+
+* 6/15/10:
+
+  + RRL: contact Galaxy Zoo people
 
 Not Yet Scheduled for Discussion
 ................................
@@ -70,14 +110,8 @@ Comments may be identified by the commenter's initials.
   II. Classification from the Hubble Space Telescope Medium Deep
   Survey", Ap. J. Suppl. 107, 1--17 AVG96_
 
-* Frei, "Semi–Automatic Removal of Foreground Stars from Images of Galaxies"
-  FRE96_
-
-  + RJ: a bit dated, but seems like it might have some useful research
-    that we can leverage.
-
-* Ouzounis and Wilkinson, "Hyperconnected Attribute Filters Based on k-Flat Zones"
-  OUW10_
+* Ouzounis and Wilkinson, "Hyperconnected Attribute Filters Based on
+  k-Flat Zones" OUW10_
 
   + RJ: interesting in that they are able to remove the stars and
     still keep the detail of the galaxy behind them.
@@ -85,32 +119,26 @@ Comments may be identified by the commenter's initials.
   + RJ: The applications to historical documents are interesting to me
     as well.
 
-* Banerji, et al., "Galaxy Zoo: Reproducing Galaxy Morphologies Via Machine Learning"
-  BAN10_
-  
-  + RJ: This is the paper related to the news article sent out by Dr. Lewis. We ought to
-    see if the galaxy zoo people would be willing to collaborate and share data.
-
-
 * Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
   AVI97_
   
-  + TB: Discusses inhistory of galaxy classification.  Suggests that the current
+  + TB: Discusses history of galaxy classification.  Suggests that the current
     historical segmentations are non-optimal and non-intiuitive, and have been
     over-refined.  Suggests application of an SOM to naturally create an
     intuitive mapping of galaxies into a 2 dimensional topology where adjacent
     map locations indicate feature commonality.
 
-* Miller and Coe, "Star/galaxy classification using Kohonen self-organizing maps"
-  MIL95_
+* Miller and Coe, "Star/galaxy classification using Kohonen
+  self-organizing maps" MIL95_
 
   + TB: Applies SOM to binary segmentation between stars and galaxies.
 
-.. _AVY94: 1994ApJ...432...75A.pdf
 .. _AVG96: 1996ApJS..107....1A.pdf
-.. _OUW10: HyperconnectedAttributeFilters.pdf
-.. _FRE96: SemiAutomaticStarRemoval.pdf
-.. _MPD06: StarGalaxyDifferentiation.pdf
-   _AVI97: GalaxyMorphologyWithoutClassification.pdf
-   _MIL95: StarGalaxyClassificationUsingKohonenSelfOrganizingMaps.pdf
+.. _AVI97: GalaxyMorphologyWithoutClassification.pdf
+.. _AVY94: 1994ApJ...432...75A.pdf
 .. _BAN10: 2010GalaxyZoo.pdf
+.. _DOI93: 1993MNRAS.264..832D.pdf
+.. _FRE96: SemiAutomaticStarRemoval.pdf
+.. _MIL95: StarGalaxyClassificationUsingKohonenSelfOrganizingMaps.pdf
+.. _MPD06: StarGalaxyDifferentiation.pdf
+.. _OUW10: HyperconnectedAttributeFilters.pdf
