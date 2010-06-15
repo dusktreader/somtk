@@ -23,8 +23,72 @@ The repository itself can be reached via::
 
   $ svn checkout svn+ssh://peacock.tricity.wsu.edu/home/bobl/svn/astrocv
 
-Discussed
-.........
+Scheduled for Discussion
+........................
+
+These are the papers we plan to discuss, in reverse chronological
+order.
+
+* Abraham, et al., "The Morphologies of Distant Galaxies.  I. An
+  Automated Classification System", Ap. J. 432(75) AVY94_
+
+  + discussed 6/1/10, will continue on 6/22/10
+
+* Banerji, et al., "Galaxy Zoo: Reproducing Galaxy Morphologies Via
+  Machine Learning" BAN10_
+
+  + RJ: This is the paper related to the news article sent out by
+    Dr. Lewis. We ought to see if the galaxy zoo people would be
+    willing to collaborate and share data.
+
+  + web site: http://www.galaxyzoo.org
+
+  + discussed on 6/15/10, continuing on 6/22/10
+
+* Ouzounis and Wilkinson, "Hyperconnected Attribute Filters Based on
+  k-Flat Zones" OUW10_
+
+  + RJ: interesting in that they are able to remove the stars and
+    still keep the detail of the galaxy behind them.
+
+  + RJ: The applications to historical documents are interesting to me
+    as well.
+
+  + to be discussed on 6/22/10
+
+Additional Action Items
+.......................
+
+* 6/15/10:
+
+  + RRL: contact Galaxy Zoo people
+
+Not Yet Scheduled for Discussion
+................................
+
+Resources in this section are listed in alphabetical order of author.
+Comments may be identified by the commenter's initials.
+
+* Abraham, et al., "The Morphologies of Distant Galaxies.
+  II. Classification from the Hubble Space Telescope Medium Deep
+  Survey", Ap. J. Suppl. 107, 1--17 AVG96_
+
+* Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
+  AVI97_
+  
+  + TB: Discusses history of galaxy classification.  Suggests that the current
+    historical segmentations are non-optimal and non-intiuitive, and have been
+    over-refined.  Suggests application of an SOM to naturally create an
+    intuitive mapping of galaxies into a 2 dimensional topology where adjacent
+    map locations indicate feature commonality.
+
+* Miller and Coe, "Star/galaxy classification using Kohonen
+  self-organizing maps" MIL95_
+
+  + TB: Applies SOM to binary segmentation between stars and galaxies.
+
+Previously Discussed
+....................
 
 These are the papers we have discussed with our comments, in
 chronological order.
@@ -67,71 +131,6 @@ chronological order.
 
   + kinda ad-hoc, not automated
 
-Scheduled for Discussion
-........................
-
-These are the papers we plan to discuss, in reverse chronological
-order.
-
-* Abraham, et al., "The Morphologies of Distant Galaxies.  I. An
-  Automated Classification System", Ap. J. 432(75) AVY94_
-
-  + discussed 6/1/10, will continue on 6/15/10
-
-* Banerji, et al., "Galaxy Zoo: Reproducing Galaxy Morphologies Via
-  Machine Learning" BAN10_
-
-  + RJ: This is the paper related to the news article sent out by
-    Dr. Lewis. We ought to see if the galaxy zoo people would be
-    willing to collaborate and share data.
-
-  + web site: http://www.galaxyzoo.org
-
-  + RJ: This is the paper related to the news article sent out by
-    Dr. Lewis. We ought to see if the galaxy zoo people would be
-    willing to collaborate and share data.
-
-  + to be discussed on 6/15/10
-
-Additional Action Items
-.......................
-
-* 6/15/10:
-
-  + RRL: contact Galaxy Zoo people
-
-Not Yet Scheduled for Discussion
-................................
-
-Resources in this section are listed in alphabetical order of author.
-Comments may be identified by the commenter's initials.
-
-* Abraham, et al., "The Morphologies of Distant Galaxies.
-  II. Classification from the Hubble Space Telescope Medium Deep
-  Survey", Ap. J. Suppl. 107, 1--17 AVG96_
-
-* Ouzounis and Wilkinson, "Hyperconnected Attribute Filters Based on
-  k-Flat Zones" OUW10_
-
-  + RJ: interesting in that they are able to remove the stars and
-    still keep the detail of the galaxy behind them.
-
-  + RJ: The applications to historical documents are interesting to me
-    as well.
-
-* Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
-  AVI97_
-  
-  + TB: Discusses history of galaxy classification.  Suggests that the current
-    historical segmentations are non-optimal and non-intiuitive, and have been
-    over-refined.  Suggests application of an SOM to naturally create an
-    intuitive mapping of galaxies into a 2 dimensional topology where adjacent
-    map locations indicate feature commonality.
-
-* Miller and Coe, "Star/galaxy classification using Kohonen
-  self-organizing maps" MIL95_
-
-  + TB: Applies SOM to binary segmentation between stars and galaxies.
 
 .. _AVG96: 1996ApJS..107....1A.pdf
 .. _AVI97: GalaxyMorphologyWithoutClassification.pdf
