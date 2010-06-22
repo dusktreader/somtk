@@ -52,7 +52,12 @@ order.
     still keep the detail of the galaxy behind them.
 
   + RJ: The applications to historical documents are interesting to me
-    as well.
+    as well. The author notes that this is the "most important" result
+    of their research.
+
+  + RJ: In this paper, they cluster flat zones (connected region with constant 
+    brightness) based on intensity, rather than spacially. The 'k' in k-flat 
+    simply refers to the limit of grey level variation to consider in the clustering.
 
   + to be discussed on 6/22/10
 
