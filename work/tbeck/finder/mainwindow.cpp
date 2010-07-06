@@ -84,7 +84,9 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_actionOpen_Image_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName( this, "Open Source Image", "./", "Images (*.png *.jpg *.tif)" );
+    //QString fileName = QFileDialog::getOpenFileName( this, "Open Source Image", "./", "Images (*.png *.jpg *.tif)" );
+    
+    QString fileName = "./samller.png";
     if( fileName == "" )
         return;
     rgb = cv::Mat( cv::imread( fileName.toStdString() ) );

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'megaslider.ui'
 **
-** Created: Thu Apr 15 14:22:14 2010
+** Created: Tue Jun 22 16:03:48 2010
 **      by: Qt User Interface Compiler version 4.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
