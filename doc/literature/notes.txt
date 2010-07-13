@@ -61,6 +61,14 @@ Comments may be identified by the commenter's initials.
 * Ball, et al., "Galaxy types in the Sloan Digital Sky Survey using
   supervised artificial neural networks" BLK04_
 
+  + RJ: The technique presented in this paper uses data collected from the
+    Sloan Digitial Sky Survey as parameters to a neural net. Their approach
+    isn't unique other than they are using a larger and higher quality
+    dataset than those referenced in the paper. There is no machine vision
+    component in their approach. One thing that we may be able to contribute
+    here is to combine the visual inputs with the SDSS parameters to try
+    to get a higher classification rate.
+
   + referenced in BAN10_
 
 * Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
