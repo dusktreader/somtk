@@ -1,10 +1,10 @@
 /********************************************************************************
-** Form generated from reading ui file 'megaslider.ui'
+** Form generated from reading UI file 'megaslider.ui'
 **
-** Created: Tue Jun 22 16:03:48 2010
-**      by: Qt User Interface Compiler version 4.5.0
+** Created: Tue Jul 13 16:44:03 2010
+**      by: Qt User Interface Compiler version 4.6.2
 **
-** WARNING! All changes made in this file will be lost when recompiling ui file!
+** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
 #ifndef UI_MEGASLIDER_H
@@ -105,7 +105,7 @@ public:
         leftButton->setSizePolicy(sizePolicy3);
         leftButton->setMinimumSize(QSize(10, 20));
         QIcon icon;
-        icon.addPixmap(QPixmap(QString::fromUtf8(":/icons/left")), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/left"), QSize(), QIcon::Normal, QIcon::Off);
         leftButton->setIcon(icon);
 
         gridLayout->addWidget(leftButton, 1, 1, 1, 1);
@@ -116,7 +116,7 @@ public:
         rightButton->setSizePolicy(sizePolicy3);
         rightButton->setMinimumSize(QSize(10, 20));
         QIcon icon1;
-        icon1.addPixmap(QPixmap(QString::fromUtf8(":/icons/right")), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/icons/right"), QSize(), QIcon::Normal, QIcon::Off);
         rightButton->setIcon(icon1);
 
         gridLayout->addWidget(rightButton, 1, 3, 1, 1);
@@ -127,7 +127,7 @@ public:
         minButton->setSizePolicy(sizePolicy3);
         minButton->setMinimumSize(QSize(10, 20));
         QIcon icon2;
-        icon2.addPixmap(QPixmap(QString::fromUtf8(":/icons/begin")), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QString::fromUtf8(":/icons/begin"), QSize(), QIcon::Normal, QIcon::Off);
         minButton->setIcon(icon2);
 
         gridLayout->addWidget(minButton, 1, 0, 1, 1);
@@ -138,7 +138,7 @@ public:
         maxButton->setSizePolicy(sizePolicy3);
         maxButton->setMinimumSize(QSize(10, 20));
         QIcon icon3;
-        icon3.addPixmap(QPixmap(QString::fromUtf8(":/icons/end")), QIcon::Normal, QIcon::Off);
+        icon3.addFile(QString::fromUtf8(":/icons/end"), QSize(), QIcon::Normal, QIcon::Off);
         maxButton->setIcon(icon3);
 
         gridLayout->addWidget(maxButton, 1, 4, 1, 1);
@@ -158,7 +158,6 @@ public:
         rightButton->setText(QString());
         minButton->setText(QApplication::translate("MegaSlider", "...", 0, QApplication::UnicodeUTF8));
         maxButton->setText(QApplication::translate("MegaSlider", "...", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(MegaSlider);
     } // retranslateUi
 
 };

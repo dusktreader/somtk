@@ -7,7 +7,7 @@ PAPERS = $(wildcard *.pdf)
 BROWSER = firefox
 
 WEB_HOST = beta.tricity.wsu.edu
-WEB_DIR = public_html/astrocv_notes
+WEB_DIR = public_html/astrocv
 WEB_DEST = $(WEB_HOST):$(WEB_DIR)
 
 RSYNC_FLAGS = -arvL

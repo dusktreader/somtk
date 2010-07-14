@@ -84,17 +84,30 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_actionOpen_Image_triggered()
 {
-    //QString fileName = QFileDialog::getOpenFileName( this, "Open Source Image", "./", "Images (*.png *.jpg *.tif)" );
-    
-    QString fileName = "./samller.png";
+#if 1
+    QString fileName = QFileDialog::getOpenFileName( this, "Open Source Image", "./", "Images (*.png *.jpg *.tif)" );
+#else
+    QString fileName = "./smaller.png";
+#endif
     if( fileName == "" )
         return;
+#if 0
+    cerr << fileName.toStdString() << endl;
+#endif
     rgb = cv::Mat( cv::imread( fileName.toStdString() ) );
+#if 0
     cv::cvtColor( rgb, ycc, CV_RGB2YCrCb );
+#else
+    cv::cvtColor( rgb, gry, CV_RGB2GRAY );
+#endif
 
+#if 0
     vector<cv::Mat> channels;
     cv::split( ycc, channels );
     gry = ~channels[0];
+#else
+    gry = ~gry;
+#endif
     ui->rawImageBox->loadImage( fileName );
     clearDetections();
 }

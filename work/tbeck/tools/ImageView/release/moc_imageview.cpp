@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'imageview.h'
 **
-** Created: Tue Apr 13 17:35:06 2010
-**      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
+** Created: Tue Jul 13 16:43:42 2010
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -10,8 +10,8 @@
 #include "../imageview.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'imageview.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 61
-#error "This file was generated using the moc from 4.5.0. It"
+#elif Q_MOC_OUTPUT_REVISION != 62
+#error "This file was generated using the moc from 4.6.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,13 +20,15 @@ QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_ImageView[] = {
 
  // content:
-       2,       // revision
+       4,       // revision
        0,       // classname
        0,    0, // classinfo
        0,    0, // methods
-       4,   12, // properties
+       4,   14, // properties
        0,    0, // enums/sets
        0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
 
  // properties: name, type, flags
       17,   10, 0x06095103,
@@ -47,9 +49,13 @@ const QMetaObject ImageView::staticMetaObject = {
       qt_meta_data_ImageView, 0 }
 };
 
+#ifdef Q_NO_DATA_RELOCATION
+const QMetaObject &ImageView::getStaticMetaObject() { return staticMetaObject; }
+#endif //Q_NO_DATA_RELOCATION
+
 const QMetaObject *ImageView::metaObject() const
 {
-    return &staticMetaObject;
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
 }
 
 void *ImageView::qt_metacast(const char *_clname)

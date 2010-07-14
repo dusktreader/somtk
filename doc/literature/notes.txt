@@ -4,7 +4,7 @@ Astronomical Computer Vision Group Notes
 Tucker Beck, Russell Jensen, and Bob Lewis; WSU Tri-Cities
 ----------------------------------------------------------
 
-Last edited: 6/22/10 (BL)
+Last edited: 7/13/10 (RRL)
 
 Overview
 ........
@@ -29,35 +29,6 @@ Scheduled for Discussion
 These are the papers we plan to discuss, in reverse chronological
 order.
 
-* Ouzounis and Wilkinson, "Hyperconnected Attribute Filters Based on
-  k-Flat Zones" OUW10_
-
-  + RJ: interesting in that they are able to remove the stars and
-    still keep the detail of the galaxy behind them.
-
-  + RJ: The applications to historical documents are interesting to me
-    as well. The author notes that this is the "most important" result
-    of their research.
-
-  + RJ: In this paper, they cluster flat zones (connected region with constant 
-    brightness) based on intensity, rather than spacially. The 'k' in k-flat 
-    simply refers to the limit of grey level variation to consider in the clustering.
-
-  + to be discussed on 6/29/10
-
-Additional Action Items
-.......................
-
-* 6/29/10:
-
-  + BL: contact Galaxy Zoo people (Linott) again
-
-Not Yet Scheduled for Discussion
-................................
-
-Resources in this section are listed in alphabetical order of author.
-Comments may be identified by the commenter's initials.
-
 * Ball, et al., "Galaxy types in the Sloan Digital Sky Survey using
   supervised artificial neural networks" BLK04_
 
@@ -70,6 +41,14 @@ Comments may be identified by the commenter's initials.
     to get a higher classification rate.
 
   + referenced in BAN10_
+
+  + to be discussed 7/20/10
+
+Not Yet Scheduled for Discussion
+................................
+
+Resources in this section are listed in alphabetical order of author.
+Comments may be identified by the commenter's initials.
 
 * Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
   AVI97_
@@ -158,6 +137,22 @@ chronological order.
   + web site: http://www.galaxyzoo.org
 
   + discussed on 6/15/10 and 6/22/10
+
+* Ouzounis and Wilkinson, "Hyperconnected Attribute Filters Based on
+  k-Flat Zones" OUW10_
+
+  + RJ: interesting in that they are able to remove the stars and
+    still keep the detail of the galaxy behind them.
+
+  + RJ: The applications to historical documents are interesting to me
+    as well. The author notes that this is the "most important" result
+    of their research.
+
+  + RJ: In this paper, they cluster flat zones (connected region with constant 
+    brightness) based on intensity, rather than spacially. The 'k' in k-flat 
+    simply refers to the limit of grey level variation to consider in the clustering.
+
+  + discussed on 6/29/10
 
 
 .. _AVG96: 1996ApJS..107....1A.pdf
