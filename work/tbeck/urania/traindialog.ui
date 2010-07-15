@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TrainDialog</class>
+ <widget class="QDialog" name="TrainDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>441</width>
+    <height>501</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Train New HSOM</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>460</y>
+     <width>441</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+   <property name="centerButtons">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>441</width>
+     <height>451</height>
+    </rect>
+   </property>
+   <property name="showDropIndicator" stdset="0">
+    <bool>true</bool>
+   </property>
+   <property name="rowCount">
+    <number>13</number>
+   </property>
+   <property name="columnCount">
+    <number>2</number>
+   </property>
+   <attribute name="horizontalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>225</number>
+   </attribute>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="horizontalHeaderMinimumSectionSize">
+    <number>10</number>
+   </attribute>
+   <attribute name="horizontalHeaderStretchLastSection">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="verticalHeaderVisible">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="verticalHeaderVisible">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="horizontalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
+   <row>
+    <property name="text">
+     <string>Training Directory</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>HSOM Save File</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>HSOM Width</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>HSOM Height</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Feature Width</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Feature Height</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Category Count</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Training Epochs</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Initial Alpha</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Initial Radius Ratio</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>ANN Iteration Limit</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>ANN Epslilon Limit</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Add to Current HSOM List</string>
+    </property>
+   </row>
+   <column/>
+   <column/>
+   <item row="0" column="0">
+    <property name="text">
+     <string>/data/suspect_library/train</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+   </item>
+   <item row="0" column="1">
+    <property name="text">
+     <string>...</string>
+    </property>
+    <property name="foreground">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="flags">
+     <set>ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="1" column="0">
+    <property name="text">
+     <string>/data/suspect_library/soms/newHSOM.xml</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+   </item>
+   <item row="1" column="1">
+    <property name="text">
+     <string>...</string>
+    </property>
+    <property name="flags">
+     <set>ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="2" column="0">
+    <property name="text">
+     <string>8</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="2" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="3" column="0">
+    <property name="text">
+     <string>8</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="3" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="4" column="0">
+    <property name="text">
+     <string>13</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="4" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="5" column="0">
+    <property name="text">
+     <string>13</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="5" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="6" column="0">
+    <property name="text">
+     <string>5</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="6" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="7" column="0">
+    <property name="text">
+     <string>10</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="7" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="8" column="0">
+    <property name="text">
+     <string>0.2</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="8" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="9" column="0">
+    <property name="text">
+     <string>0.3</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="9" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="10" column="0">
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="10" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="11" column="0">
+    <property name="text">
+     <string>0.00</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="11" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+   <item row="12" column="0">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="12" column="1">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flags">
+     <set>NoItemFlags</set>
+    </property>
+   </item>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>TrainDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>TrainDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
