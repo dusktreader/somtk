@@ -1,12 +1,13 @@
 #pragma once
-#include "local.h"
 
-#define FEATURE_ALIAS "FEATURE"
+#include "cv.h"
 
 /** The feature class provides an abstract base class for SOM features */
 class Feature
 {
 protected:
+
+    static const std::string alias;
 
     /** The data associated with the feature */
     std::vector<double> data;

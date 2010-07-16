@@ -3,12 +3,14 @@
 #define HU7_FIX
 
 /** The HuFeature class provides a feature based upon image data */
-class HuFeature : public Feature{
+class HuFeature : public Feature
+{
 private:
 
+    static const std::string alias;
     std::vector<double> huVals;
-                                                                                                                        // Generated with training set and epsilon = 0.625
-    static std::vector<double> huAlpha;
+
+    static std::vector<double> huAlpha;                                                                                                                        // Generated with training set and epsilon = 0.625
     static std::vector<double> huMean;
     static std::vector<double> huStdv;
 
@@ -21,7 +23,7 @@ public:
       * @param  img - The image source for the data
       * @note   The image may be color or grayscale and any size
       */
-    HuFeature( IplImage* img );
+    HuFeature( const cv::Mat& img );
 
     virtual ~HuFeature();
 
@@ -33,14 +35,14 @@ public:
       @param  huStdv  - The standard deviations for all hu features
       @param  huAlpha - The alpha tunting parameter for all hu features
       */
-    static void setSigmoidParams( const std::vector<double> &huMean, const std::vector<double> &huStdv, const std::vector<double> &huAlpha );
+    static void setSigmoidParams( const std::vector<double>& huMean, const std::vector<double>& huStdv, const std::vector<double>& huAlpha );
 
     /** Fetches the parameters for the sigmoid correction function
       @param  huMean  - The mean values for all hu features
       @param  huStdv  - The standard deviations for all hu features
       @param  huAlpha - The alpha tunting parameter for all hu features
       */
-    static void getSigmoidParams( std::vector<double> &huMean, std::vector<double> &huStdv, std::vector<double> &huAlpha );
+    static void getSigmoidParams( std::vector<double>& huMean, std::vector<double>& huStdv, std::vector<double>& huAlpha );
 
     /** This sigmoid squashing function maps hu values to the range ( 0, 1 )
       * @param  t   - The input hu value

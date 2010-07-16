@@ -6,7 +6,6 @@ TEMPLATE = app
 
 CONFIG += qt
 
-
 INCLUDEPATH += /usr/local/include/opencv ../tools
 LIBS += -L /usr/local/lib -lcv -lcxcore -lhighgui -lml
 

@@ -2,6 +2,8 @@
 
 using namespace std;
 
+string Feature::alias = "Feature";
+
 Feature::~Feature(){}
 
 void Feature::setData( const vector<double> &newData )
@@ -30,23 +32,12 @@ int Feature::l()
     return data.size();
 }
 
-void Feature::read( CvFileStorage* fs, CvFileNode* node ){
-    ENTER;
-    node = cvGetFileNodeByName( fs, node, FEATURE_ALIAS );
-    double* fdata = new double[l];
-    cvReadRawData( fs, node, fdata, "d" );
-    copy( fdata, fdata+l, data.begin() );
-    delete [] fdata;
-    RETURN;
+void Feature::read( const cv::FileNode& fn )
+{
+    fn[alias] >> data;
 }
 
-void Feature::write( CvFileStorage* fs ){
-    ENTER;
-    cvStartWriteStruct( fs, FEATURE_ALIAS, CV_NODE_SEQ );
-    double* fdata = new double[l];
-    copy( data.begin(), data.end(), fdata );
-    cvWriteRawData( fs, fdata, l, "d" );
-    cvEndWriteStruct( fs );
-    delete [] fdata;
-    RETURN;
+void Feature::write( cv::FileStorage& fs )
+{
+    fs << alias << "{" << data << "}";
 }

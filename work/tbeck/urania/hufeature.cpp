@@ -2,16 +2,16 @@
 
 using namespace std;
 
+string HuFeature::alias = "HuFeature";
+
 vector<double> HuFeature::huAlpha;                                                                                      // This static data member retains the alpha values for the sigmoid function
 vector<double> HuFeature::huMean;                                                                                       // This static data member retains the mean of hu values
 vector<double> HuFeature::huStdv;                                                                                       // This static data member retains the standard deviaton of hu values
 
-HuFeature::HuFeature(){
-    ENTER;
-    l = 7;
-    for( int i=0; i<l; i++ )                                                                                            // Intialize the data vector with random values
+HuFeature::HuFeature()
+{
+    for( int i=0; i<7; i++ )                                                                                            // Intialize the data vector with random values
         data.push_back( RAND_DBL );
-    RETURN;
 }
 
 HuFeature::HuFeature( IplImage* img ){
