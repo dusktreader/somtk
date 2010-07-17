@@ -1,9 +1,12 @@
 #pragma once
 #include "feature.h"
 #include "somhistogram.h"
-#include "local.h"
 
-class Suspect{
+#include "cv.h"
+#include "cxcore.h"
+
+class Suspect
+{
 private:
     int predCat;
     int realCat;
@@ -27,7 +30,9 @@ public:
     virtual ~Suspect();
 
     /** Fetches the next feature out of the suspect's data */
-    virtual Feature* getNextFeature() = 0;
+    virtual Feature& getNextFeature() = 0;
+
+    virtual bool hasMoreFeatures() = 0;
 
     /** Sets ANN input and ouput vectors based upon the suspect's histogram
       * @param  input   - The ANN's input vector

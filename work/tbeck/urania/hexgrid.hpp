@@ -1,16 +1,20 @@
 #pragma once
-#include "tools.h"
+
+#include <deque>
+
+#include "tools.hpp"
 #include "cvtypesplus.hpp"
+
 #include "feature.h"
+
+/** Enumration for marks in the HexGrid */
+enum Mark { HG_DEFAULT_MARK, HG_WINNING_MARK, HG_VISITED_MARK, HG_ORIGIN_MARK, HG_NEIGHBOR_MARK, HG_EXCLUDE_MARK };
 
 /** The default width of a HexGrid */
 #define HG_DEFAULT_W      64
 
 /** The default height of a HexGrid */
 #define HG_DEFAULT_H      64
-
-/** Enumration for marks in the HexGrid */
-enum Mark { HG_DEFAULT_MARK, HG_WINNING_MARK, HG_VISITED_MARK, HG_ORIGIN_MARK, HG_NEIGHBOR_MARK, HG_EXCLUDE_MARK };
 
 /** Default value for cells */
 #define HG_DEFAULT_VALUE  0.0
@@ -25,6 +29,9 @@ enum Mark { HG_DEFAULT_MARK, HG_WINNING_MARK, HG_VISITED_MARK, HG_ORIGIN_MARK, H
 template <class T>
 class HexGrid{
 protected:
+
+    /** The alias for this class */
+    static const std::string alias;
 
     /** The width of the hex grid */
     SizePlus<int> _sz;
@@ -115,43 +122,43 @@ protected:
       */
     std::vector<int> getNeighborhood( double r, int idx )
     {
-            resetMarks();                                                                                                   // The marks vector will be used to keep track of which cells have been visited
-            resetValues();                                                                                                  // The values vector will be used to store the distance of a cell from the neighborhood's origin cell
-            vector<int> results;                                                                                            // The results vector will contain the indices of all cells in the neighborhood
-            deque<int> pending;                                                                                             // The pending vector will hold potential neighbors awaiting examination
-            vector<int> neighbors;                                                                                          // The neighbors vector will temporarily hold indices of immediate neighbors
-            marks[idx] = HG_ORIGIN_MARK;                                                                                    // All visited cells should be marked with something besides their default mark.  The origin cell is the only cell marked as the winner.
-            values[idx] = 0.0;                                                                                              // Obviously the distance between the origin and itself is 0.0
-            pending.push_back( idx );                                                                                       // Put the origin cell into the queue to begin the breadth first traversal
-            double dist;                                                                                                    // Temporary distance variable holds the current distance
-            while( !pending.empty() )                                                                                       // Process idices in the queue until the queue is empty ( meaning the traversal is done )
-            {
-                idx = pending.front();                                                                                      // Get the index at the front of the queue
-                pending.pop_front();
-                results.push_back( idx );                                                                                   // Add the popped index to the results
-                dist = values[idx];                                                                                         // Record the current distance
-                if( r - dist > EPS )                                                                                        // If the current distance is greater than or equal to the radius limit, do not examine the neighbors of the current cell.
-                    continue;
-                neighbors = getNeighborIndices( idx );                                                                      // Otherwise, get all the neighbors of the current cell
-                #pragma omp parallel private( idx )
-                {                                                                                                           // +omp
-                    #pragma omp for
-                    for( int i=0; i<(int)neighbors.size(); i++ )
+        resetMarks();                                                                                                   // The marks vector will be used to keep track of which cells have been visited
+        resetValues();                                                                                                  // The values vector will be used to store the distance of a cell from the neighborhood's origin cell
+        vector<int> results;                                                                                            // The results vector will contain the indices of all cells in the neighborhood
+        deque<int> pending;                                                                                             // The pending vector will hold potential neighbors awaiting examination
+        vector<int> neighbors;                                                                                          // The neighbors vector will temporarily hold indices of immediate neighbors
+        marks[idx] = HG_ORIGIN_MARK;                                                                                    // All visited cells should be marked with something besides their default mark.  The origin cell is the only cell marked as the winner.
+        values[idx] = 0.0;                                                                                              // Obviously the distance between the origin and itself is 0.0
+        pending.push_back( idx );                                                                                       // Put the origin cell into the queue to begin the breadth first traversal
+        double dist;                                                                                                    // Temporary distance variable holds the current distance
+        while( !pending.empty() )                                                                                       // Process idices in the queue until the queue is empty ( meaning the traversal is done )
+        {
+            idx = pending.front();                                                                                      // Get the index at the front of the queue
+            pending.pop_front();
+            results.push_back( idx );                                                                                   // Add the popped index to the results
+            dist = values[idx];                                                                                         // Record the current distance
+            if( r - dist > EPS )                                                                                        // If the current distance is greater than or equal to the radius limit, do not examine the neighbors of the current cell.
+                continue;
+            neighbors = getNeighborIndices( idx );                                                                      // Otherwise, get all the neighbors of the current cell
+            #pragma omp parallel private( idx )
+            {                                                                                                           // +omp
+                #pragma omp for
+                for( int i=0; i<(int)neighbors.size(); i++ )
+                {
+                    idx = neighbors[i];
+                    if( marks[idx] != HG_DEFAULT_MARK )                                                                 // If the current neighbor has already been marked, it has already been examined.  Pass it up
+                        continue;
+                    values[idx] = dist + 1.0;                                                                           // Otherwise record its distance.  For simplicity, distances are simply a count of the number of steps away from the origin cell.
+                    marks[idx] = HG_NEIGHBOR_MARK;                                                                      // Mark the cell as being a part of the neighborhood.  This ensures that each neighbor cell is examined only once.
+                    #pragma omp critical
                     {
-                        idx = neighbors[i];
-                        if( marks[idx] != HG_DEFAULT_MARK )                                                                 // If the current neighbor has already been marked, it has already been examined.  Pass it up
-                            continue;
-                        values[idx] = dist + 1.0;                                                                           // Otherwise record its distance.  For simplicity, distances are simply a count of the number of steps away from the origin cell.
-                        marks[idx] = HG_NEIGHBOR_MARK;                                                                      // Mark the cell as being a part of the neighborhood.  This ensures that each neighbor cell is examined only once.
-                        #pragma omp critical
-                        {
-                            pending.push_back( idx );                                                                       // Add the cell to the queue
-                        }
+                        pending.push_back( idx );                                                                       // Add the cell to the queue
                     }
-                }                                                                                                           // -omp
-            }
-            return results;
+                }
+            }                                                                                                           // -omp
         }
+        return results;
+    }
 
 public:
 
@@ -189,9 +196,15 @@ public:
     }
 
     /** Fetches the size of the grid */
-    SizePlus<int> getSize()
+    SizePlus<int> size()
     {
         return _sz;
+    }
+
+    /** Fetches the linear size of the grid */
+    int l()
+    {
+        return _sz.area();
     }
 
     /** Resets the slots of the hex grid */
@@ -228,6 +241,21 @@ public:
         return fetchItem( getIndex( pt ) );
     }
 
+    T& operator[]( const PointPlus<int>& pt )
+    {
+        return fetchItem( pt );
+    }
+
+    T& operator[]( int row, int col )
+    {
+        return fetchItem( PointPlus<int>( row, col ) );
+    }
+
+    T& operator[]( int idx )
+    {
+        return fetchItem( idx );
+    }
+
     /** Fetches the item at the given coordinates
       * @param  idx - The index of the desired slot
       * @return A reference to the desired item
@@ -237,4 +265,38 @@ public:
         return items[ idx ];
     }
 
+    void write( cv::FileStorage& fs )
+    {
+        fs << alias << "{";
+        fs << "size"  << "[" << _sz.w << _sz.h << "]";
+        fs << "items" << "[";
+        for( unsigned int i=0; i<items.size(); i++ )
+            items[i].write( fs );
+        fs <<  "marks" << "[" << marks << "]";
+        fs << "values" << "[" << values << "]";
+    }
+
+    void read( const cv::FileNode& fn )
+    {
+        clear();
+
+        cv::FileNode root = fn[alias];
+        cv::FileNode nd;
+
+        nd = root["size"];
+        setSize( SizePlus<int>( nd[0], nd[1] ) );
+
+        nd = root["items"];
+        for( cv::FileNodeIterator itr = nd.begin(); itr < nd.end(); itr++ )
+        {
+            T item;
+            item.read( *itr );
+            items.push_back( item );
+        }
+        fs["marks"] >> marks;
+        fs["values"] >> values;
+    }
+
 };
+
+string alias = "HexGrid";

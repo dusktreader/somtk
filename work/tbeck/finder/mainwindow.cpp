@@ -27,6 +27,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::clearDetections()
 {
+    QTime ticks;
     foreach( QGraphicsItem* r, detectionItems )
     {
         ui->rawImageBox->scene()->removeItem( r );
@@ -114,6 +115,7 @@ void MainWindow::on_actionOpen_Image_triggered()
 
 void MainWindow::on_actionGo_triggered()
 {
+    detections.clear();
     TophatDetector detector;
     vector<double> params( 4, 0.0 );
     double detectionWidth = ui->minSlider->value();

@@ -27,8 +27,6 @@ SOURCES += feature.cpp \
     imagesuspect.cpp \
     hufeature.cpp \
     traindialog.cpp \
-    ../tools/tools.cpp \
-    ../tools/cvtools.cpp \
 
 HEADERS += feature.h \
     hexgrid.hpp \
@@ -43,8 +41,8 @@ HEADERS += feature.h \
     imagesuspect.h \
     hufeature.h \
     traindialog.h \
-    ../tools/tools.h \
-    ../tools/cvtools.h \
+    ../tools/tools.hpp \
+    ../tools/cvtools.hpp \
     ../tools/cvtypesplus.hpp \
 
 FORMS += mainwindow.ui \

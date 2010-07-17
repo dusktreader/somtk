@@ -1,7 +1,14 @@
 #pragma once
-#include "hexgrid.h"
+
+#include "cv.h"
+#include "cxcore.h"
+#include "ml.h"
+
+#include "tools.hpp"
+#include "cvtypesplus.hpp"
+
+#include "hexgrid.hpp"
 #include "suspect.h"
-#include "local.h"
 
 /** A slope tuning parameter for an inverse exponential function */
 #define A 0.1
@@ -9,18 +16,21 @@
 /** Adjustment parameter for the initial width of the neighborhood function */
 #define B 0.20
 
-/** The name field for saving an HSOM to a CvFileStorage */
-#define HSOM_ALIAS "HSOM"
-
 /** The SOM class provides an abstract base class for Self-Organizing Maps */
-class HSOM : public HexGrid{
+class HSOM
+{
 private:
+
+    /** The alias for this class */
+    static const std::string alias;
+
+    /** The name of this HSOM */
+    std::string name;
 
     /** The back-end Multilayer Perceptron Neural Network for classification */
     CvANN_MLP* ann;
 
-    /** The name of this HSOM */
-    std::string name;
+    HexGrid grid;
 
     /** Trains the SOM component of the HSOM
       * @param  somEpochs  - The number of training epochs to use
@@ -44,15 +54,11 @@ private:
 
 protected:
 
-    /** A set of features contained in the slots of the SOM */
-    std::vector<Feature*> features;
-
     /** A list of suspects for training or classification */
     std::vector<Suspect*> suspects;
 
     /** A set of precalculated gaussian weights for updating the SOM */
     std::vector<double> weights;
-
 
     /** The number of categories that this Hybrid SOM will classifiy */
     int catCt;
@@ -108,11 +114,10 @@ public:
     HSOM();
 
     /** Constructs the Hybrid SOM with a specified size
-      * @param  w     - The desired width of the SOM
-      * @param  h     - The desired height of the SOM
+      * @param  sz    - The desired size of the SOM
       * @param  catCt - Then number of categories that this Hybrid SOM can classify
       */
-    HSOM( int w, int h, int catCt );
+    HSOM( const SizePlus<int>& sz, int catCt );
 
     /** Destructs the SOM */
     virtual ~HSOM();
@@ -127,12 +132,8 @@ public:
       */
     virtual bool loadSuspects( std::string dirPath, const std::vector<std::string> &fileList ) = 0;
 
-    /** Clears the features from the HSOM */
-    void clearFeatures();
-
     /** Clears the suspect list */
     void clearSuspects();
-
 
     /** Trains the Hybrid SOM
       * @param  somEpochs  - The number of training epochs to use
@@ -140,9 +141,8 @@ public:
       * @param  initR      - The intial radius of the training neighborhood
       * @param  annIters   - The number of iterations for ANN training
       * @param  annEps     - The minimum adjustment size for ANN training
-      * @return A flag indicating if training finished or was terminated
       */
-    bool train( int somEpochs, double initAlpha, double initR, int annIters, double annEps );
+    void train( int somEpochs, double initAlpha, double initR, int annIters, double annEps );
 
     /** Report classification results
       * @param  report   - The string that will contain the report
@@ -155,14 +155,14 @@ public:
     /** Classifies suspects
       * @param  A flag indicating if the function finished or was terminated
       */
-    bool classify();
+    void classify();
 
     /** Classifies a single suspect
       * @param  suspect - The suspect to classify
       * @param  input   - The input matrix for the ANN
       * @param  output  - The output matrix for the ANN
       */
-    void classify( Suspect* suspect, CvMat* input=NULL, CvMat* output=NULL );
+    void classify( Suspect* suspect, cv::Mat& input = cv::Mat(), cv::Mat& output = cv::Mat() );
 
     /** Fetches the name of this HSOM */
     std::string getName();

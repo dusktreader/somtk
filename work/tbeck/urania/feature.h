@@ -9,6 +9,8 @@ protected:
 
     static const std::string alias;
 
+    bool _empty;
+
     /** The data associated with the feature */
     std::vector<double> data;
 
@@ -23,6 +25,8 @@ protected:
     void setData( const std::vector<double> &newData );
 
 public:
+
+    Feature();
 
     virtual ~Feature();
 
@@ -39,6 +43,8 @@ public:
     virtual void adjust( const Feature& other, double scaleFactor );
 
     int l();
+
+    bool empty();
 
     void read( CvFileStorage* fs, CvFileNode* node=NULL );
     void write( CvFileStorage* fs );

@@ -5,6 +5,8 @@
 #include <QColorDialog>
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
+#include <QTime>
+
 #include <MegaSlider/megaslider.h>
 
 #include "cv.h"

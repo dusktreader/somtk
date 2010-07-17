@@ -2,73 +2,61 @@
 
 using namespace std;
 
-HSOM::HSOM() : HexGrid(){
-    ENTER;
+string HSOM::alias = "HSOM";
+
+HSOM::HSOM() : HexGrid()
+{
     catCt = -1;
     ann = NULL;
-    RETURN;
 }
 
-HSOM::HSOM( int w, int h, int catCt ) : HexGrid( w, h ){
-    ENTER;
+HSOM::HSOM( const SizePlus<int>& sz, int catCt )
+{
+    grid = HexGrid( sz );
     this->catCt = catCt;
     ann = NULL;
     name = "unnamed";
-    RETURN;
 }
 
-HSOM::~HSOM(){
-    ENTER;
+HSOM::~HSOM()
+{
     clear();
     delete ann;
-    RETURN;
 }
 
-void HSOM::clear(){
-    ENTER;
-    clearFeatures();
+void HSOM::clear()
+{
     clearSuspects();
-    HexGrid::clear();
-    RETURN;
+    grid.clear();
 }
 
-void HSOM::clearFeatures(){
-    ENTER;
-    for( vector<Feature*>::iterator f = features.begin(); f != features.end(); f++ )
-        delete *f;
-    features.clear();
-    RETURN;
-}
-
-void HSOM::clearSuspects(){
-    ENTER;
+void HSOM::clearSuspects()
+{
     for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ )
         delete *s;
     suspects.clear();
-    RETURN;
 }
 
-bool HSOM::statusCheck( int iteration, string msg1, string msg2, int maxIters ){
-    ENTER;
+bool HSOM::statusCheck( int iteration, string msg1, string msg2, int maxIters )
+{
     cout << "HSOM training " << iteration << "/" << maxIters << ": " << msg1 << " ... " << msg2 << endl;
-    RETURN true;
+    return true;
 }
 
-bool HSOM::analyzeSuspects(){
-    ENTER;
-    RETURN true;
+bool HSOM::analyzeSuspects()
+{
+    return true;
 }
 
-bool HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat ){
-    ENTER;
+void HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat )
+{
     ASSERT_MSG( initRadRat <= 0.5, "Inital radius ratio may not exceed 1/2" );
 
     bool alive = statusCheck( 0, "Beginning SOM training...", "Training SOM" );
-    if( !alive ){
-        RETURN false;
-    }
+    if( !alive )
+        return false;
 
-    double radius;                                                                                                      /// @keyword  ts1253137089  @keyword  ts1247868419 - Now defunct: replaced with exponential decay
+    double radius;
     double radius0 = initRadRat * w;                                                                                    /// @todo  Make radius_tf, radius_Nf, alpha_tf, alpha_Nf arguments to this function
     double radius_tf = 0.25;
     double radius_Nf = 0.5;
@@ -80,12 +68,9 @@ bool HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat ){
     double alpha_Nf = 0.25;
     double alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * somEpochs );
 
-    for( int E=0; E<somEpochs; E++ ){
-
-        alive = statusCheck( 0, "---", "SOM Epoch " + num2str( E + 1 ) + "/" + num2str( somEpochs ) );
-        if( !alive ){
-            RETURN false;
-        }
+    for( int E=0; E<somEpochs; E++ )
+    {
+        ASSERT( statusCheck( 0, "---", "SOM Epoch " + num2str( E + 1 ) + "/" + num2str( somEpochs ) ) );
 
         random_shuffle( suspects.begin(), suspects.end() );                                                             // Shuffle the list of suspects so that representatives from each category appear uniformly throught the training
 
@@ -93,113 +78,119 @@ bool HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat ){
         radius = radius0 * exp( -radius_gamma * E );
         preCalcWeights( alpha, radius );                                                                                // Pre-calculate the gaussian weights for updating the SOM
         int i = 0;
-        for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ ){                                 // Iterate over all training suspects
+        for( unsigned int i=0; i<suspects.size(); i++ )
+        {
+            ASSERT( statusCheck( i, "Processing " + suspects[i]->getName() ) );
+            updateSOM( suspects[i] );
+        }
+
+        /** @todo verify that the previous loop is functional
+        /*for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ ){                               // Iterate over all training suspects
             alive = statusCheck( i++, "Processing " + (*s)->getName() );
             if( !alive ){
                 RETURN false;
             }
             updateSOM( *s );
-        }
+        }*/
     }
-    RETURN true;
 }
 
-bool HSOM::generateHistograms(){
-    ENTER;
-    bool alive = statusCheck( 0, "---", "Generating histograms" );
-    if( !alive ){
-        RETURN false;
-    }
+void HSOM::generateHistograms()
+{
+    ASSERT( statusCheck( 0, "---", "Generating histograms" ) );
 
     int i = 0;
-    for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ ){                                     // Iterate over all training suspects
+    for( unsigned int i=0; i<suspects.size(); i++ )
+    {
+        alive = statusCheck( i++, "Processing " + suspects[i]->getName() );
+        if( !alive )
+            return false;
+        updateHistogram( suspects[i] );
+    }
+
+    /*for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ ){                                     // Iterate over all training suspects
         alive = statusCheck( i++, "Processing " + (*s)->getName() );
         if( !alive ){
             RETURN false;
         }
         updateHistogram( *s );                                                                                          // Update each suspects's histogram now that the SOM part is fully trained.
-    }
-    RETURN true;
+    }*/
 }
 
-bool HSOM::trainANN( int annIters, double annEps ){
-    ENTER;
-    bool alive = statusCheck( 0, "---", "Training ANN" );
-    if( !alive ){
-        RETURN false;
+bool HSOM::trainANN( int annIters, double annEps )
+{
+    ASSERT( statusCheck( 0, "---", "Training ANN" ) );
+
+    int l = grid.size().area();
+
+    cv::Mat_<double>  input( suspects.size(), l, 0.0 );                                                                 // Make an input matrix for training the back-end MLPANN.  This is a matrix composed of vectors of size l = grid width x grid height
+    cv::Mat_<double> output( suspects.size(), catCt, 0.0 );                                                             // Make an output matrix for trainig the back-end MLPANN.  This is a matrix composed of vectors of size catCt.
+
+    cv::Mat_<double> inRow, outRow;
+
+    for( unsigned int i=0; i<suspects.size(); i++ )
+    {
+        ASSERT( statusCheck( i++, "Extracting ANN inputs from " + suspects[i]->getName() ) );
+        inRow = input.row( i );
+        outRow = output.row( i );
+        suspects[i]->setANNVectors( inRow, outRow );
     }
 
-    CvMat* input = cvCreateMat( suspects.size(), l, CV_64F );                                                           // Make an input matrix for training the back-end MLPANN.  This is a matrix composed of vectors of size l = SOM_W * SOM_H
-    CvMat* output = cvCreateMat( suspects.size(), catCt, CV_64F );                                                      // Make an output matrix for trainig the back-end MLPANN.  This is a matrix composed of vectors of size catCt.
-    double* inPtr = input->data.db;                                                                                     // These two utility pointers will point to the current locations within the input and output matrices
-    double* outPtr = output->data.db;
-
-
-    int i = 0;
+    /// @todo verify that new implementation works correctly
+/*
+    double* inPtr  = (double*)input.data;                                                                               // These two utility pointers will point to the current locations within the input and output matrices
+    double* outPtr = (double*)output.data;
     for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ ){                                     // Iterate over all training suspects
-        alive = statusCheck( i++, "Extracting ANN inputs from " + (*s)->getName() );
-        if( !alive ){
-            cvReleaseMat( &input );
-            cvReleaseMat( &output );
-            RETURN false;
-        }
         (*s)->setANNVectors( inPtr, l, outPtr, catCt );                                                                 // Update the input and output matrices with values from the suspect's histogram
         inPtr += l;
         outPtr += catCt;
-    }
+    }*/
 
     int tcType = 0;
     if( annIters != 0 )
-        tcType += CV_TERMCRIT_ITER;
+        tcType += cv::TermCriteria::MAX_ITER;
     if( annEps != 0.0 )
-        tcType += CV_TERMCRIT_EPS;
+        tcType += cv::TermCriteria::EPS;
 
-    CvANN_MLP_TrainParams tParams;
-    tParams.term_crit = cvTermCriteria( tcType, annIters, annEps );
-    tParams.train_method = CvANN_MLP_TrainParams::RPROP;
+    cv::ANN_MLP_TrainParams tParams( tcType, CvANN_MLP_TrainParams::RPROP, annIters, annEps );
 
     int normFlag = 0;
 
-    CvMat* layerSizes = cvCreateMat( 4, 1, CV_32S );                                                                    /// @todo  Make this more dynamic, so that the size and count of input layers is dependent on the number of ANN inputs
-    layerSizes->data.i[0] = l;                                                                                          // Input layer.
-    layerSizes->data.i[1] = l/2;                                                                                        // First hidden layer is 1/2 the size of the input layer
-    layerSizes->data.i[2] = l/4;                                                                                        // Second hidden layer is 1/4 the size of the input layer
-    layerSizes->data.i[3] = catCt;                                                                                      // The output layer has one node for each category
+    cv::Mat_<int> layerSizes( 4, 1 );                                                                                   /// @todo  Make this more dynamic, so that the size and count of input layers is dependent on the number of ANN inputs
+    layerSizes[0,0] = l;                                                                                                // Input layer.
+    layerSizes[1,0] = l/2;                                                                                              // First hidden layer is 1/2 the size of the input layer
+    layerSizes[2,0] = l/4;                                                                                              // Second hidden layer is 1/4 the size of the input layer
+    layerSizes[3,0] = catCt;                                                                                            // The output layer has one node for each category
 
-    if( ann == NULL )
+    if( ann != NULL )
         delete ann;
     ann = new CvANN_MLP( layerSizes, CvANN_MLP::SIGMOID_SYM );
 
     ann->train( input, output, NULL, NULL, tParams, normFlag );
 
-    cvReleaseMat( &input );
-    cvReleaseMat( &output );
-    cvReleaseMat( &layerSizes );
-
-    RETURN true;
+    return true;
 }
 
-bool HSOM::train( int somEpochs, double initAlpha, double initR, int annIters, double annEps ){
-    ENTER;
+void HSOM::train( int somEpochs, double initAlpha, double initR, int annIters, double annEps )
+{
     random_shuffle( suspects.begin(), suspects.end() );
-    if( !analyzeSuspects() ){
-        RETURN false;
+    try
+    {
+        analyzeSuspects();
+        trainSOM( somEpochs, initAlpha, initR ) );
+        generateHistograms();
+        trainANN( annIters, annEps ) );
+        statusCheck( -1 );
     }
-    if( !trainSOM( somEpochs, initAlpha, initR ) ){
-        RETURN false;
+    catch( ... )
+    {
+        statusCheck( -1 );
+        throw;
     }
-    if( !generateHistograms() ){
-        RETURN false;
-    }
-    if( !trainANN( annIters, annEps ) ){
-        RETURN false;
-    }
-    statusCheck( -1 );
-    RETURN true;
 }
 
-void HSOM::getReport( string &report, double &hitRate, double &missRate, double &nearRate ){
-    ENTER;
+void HSOM::getReport( string &report, double &hitRate, double &missRate, double &nearRate )
+{
     report.clear();
     hitRate = 0.0;
     missRate = 0.0;
@@ -208,34 +199,36 @@ void HSOM::getReport( string &report, double &hitRate, double &missRate, double 
     int suspectCt = suspects.size();
     int realCat, predCat;
     vector<double> votes;
-    int* confusionMatrix= new int[ catCt * catCt ];
-    for( int i=0; i<catCt; i++ )
-        for( int j=0; j<catCt; j++ )
-            confusionMatrix[ i * catCt + j ] = 0;
+    cv::Mat_<int> confusionMatrix( catCt, catCt, 0 );
 
-    for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ ){                                            // Iterate over all suspects
+    for( unsigned int i=0; i<suspects.size(); i++ )
+    {
+        realCat = suspects[i]->getRealCat();
+        predCat = suspects[i]->getPredCat();
 
-        realCat = (*s)->getRealCat();
-        predCat = (*s)->getPredCat();
-
-        if( realCat == predCat ){
+        if( realCat == predCat )
+        {
             currReport = &hitReport;
             hitRate++;
         }
-        else if( realCat !=0 && predCat != 0 && abs( realCat - predCat ) == 1 ){
+        /// @todo Review off by one logic
+        else if( realCat !=0 && predCat != 0 && abs( realCat - predCat ) == 1 )
+        {
             currReport = &nearReport;
             nearRate++;
         }
-        else{
+        else
+        {
             currReport = &missReport;
             missRate++;
         }
 
-        confusionMatrix[ predCat * catCt + realCat ]++;
+        confusionMatrix[predCat,realCat]++;
 
-        currReport->append( (*s)->getName() + " --> Class " + num2str( predCat ) + "\n" );
-        if( currReport == &missReport ){
-            votes = (*s)->getCatVotes();
+        currReport->append( suspects[i]->getName() + " --> Class " + num2str( predCat ) + "\n" );
+        if( currReport == &missReport )
+        {
+            votes = suspects[i]->getCatVotes();
             currReport->append( "  < " );
             for( int i=0; i<catCt; i++ )
                 currReport->append( num2str( votes[i], 4 ) + " " );
@@ -249,18 +242,22 @@ void HSOM::getReport( string &report, double &hitRate, double &missRate, double 
 
     report.append( "\n\nConfusion Matrix\n----------------\n\n" );
     report.append( "              Actual\n" );
-    for( int i=-2; i<catCt; i++ ){
+    for( int i=-2; i<catCt; i++ )
+    {
         if( i < 0 )
             report.append( "             " );
-        else{
+        else
+        {
             if( i == catCt / 2 )
                 report.append( "Predicted" );
             else
                 report.append( "         " );
             report.append( num2str( i, 0, 3 ) + "|" );
         }
-        for( int j=0; j<catCt; j++ ){
-            switch( i ){
+        for( int j=0; j<catCt; j++ )
+        {
+            switch( i )
+            {
                 case -2:
                     report.append( num2str( j, 0, 5 ) );
                     break;
@@ -268,7 +265,7 @@ void HSOM::getReport( string &report, double &hitRate, double &missRate, double 
                     report.append( "-----" );
                     break;
                 default:
-                    report.append( num2str( confusionMatrix[i*catCt+j], 0, 5 ) );
+                    report.append( num2str( confusionMatrix[i,j], 0, 5 ) );
             }
         }
         report.append( "\n" );
@@ -277,101 +274,96 @@ void HSOM::getReport( string &report, double &hitRate, double &missRate, double 
     hitRate /= suspectCt;
     missRate /= suspectCt;
     nearRate /= suspectCt;
-    delete [] confusionMatrix;
-    RETURN;
 }
 
-bool HSOM::classify(){
-    ENTER;
+void HSOM::classify()
+{
     string title = "Analyzing with " + name;
-    bool alive = statusCheck( 0, title + "__size_buffer__", title, suspects.size() );
-    if( !alive ){
-        RETURN false;
+    ASSERT( statusCheck( 0, title + "__size_buffer__", title, suspects.size() ) );
+
+    int l = grid.size().area();
+
+    cv::Mat_<double>  input( 1, l, 0.0 );
+    cv::Mat_<double> output( 1, catCt, 0.0 );
+
+    for( unsigned int i=0; i<suspects.size(); i++ )
+    {
+        ASSERT( statusCheck( i++, "Classifying " + suspects[i]->getName() ) );
+        classify( suspects[i], input, output );
     }
-
-    CvMat* input = cvCreateMat( 1, l, CV_64F );                                                                         // Alocate an input an output matrix for classifying the suspects with the back-end ANN
-    CvMat* output = cvCreateMat( 1, catCt, CV_64F );
-
-    int i = 0;
-    for( vector<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ ){                                            // Iterate over all training suspects
-        alive = statusCheck( i++, "Classifying " + (*s)->getName() );
-        if( !alive )
-            break;
-        classify( *s, input, output );
-    }
-
-    cvReleaseMat( &input );
-    cvReleaseMat( &output );
-
-    RETURN alive;
 }
 
-void HSOM::classify( Suspect* suspect, CvMat* input, CvMat* output ){
-    ENTER;
+void HSOM::classify( Suspect* suspect, cv::Mat& input, cv::Mat& output )
+{
+    int l = grid.size().area();
     bool localMats = false;
-    if( input == NULL ){                                                                                                // If the input and output matrix arent' specified, they need to be allocated and de-allocated in this function
+    if( input.empty() )
+    {                                                                                                                   // If the input and output matrix arent' specified, they need to be allocated and de-allocated in this function
         localMats = true;
-        input = cvCreateMat( 1, l, CV_64F );
-        output = cvCreateMat( 1, catCt, CV_64F );
+        input  = cv::Mat_<double>( 1, l, 0.0 );
+        output = cv::Mat_<double>( 1, catCt, 0.0 );
     }
 
     updateHistogram( suspect );                                                                                         // Update the histogram with features from the suspect
-    suspect->setANNVectors( input->data.db, l );                                                                        // Set the inputs for the back-end ANN classifier
+    suspect->setANNVectors( input );                                                                                    // Set the inputs for the back-end ANN classifier
     ann->predict( input, output );                                                                                      // Classify the suspect using the histogram and the ANN classifier
-    suspect->setCatVotes( output->data.db, catCt );                                                                     // Update the vote vector for the suspect based on the output of the ANN
-
-    if( localMats ){                                                                                                    // If the input and output matrices are allocated locally, de-allocate them
-        cvReleaseMat( &input );
-        cvReleaseMat( &output );
-    }
-    RETURN;
+    suspect->setCatVotes( output, catCt );                                                                              // Update the vote vector for the suspect based on the output of the ANN
 }
 
-int HSOM::closestFeature( Feature* feat ){
-    ENTER;
-    int closestIndex = 0;                                                                                               // Initialize the search by setting the 0th feature to be the closest
-    double minDist = feat->dist( features[0] );
-    double currDist;
-    int i;
-#pragma omp parallel shared( closestIndex, minDist ) private( i, currDist  )                                            /// @keyword ts1247874477
-    { /* +omp */
-#pragma omp for nowait
-    for( i=1; i<l; i++ ){                                                                                               // Search over all features
-        currDist = feat->dist( features[i] );                                                                           // Calculate the distance between the input feature and the map feature at index i
-#pragma omp critical
-        { /* +omp */
-        if( currDist < minDist ){                                                                                       // If the current feature is closer than the closest feature so far, make the current feature the closest feature
-            closestIndex = i;
-            minDist = currDist;
+int HSOM::closestFeatureIndex( const Feature& feat )
+{
+    double globalMinDist = DBL_MAX;
+    int    globalMinIdx = -1;
+
+    double localMinDist = DBL_MAX;
+    int    localMinIdx = -1;
+    #pragma omp parallel firstprivate( localMinDist, localMinIdx )
+    {
+        #pragma omp for
+        for( int i=0; i<grid.l(); i++ )
+        {
+            double dist = feat.dist( grid[i] );                                                                         // Calculate the distance between the input feature and the map feature at index i
+            if( dist  < localMinDist )
+            {
+                localMinDist = dist;
+                localMinIdx = i;
+            }
         }
-        } /* -omp */
+        #pragma omp critical
+        {
+            if( localMinDist < globalMinDist )                                                                          // If the thread's local minimum feature is closer than the global minimum, make the local closest feature the global closest feature
+            {
+                globalMinDist = localMinDist;
+                globalMinIdx  = localMinIdx;
+            }
+        }
     }
-    } /* -omp */
-    RETURN closestIndex;
+    return globalMinIdx;
 }
 
-void HSOM::closestFeature( Feature* feat, int &x, int &y ){
-    ENTER;
-    getCoords( closestFeature( feat ), x, y );                                                                          // Use the protected closestFeature to find the index and translate it into coordinates
-    RETURN;
+PointPlus<int> HSOM::closestFeatureCoords( const Feature& feat )
+{
+    return grid.getCoords( closestFeatureIndex( feat ) );                                                               // Use the protected closestFeature to find the index and translate it into coordinates
 }
 
-void HSOM::preCalcWeights( const double alpha, const double radius ){
-    ENTER;
+void HSOM::preCalcWeights( const double alpha, const double radius )
+{
     double sigma = radius / FWHM_FACTOR;                                                                                // The radius will be used to describe the Full Width at Half Maximum of the gaussian weighting function.  We back-compute sigma from this.
     double twoSigmaSquared = 2 * pow( sigma, 2 );                                                                       // Value of 2 * sigma^2
-    weights.clear();
     weights = vector<double>( (int)radius + 1, 0.0 );
-    for( int i=0; i<(int)weights.size(); i++ )
+    for( unsigned int i=0; i<weights.size(); i++ )
         weights[i] = alpha * exp( -pow( i, 2.0 ) / twoSigmaSquared );                                                   // Calculate the gaussian weighting function.  This function is dependant on alpha, sigma, and current distance from origin.
-    RETURN;
 }
 
-void HSOM::updateSOM( Suspect* suspect ){
-    ENTER;
+void HSOM::updateSOM( const Suspect& suspect )
+{
     int dist, idx, x, y;
     vector<int> neighbors;
-    Feature* feat = suspect->getNextFeature();                                                                          // Begin extracting features from the suspect
+    Feature& feat = suspect.getNextFeature();
+    for( int i=0; i<suspect.featureCt(); i++ )
+    {
+        Feature& feat = suspect[i];
+    }
     while( feat != NULL ){                                                                                              // While the suspect has features to provide
         idx = closestFeature( feat );                                                                                   // Find the feature that is closest to the training feature
         getCoords( idx, x, y );                                                                                         // Get the coordinates of the closest feature

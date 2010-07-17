@@ -1,5 +1,6 @@
 #pragma once
 #include "feature.h"
+#include "tools.hpp"
 #define HU7_FIX
 
 /** The HuFeature class provides a feature based upon image data */
@@ -8,6 +9,8 @@ class HuFeature : public Feature
 private:
 
     static const std::string alias;
+    static RandMaster rng;
+
     std::vector<double> huVals;
 
     static std::vector<double> huAlpha;                                                                                                                        // Generated with training set and epsilon = 0.625

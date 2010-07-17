@@ -30,12 +30,11 @@ void ImageSuspect::resetFeatureSz( int featW, int featH ){
     this->featH = featH;
 }
 
-Feature* ImageSuspect::getNextFeature(){
-    ENTER;
-    Feature* feat = NULL;
+void ImageSuspect::getNextFeature( Feature& feat, bool isValid ){
                                                                                                                         //IplImage* imgSub = NULL;
     IplImage* mskSub = NULL;
-    while( imgX + featW < img->width && imgY + featH < img->height && feat == NULL ){
+    while( imgX + featW < img->width && imgY + featH < img->height && feat == NULL )
+    {
         mskSub = cropImage( msk, imgX, imgY, featW, featH );
         if( hasContent( mskSub ) ){
             /*
