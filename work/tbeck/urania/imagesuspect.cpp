@@ -2,62 +2,49 @@
 
 using namespace std;
 
-ImageSuspect::ImageSuspect( IplImage* img, IplImage* msk,
-                            int realCat, int catCt, int w, int h, int featW, int featH, string name ) :
-Suspect( name, realCat, catCt, w, h ){
-    ENTER;
-    this->img = cvCloneImage( img );
-    if( msk == NULL )
+ImageSuspect::ImageSuspect( const cv::Mat& img, const cv::Mat& msk,
+                            int realCat, int catCt,
+                            const SizePlus<int>& sz,
+                            const SizePlus<int>& featSz,
+                            string name ) :
+Suspect( name, realCat, catCt, sz )
+{
+    this->img = img.clone();
+    roi = RectPlus<int>( featSz );
+    if( msk.empty() )
         this->msk = starMask( img );
     else
-        this->msk = cvCloneImage( msk );
-    imgX = 0;
-    imgY = 0;
-    this->featW = featW;
-    this->featH = featH;
-    RETURN;
+        this->msk = msk.clone();
 }
 
-ImageSuspect::~ImageSuspect(){
-    ENTER;
-    cvReleaseImage( &img );
-    cvReleaseImage( &msk );
-    RETURN;
+ImageSuspect::~ImageSuspect(){}
+
+void ImageSuspect::resetFeatureSz( const SizePlus<int>& featSz )
+{
+    roi = RectPlus<int>( featSz );
 }
 
-void ImageSuspect::resetFeatureSz( int featW, int featH ){
-    this->featW = featW;
-    this->featH = featH;
-}
-
-void ImageSuspect::getNextFeature( Feature& feat, bool isValid ){
-                                                                                                                        //IplImage* imgSub = NULL;
-    IplImage* mskSub = NULL;
-    while( imgX + featW < img->width && imgY + featH < img->height && feat == NULL )
+void ImageSuspect::getNextFeature( Feature& feat )
+{
+    cv::Mat imgSub, mskSub;
+    RectPlus<int> bounds( img.size() );
+    currFeat = HuFeature();
+    while( bounds.contains( roi ) && currFeat.empty() )
     {
-        mskSub = cropImage( msk, imgX, imgY, featW, featH );
-        if( hasContent( mskSub ) ){
-            /*
-            imgSub = cropImage( img, imgX, imgY, featW, featH );
-             */
-            feat = new HuFeature( mskSub );
-            /*
-            feat = new HuFeature( imgSub );
-            feat = new ImageFeature( featW, featH, imgSub );
-            cvReleaseImage( &imgSub );
-             */
+        mskSub = crop( msk, roi );
+        if( hasContent( mskSub ) )
+        {
+            //imgSub = crop( img, roi );
+            currFeat = HuFeature( mskSub );
+            //feat = HuFeature( imgSub );
+            //feat = new ImageFeature( featW, featH, imgSub );
         }
-        cvReleaseImage( &mskSub );
-        imgX += STEP_SIZE;
-        if( imgX + featW >= img->width ){
-            imgY += STEP_SIZE;
-            imgX = imgY % STEP_SIZE;
-        }
+        roi += PointPlus<int>( STEP_SIZE, 0 );
+        if( roi.left() > bounds.left() )
+            roi.anchorOn( PointPlus<int>( roi.y % STEP_SIZE, roi.y + STEP_SIZE ) );
     }
-    if( feat == NULL ){                                                                                                 // If there are no more features in the image, reset the scan coordinates
-        imgX = 0;
-        imgY = 0;
-    }
-    RETURN feat;
+    if( currFeat.empty() )
+        roi.anchorOn( PointPlus<int>() );
+    feat = dynamic_cast<Feature&>( currFeat );
 }
 

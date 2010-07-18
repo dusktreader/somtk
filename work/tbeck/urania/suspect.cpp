@@ -2,92 +2,78 @@
 
 using namespace std;
 
-Suspect::Suspect( string name, int realCat, int catCt, int w, int h ){
-    ENTER;
-    this->name = name;
-    hist = new SOMHistogram( w, h );
-    this->realCat = realCat;
-    this->catCt = catCt;
-    votes = vector<double>( catCt, 0.0 );
-    RETURN;
+Suspect::Suspect( string name, int realCat, int catCt, const SizePlus<int>& sz )
+    : _name(name), _realCat(realCat)
+{
+    hist = SOMHistogram( sz );
+    _cats = cv::Mat_<double>( SizePlus<int>( 1, catCt, 0.0 ) );
 }
 
-Suspect::~Suspect(){
-    ENTER;
-    delete hist;
-    RETURN;
-}
+Suspect::~Suspect(){}
 
-void Suspect::setANNVectors( double* input, int inputW, double* output, int outputW ){
-    ENTER;
-    ASSERT_MSG( output == NULL || outputW == catCt, "Class count missmatch" );
+void Suspect::setANNVectors( cv::Mat_<double>& input, const cv::Mat_<double>& output )
+{
+    ASSERT_MSG( output.empty() || output.size() == _cats.size(), "Ouput size missmatch" );
     for( int i=0; i<inputW; i++ )
-        input[i] = hist->getBin( i );
-    if( output==NULL ){
-        RETURN;
-    }
-    for( int i=0; i<outputW; i++ )
-        output[i] = i==realCat ? 1.0 : -1.0;
-    RETURN;
+        input[0,i] = hist.grid()[i];
+    if( output.empty() )
+        return;
+    output = -1.0;
+    output[ 0, _realCat ] = 1.0;
 }
 
-void Suspect::setCatVotes( double* output, int outputW ){
-    ENTER;
-    ASSERT_MSG( outputW == catCt, "Class count mismatch" );
-    for( int i=0; i<outputW; i++ ){
-        votes[i] = output[i];
-    }
-    RETURN;
+void Suspect::setCats( const cv::Mat_<double>& output )
+{
+    ASSERT_MSG( output.size() = _cats.size(), "Output size missmatch" );
+    _cats = output;
 }
 
-vector<double> Suspect::getCatVotes(){
-    ENTER;
-    RETURN votes;
+cv::Mat_<double> Suspect::cats()
+{
+    return _cats;
 }
 
-int Suspect::getRealCat(){
-    ENTER;
-    RETURN realCat;
+int Suspect::realCat()
+{
+    return _realCat;
 }
 
-int Suspect::getPredCat(){
-    ENTER;
-    int maxVote = 0;
-    double maxVal  = votes[0];
-    for( int i=1; i<catCt; i++ ){
-        if( votes[i] >= maxVal ){                                                                                       /// @note that this will favor a higher category if two or more votes are equivalent
-            maxVote = i;
-            maxVal = votes[i];
+int Suspect::predCat()
+{
+    int maxIdx = -1;
+    double maxVal = -DBL_MAX;
+    for( int i=0; i<_cats.size().width; i++ )
+    {
+        if( _cats[0,i] > maxVal )
+        {
+            maxIdx = i;
+            maxVal = _cats[0,i];
         }
     }
-    RETURN maxVote;
+    return maxIdx;
 }
 
-void Suspect::incrementHistogram( int index ){
-    ENTER;
-    hist->increment( index );
-    RETURN;
+void Suspect::incrementHistogram( int idx )
+{
+    hist.grid()[idx]++;
 }
 
-void Suspect::incrementHistogram( int x, int y ){
-    ENTER;
-    hist->increment( x, y );
-    RETURN;
+void Suspect::incrementHistogram( const PointPlus<int>& pt )
+{
+    hist.grid()[pt]++;
 }
 
-void Suspect::normalizeHistogram(){
-    ENTER;
-    hist->normalize();
-    RETURN;
+void Suspect::normalizeHistogram()
+{
+    hist.normalize();
 }
 
-void Suspect::showHistogram( string msg ){
-    ENTER;
-    hist->showHistogram( msg );
-    RETURN;
+cv::Mat Suspect::vizHistogram()
+{
+    return hist.vizHistogram();
 }
 
-string Suspect::getName(){
-    ENTER;
-    RETURN name;
+string Suspect::name()
+{
+    return _name;
 }

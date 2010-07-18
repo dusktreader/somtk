@@ -5,77 +5,71 @@
 #include "cv.h"
 #include "cxcore.h"
 
+#include "tools.hpp"
+#include "cvtypesplus.hpp"
+
+/** This abstract base class provides the basic functionality for a HSOM suspect */
 class Suspect
 {
 private:
-    int predCat;
-    int realCat;
-    SOMHistogram* hist;
-    std::string name;
-    std::vector<double> votes;
-    int catCt;
+    int _predCat;
+    int _realCat;
+    SOMHistogram hist;
+    std::string _name;
+    cv::Mat_<double> _cats;
 
 public:
 
     /** Creates a new Suspect
-      * @param  name    - The name of the suspect
-      * @param  realCat - The category for this suspect
-      * @param  predCat - The predicted category for this suspect
-      * @param  w       - The correct width of the suspect's histogram
-      * @param  h       - The correct height of the suspect's histogram
+      * @param  name    - The name of this Suspect
+      * @param  realCat - The actual category for this suspect
+      * @param  catCt   - The number of categories possible for this suspect
+      * @param  sz      - The size of this Suspect's histogram
       */
-    Suspect( std::string name, int realCat, int catCt, int w, int h );
+    Suspect( std::string name, int realCat, int catCt, const SizePlus<int>& sz );
 
-    /** Destructs the Suspect */
+    /** Destructs this Suspect */
     virtual ~Suspect();
 
-    /** Fetches the next feature out of the suspect's data */
-    virtual Feature& getNextFeature() = 0;
+    /** Generates the next feature from this Suspect */
+    virtual void getNextFeature( Feature& feat ) = 0;
 
-    virtual bool hasMoreFeatures() = 0;
-
-    /** Sets ANN input and ouput vectors based upon the suspect's histogram
+    /** Sets ANN input and ouput vectors based upon this suspect's histogram
       * @param  input   - The ANN's input vector
-      * @param  inputW  - The width of the ANN's input vector
       * @param  output  - The ANN's output vector
-      * @param  outputW - The width of the ANN's output vector
       */
-    void setANNVectors( double* input, int inputW, double* output=NULL, int outputW=0 );
+    void setANNVectors( cv::Mat_<double>& input, cv::Mat_<double>& output );
 
-    /** Set's the Suspect's vote vector to an ANN's output
+    /** Sets this Suspect's vote vector to an ANN's output
       * @param  output  - The ANN's output vector
-      * @param  outputW - The width of the ANN's output vector
       */
-    void setCatVotes( double* output, int outputW );
+    void setCats( const cv::Mat_<double>& output );
 
-    /** Fetches the Suspect's vote vector */
-    std::vector<double> getCatVotes();
+    /** Fetches this Suspect's predicted category vector */
+    cv::Mat<double> cats();
 
-    /** Fetches the actual category of this Suspect
-      * @return The suspect's actual category that was set at initialization
-      */
-    int getRealCat();
+    /** Fetches the actual category of this Suspect */
+    int realCat();
 
     /** Gets the predicted category of this Suspect */
-    int getPredCat();
+    int predCat();
 
-    /** Increments a bin in the Suspect's histogram at a specified location
-      * @param  index - The index of the bin to increment
+    /** Increments a bin in this Suspect's histogram at a specified location
+      * @param  idx - The index of the bin to increment
       */
-    void incrementHistogram( int index );
+    void incrementHistogram( int idx );
 
-    /** Increments a bin in the Suspect's histogram at a specified location
-      * @param  x - The x location of the bin
-      * @param  y - The y location of the bin
+    /** Increments a bin in this Suspect's histogram at a specified location
+      * @param  pt - The location of the bin to increment
       */
-    void incrementHistogram( int x, int y );
+    void incrementHistogram( const PointPlus<int>& pt );
 
-    /** Normalizes the Suspect's histogram */
+    /** Normalizes this Suspect's histogram */
     void normalizeHistogram();
 
-    /** Shows a visualization of the histogram */
-    void showHistogram( std::string msg="" );
+    /** Fetches a visualization of this histogram */
+    cv::Mat vizHistogram();
 
-    /** Fetches the name of the Suspect */
-    std::string getName();
+    /** Fetches the name of this Suspect */
+    std::string name();
 };

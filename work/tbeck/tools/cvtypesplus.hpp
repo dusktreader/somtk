@@ -266,6 +266,20 @@ public:
         this->height = (T)( this->height * scl );
     }
 
+    RectPlus& operator+=( PointPlus<T>& dpt )
+    {
+        this->x += dpt.x;
+        this->y += dpt.y;
+        return *this;
+    }
+
+    RectPlus operator+( PointPlus<T>& dpt )
+    {
+        RectPlus<T> r = *this;
+        r += dpt;
+        return r;
+    }
+
     /** Scales this RectPlus by a constant scale factor relative to its own center */
     RectPlus& operator*=( double scl )
     {
@@ -279,6 +293,12 @@ public:
         double num = min( this->width, this->height );
         double den = max( this->width, this->height );
         return num / den;
+    }
+
+    /** Determines if this rectangle contains another */
+    bool contains( const RectPlus<T>& other )
+    {
+        return other.ul().inside( *this ) && other.lr().inside( *this );
     }
 
     /** Creates a set of rectangles that sub-divide this rectangle */
