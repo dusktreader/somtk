@@ -1,10 +1,16 @@
-#include "qtools.h"
+#pragma once
 
-using namespace std;
+#include <QImage>
+#include <QPixmap>
+#include <QRect>
+#include <QPoint>
+#include "cv.h"
+#include "cxcore.h"
+#include "tools.h"
 
-QPixmap cvMatToQPixmap( const cv::Mat& src, QSize size,
-                        Qt::TransformationMode tmode, Qt::AspectRatioMode amode,
-                        unsigned int trimBorder )
+/// @todo Document this file
+
+QPixmap cvMatToQPixmap( const cv::Mat &src, QSize size=QSize(), Qt::TransformationMode tmode=Qt::FastTransformation, Qt::AspectRatioMode amode=Qt::KeepAspectRatio, unsigned int trimBorder=0 )
 {
     QImage timg;
     cv::Mat tmp( src.size(), CV_8UC3 );
