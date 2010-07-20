@@ -40,6 +40,17 @@ order.
     here is to combine the visual inputs with the SDSS parameters to try
     to get a higher classification rate.
 
+  + TB:  This study seems to implement the common approach of preliminary
+    numerical decomposition using an array of historically preferred metrics.
+    These metrics are not used in human visual recognition, and may not
+    represent the optimal reduction of the data for neural clasification.
+    The authors also seem to prefer reduced training time and network simplicity
+    to accuracy.  This preference is a questionable goal for machine vision and
+    learning, especially when a neural network trained by any algorithm can
+    classify new suspects very quickly.  The use of a single output ANN is also
+    strange considering a single ANN could provide the three output regression
+    classes used in this study.
+
   + referenced in BAN10_
 
   + to be discussed 7/20/10
