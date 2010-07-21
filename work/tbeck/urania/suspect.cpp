@@ -5,13 +5,18 @@ using namespace std;
 Suspect::Suspect( string name, int realCat, int catCt, const SizePlus<int>& sz )
     : _name(name), _realCat(realCat)
 {
+    currFeat = NULL;
     hist = SOMHistogram( sz );
     _cats = cv::Mat_<double>( SizePlus<int>( 1, catCt, 0.0 ) );
 }
 
-Suspect::~Suspect(){}
+Suspect::~Suspect()
+{
+    if( currFeat != NULL )
+        delete currFeat;
+}
 
-void Suspect::setANNVectors( cv::Mat_<double>& input, const cv::Mat_<double>& output )
+void Suspect::setANNVectors( cv::Mat_<double>& input, cv::Mat_<double>& output )
 {
     ASSERT_MSG( output.empty() || output.size() == _cats.size(), "Ouput size missmatch" );
     for( int i=0; i<inputW; i++ )

@@ -18,6 +18,8 @@ private:
     std::string _name;
     cv::Mat_<double> _cats;
 
+    Feature* currFeature;
+
 public:
 
     /** Creates a new Suspect
@@ -32,7 +34,7 @@ public:
     virtual ~Suspect();
 
     /** Generates the next feature from this Suspect */
-    virtual void getNextFeature( Feature& feat ) = 0;
+    virtual Feature* getNextFeature() = 0;
 
     /** Sets ANN input and ouput vectors based upon this suspect's histogram
       * @param  input   - The ANN's input vector

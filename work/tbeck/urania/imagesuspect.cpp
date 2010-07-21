@@ -24,8 +24,11 @@ void ImageSuspect::resetFeatureSz( const SizePlus<int>& featSz )
     roi = RectPlus<int>( featSz );
 }
 
-void ImageSuspect::getNextFeature( Feature& feat )
+Feature* ImageSuspect::getNextFeature()
 {
+    if( currFeat != NULL )
+        delete currFeat;
+    currFeat = NULL;
     cv::Mat imgSub, mskSub;
     RectPlus<int> bounds( img.size() );
     currFeat = HuFeature();
@@ -35,7 +38,7 @@ void ImageSuspect::getNextFeature( Feature& feat )
         if( hasContent( mskSub ) )
         {
             //imgSub = crop( img, roi );
-            currFeat = HuFeature( mskSub );
+            currFeat = new HuFeature( mskSub );
             //feat = HuFeature( imgSub );
             //feat = new ImageFeature( featW, featH, imgSub );
         }
@@ -43,8 +46,8 @@ void ImageSuspect::getNextFeature( Feature& feat )
         if( roi.left() > bounds.left() )
             roi.anchorOn( PointPlus<int>( roi.y % STEP_SIZE, roi.y + STEP_SIZE ) );
     }
-    if( currFeat.empty() )
+    if( currFeat == NULL )
         roi.anchorOn( PointPlus<int>() );
-    feat = dynamic_cast<Feature&>( currFeat );
+    return currFeat;
 }
 

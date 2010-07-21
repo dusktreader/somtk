@@ -52,27 +52,6 @@ protected:
         _sz = SizePlus<int>();
     }
 
-    /** Fetches the index for the slot at the specified coordinates
-      * @param  pt - The point coordinate
-      * @return The vector index of the corresponding slot
-      */
-    int getIndex( const PointPlus<int>& pt )
-    {
-        ASSERT_MSG( pt.x >= 0 && pt.x < _sz.w, "x coordinate must be in the range [ 0 , w )" );
-        ASSERT_MSG( pt.y >= 0 && pt.y < _sz.h, "y coordinate must be in the range [ 0 , h )" );
-        return pt.y * _sz.w + pt.x;
-    }
-
-    /** Fetches the coordinates given an index
-      * @param  index - The index of the slot for which to fetch coords
-      * @return The point coordinate for the slot
-      */
-    PointPlus<int> getCoords( int idx )
-    {
-        ASSERT_MSG( idx < _sz.area(), "The index must not be greater than the grid's area" );
-        return PointPlus<int>( idx % w, idx / w );
-    }
-
     /** Fetches the neighbors for the slot at the specified coordinates
       * @param  pt - The point coordinate of the slot
       * @return A vector of indices for the immediate neighbors ( <=6 indices )
@@ -263,6 +242,34 @@ public:
     T& fetchItem( int idx )
     {
         return items[ idx ];
+    }
+
+    /** Fetches the index for the slot at the specified coordinates
+      * @param  pt - The point coordinate
+      * @return The vector index of the corresponding slot
+      */
+    int index( const PointPlus<int>& pt )
+    {
+        ASSERT_MSG( pt.x >= 0 && pt.x < _sz.w, "x coordinate must be in the range [ 0 , w )" );
+        ASSERT_MSG( pt.y >= 0 && pt.y < _sz.h, "y coordinate must be in the range [ 0 , h )" );
+        return pt.y * _sz.w + pt.x;
+    }
+
+    /** Fetches the coordinates given an index
+      * @param  index - The index of the slot for which to fetch coords
+      * @return The point coordinate for the slot
+      */
+    PointPlus<int> coords( int idx )
+    {
+        ASSERT_MSG( idx < _sz.area(), "The index must not be greater than the grid's area" );
+        return PointPlus<int>( idx % w, idx / w );
+    }
+
+    PointPlus<double> realCoords( const PointPlus<int>& pt )
+    {
+        ASSERT_MSG( pt.x >= 0 && pt.x < _sz.w, "x coordinate must be in the range [ 0 , w )" );
+        ASSERT_MSG( pt.y >= 0 && pt.y < _sz.h, "y coordinate must be in the range [ 0 , h )" );
+        return PointPlus<double>( x + ( y % 2 ) * 0.5, y * HG_B );
     }
 
     void write( cv::FileStorage& fs )

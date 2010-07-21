@@ -3,21 +3,20 @@
 #include "feature.h"
 #include "suspect.h"
 #include "imagesuspect.h"
-#include "local.h"
-#include "ThumbData.h"
-#include "SubClassifier.h"
 
-#define IMAGE_HSOM_ALIAS "IMAGE_HSOM"
+#include "tools.hpp"
+#include "cvtypesplus.hpp"
+
+#include "cv.h"
+#include "cxcore.h"
 
 /** The ImageHSOM class provides an image based Self-Organizing Map that uses distinct image features to classify */
-class ImageHSOM : public HSOM, public SubClassifier{
+class ImageHSOM : public HSOM
+{
 private:
 
-    /** The width of features in this HSOM */
-    int featW;
-
-    /** The height of features in this HSOM */
-    int featH;
+    /** The size of features in this HSOM */
+    SizePlus<int> _featSz;
 
 public:
 
@@ -25,33 +24,27 @@ public:
     ImageHSOM();
 
     /** Constructs an Image HSOM with specified size, feature size, and wrapping
-      * @param  w     - The desired width of the HSOM
-      * @param  h     - The desired height of the HSOM
-      * @param  featW - The desired width of the features in the HSOM
-      * @param  featH - The desired height of the features in the HSOM
+      * @param  sz     - The desired size of the HSOM's grid
+      * @param  featSz - The desired size of the features in the HSOM
       * @param  catCt - The number of possible suspect classes
       */
-    ImageHSOM( int w, int h, int featW, int featH, int catCt );
+    ImageHSOM( const SizePlus<int>& sz, const SizePlus<int>& featSz, int catCt );
 
     /** Constructs an Image HSOM from a save file
       * @param  fileName - The name of the file from which to load the HSOM
       */
     ImageHSOM( string fileName );
 
-    /** Constructs an Image HSOM from a file storage
-      * @param  fs   - The file storage from which to read
-      * @param  node - The node in which to begin reading
+    /** Constructs an Image HSOM from a file node
+      * @param  fn   - The file node from which to read
       */
-    ImageHSOM( CvFileStorage* fs, CvFileNode* node );
+    ImageHSOM( cv::FileNode& fn );
 
     /** Destructs the ImageHSOM */
     virtual ~ImageHSOM();
 
-    /** Fetches the size of features for this ImageHSOM
-      * @param  featW - The width of the feature
-      * @param  featH - The height of the feature
-      */
-    void getFeatSize( int &featW, int &featH );
+    /** Fetches the size of features for this ImageHSOM */
+    void featSz();
 
     /** Loads a list of suspects from a directory
       * @param  dirPath - The directory holding the image files

@@ -1,115 +1,123 @@
 #include "imagehsom.h"
-#include <time.h>
 
 using namespace std;
 
-ImageHSOM::ImageHSOM() : HSOM(){
-    ENTER;
-    featW = -1;
-    featH = -1;
-    RETURN;
-}
+const string ImageHSOM::alias = "ImageHSOM";
 
-ImageHSOM::ImageHSOM( int w, int h, int featW, int featH, int catCt ) : HSOM( w, h, catCt ) {
-    ENTER;
-    ASSERT_SET( this->featW, featW, featW > 0, "Feature width must have a positive size" );
-    ASSERT_SET( this->featH, featH, featH > 0, "Feature height must have a positive size" );
+ImageHSOM::ImageHSOM() : HSOM(){}
+
+ImageHSOM::ImageHSOM( const SizePlus<int>& sz, const SizePlus<int>& featSz, int catCt )
+    : HSOM( sz, catCt ), _featSz(featSz)
+{
     initFeatures();
-    RETURN;
 }
 
-ImageHSOM::ImageHSOM( string fileName ) : HSOM(){
-    ENTER;
+ImageHSOM::ImageHSOM( string fileName ) : HSOM()
+{
     load( fileName );
-    RETURN;
 }
 
-ImageHSOM::ImageHSOM( CvFileStorage* fs, CvFileNode* node ) : HSOM(){
-    ENTER;
-    read( fs, node );
-    RETURN;
+ImageHSOM::ImageHSOM( cv::FileNode& fn ) : HSOM()
+{
+    read( fn );
 }
 
-ImageHSOM::~ImageHSOM(){
-    ENTER;
-    RETURN;
+ImageHSOM::~ImageHSOM(){}
+
+void ImageHSOM::featSz()
+{
+    return _featSz;
 }
 
-void ImageHSOM::getFeatSize( int &featW, int &featH ){
-    ENTER;
-    featW = this->featW;
-    featH = this->featH;
-    RETURN;
-}
-
-void ImageHSOM::initFeatures(){
-    ENTER;
+void ImageHSOM::initFeatures()
+{
     for( int i=0; i<l; i++ )
-        features.push_back( new HuFeature() );
-    RETURN;
+        grid[i] = new HuFeature();
 }
 
-void ImageHSOM::AddData( ThumbData &input ){
-    ENTER;
-    IplImage img = (IplImage)input.original;
-    IplImage msk = (IplImage)input.simple;
-    int realCat = input.response;
-    string name = input.filename;
-    suspects.push_back( createSuspect( &img, &msk, realCat, name ) );
-    RETURN;
+/// @todo  determine if this function is necessary
+ImageSuspect* ImageHSOM::createSuspect( const cv::Mat& img, const cv::Mat& msk, int realCalt, string name )
+{
+    return new ImageSuspect( img, msk, realCat, catCt, w, h, featW, featH, name );
 }
 
-void ImageHSOM::Train(){
-    ENTER;
-    train( 10, 0.2, 0.3, 0, 0.0 );
-    RETURN;
+cv::Mat loadImage64f( string fileName, const SizePlus<int>& imgSz )
+{
+    cv::Mat src = cv::imread( fileName, 0 );
+    ASSERT_MSG( !src.empty(), "Couldn't load source image file." );
+    cv::Mat dst = cvtTo64f1c( src, imgSz);
+    return dst;
 }
 
-void ImageHSOM::Read( CvFileStorage* fs, CvFileNode* fsNode ){
-    ENTER;
-    read( fs, fsNode );
-    RETURN;
+cv::Mat cvtTo8u1c( const cv::Mat& src, const SizePlus<int>& imgSz )
+{
+    SizePlus<int> dstSz;
+    dstSz.w = imgSz.w == 0 ? src.size().width  : imgSz.w;
+    dstSz.h = imgSz.h == 0 ? src.size().height : imgSz.h;
+
+    cv::Mat::type()
+    cv::Mat tmp1( src.size(), src.depth(), )
+    IplImage* tmp1 = cvCreateImage( IPL_SZ(src), src->depth, 1 );
+    IplImage* tmp2 = cvCreateImage( IPL_SZ(src), IPL_DEPTH_8U, 1 );
+    IplImage* dst  = cvCreateImage( cvSize(imgW,imgH), IPL_DEPTH_8U, 1 );
+    switch( src->nChannels ){
+        case 4:
+        cvCvtColor( src, tmp1, CV_BGRA2GRAY );
+        break;
+        case 3:
+        cvCvtColor( src, tmp1, CV_BGR2GRAY );
+        break;
+        case 1:
+        cvCopy( src, tmp1 );
+        break;
+    }
+    cvNormalize( tmp1, tmp1, 0, 255, CV_MINMAX );
+    cvCvtScale( tmp1, tmp2 );
+    cvResize( tmp2, dst, CV_INTER_CUBIC );                                                                              // Note that resizing has to be done after scale conversion because OpenCV doesn't know how to resize a floating point image
+    cvReleaseImage( &tmp1 );
+    cvReleaseImage( &tmp2 );
+    RETURN dst;
 }
 
-void ImageHSOM::Write( CvFileStorage* fs ){
+IplImage* cvtTo64f1c( IplImage* src, int imgW, int imgH ){
     ENTER;
-    write( fs );
-    RETURN;
+    if( imgW == 0 )
+        imgW = src->width;
+    if( imgH == 0 )
+        imgH = src->height;
+    IplImage* tmp1 = cvCreateImage( cvSize(imgW,imgH), src->depth, src->nChannels );
+    IplImage* tmp2 = cvCreateImage( cvSize(imgW,imgH), src->depth, 1 );
+    IplImage* dst = cvCreateImage( cvSize(imgW,imgH), IPL_DEPTH_64F, 1 );
+    cvResize( src, tmp1, CV_INTER_CUBIC );
+    switch( src->nChannels ){
+        case 4:
+        cvCvtColor( tmp1, tmp2, CV_BGRA2GRAY );
+        break;
+        case 3:
+        cvCvtColor( tmp1, tmp2, CV_BGR2GRAY );
+        break;
+        case 1:
+        cvCopy( tmp1, tmp2 );
+        break;
+    }
+    cvCvtScale( tmp2, dst );
+    cvNormalize( dst, dst, 0, 1, CV_MINMAX );
+    cvReleaseImage( &tmp1 );
+    cvReleaseImage( &tmp2 );
+    RETURN dst;
 }
 
-vector<int> ImageHSOM::PredictCategorical( ThumbData &input ){
-    ENTER;
-    IplImage img = (IplImage)input.original;
-    IplImage msk = (IplImage)input.simple;
-    int realCat = input.response;
-    string name = input.filename;
-    Suspect* suspect = createSuspect( &img, &msk, realCat, name );
-    classify( suspect );
-    vector<int> predVect( 1, suspect->getPredCat() );
-    delete suspect;
-    RETURN predVect;
-}
-
-ImageSuspect* ImageHSOM::createSuspect( IplImage* img, IplImage* msk, int realCat, string name ){
-    ENTER;
-    ImageSuspect* suspect = new ImageSuspect( img, msk, realCat, catCt, w, h, featW, featH, name );
-    RETURN suspect;
-}
-
-bool ImageHSOM::loadSuspects( string dirPath, const vector<string> &fileList ){
-    ENTER;
+void ImageHSOM::loadSuspects( string dirPath, const vector<string> &fileList )
+{
     clearSuspects();
     string fileName;
     int suspectCt = fileList.size();
     int realCat;
-    IplImage* img;
-    IplImage* msk;
-    bool alive = statusCheck( 0, "Loading Suspects",
-                              "Loading Suspects", suspectCt );
-    for( int i=0; i<suspectCt; i++ ){
-        alive = statusCheck( i, "Loading Suspect " + num2str(i) );
-        if( !alive )
-            break;
+    cv::Mat img, msk;
+    ASSERT( statusCheck( 0, "Loading Suspects", "Loading Suspects", suspectCt ) );
+    for( int i=0; i<suspectCt; i++ )
+    {
+        ASSERT( statusCheck( i, "Loading Suspect " + num2str(i) ) );
         fileName = dirPath + OS_SEP_STR + fileList[i];
         img = loadImage64f( fileName, 128, 128 );
         msk = starMask( img );

@@ -1,74 +1,67 @@
-#include "somhistogram.h"                                                                                              
-                                                                                                                       
-using namespace std;                                                                                                   
-                                                                                                                       
-SOMHistogram::SOMHistogram() : HexGrid(){                                                                              
-    ENTER;                                                                                                             
-    RETURN;                                                                                                            
-}                                                                                                                      
-                                                                                                                       
-SOMHistogram::SOMHistogram( int w, int h ) : HexGrid( w, h ){                                                          
-    ENTER;                                                                                                             
-    bins = vector<double>( l, 0.0 );                                                                                   
-    RETURN;                                                                                                            
-}                                                                                                                      
-                                                                                                                       
-SOMHistogram::~SOMHistogram(){                                                                                         
-    ENTER;                                                                                                             
-    RETURN;                                                                                                            
-}                                                                                                                      
-                                                                                                                       
-void SOMHistogram::increment( int x, int  y ){                                                                         
-    ENTER;                                                                                                             
-    increment( getIndex( x, y ) );                                                                                     
-    RETURN;                                                                                                            
-}                                                                                                                      
-                                                                                                                       
-void SOMHistogram::increment( int index ){                                                                             
-    ENTER;                                                                                                             
-    bins[ index ]++;                                                                                                   
-    RETURN;                                                                                                            
-}                                                                                                                      
-                                                                                                                       
-void SOMHistogram::normalize(){                                                                                        
-    ENTER;                                                                                                             
-    double minVal = bins[0];                                                                                           
-    double maxVal = bins[0];                                                                                           
-    for( int i=1; i<l; i++ ){                                                                                          
-        minVal = min( bins[i], minVal );                                                                               
-        maxVal = max( bins[i], maxVal );                                                                               
-    }                                                                                                                  
-    for( int i=0; i<l; i++ )                                                                                           
-        bins[i] = ( bins[i] - minVal ) / maxVal;                                                                       
-    RETURN;                                                                                                            
-}                                                                                                                      
-                                                                                                                       
-double SOMHistogram::getBin( int idx ){                                                                                
-    ENTER;                                                                                                             
-    RETURN bins[idx];                                                                                                  
-}                                                                                                                      
-                                                                                                                       
-void SOMHistogram::showHistogram( string msg ){                                                                        
-    ENTER;                                                                                                             
-    double maximum = 0.0;                                                                                              
-    for( int i=0; i<l; i++ )                                                                                           
-        maximum = max( bins[i], maximum );                                                                             
-    int radius = 10;                                                                                                   
-    double buff = 2.5 * radius;;                                                                                       
-    int imgW = (int)( 0.5 * buff + buff * w );                                                                         
-    int imgH = (int)( buff * h * HG_B );                                                                               
-    IplImage* map = cvCreateImage( cvSize( imgW, imgH ), IPL_DEPTH_64F, 1 );                                           
-    cvSet( map, cvScalarAll( 0.0 ) );                                                                                  
-    int x, y;                                                                                                          
-    double xR, yR;                                                                                                     
-    for( int i=0; i<l; i++ ){                                                                                          
-        getCoords( i, x, y );                                                                                          
-        getRealCoords( x, y, xR, yR );                                                                                 
-        cvCircle( map, cvPoint( (int)(xR * buff + buff/2.0),                                                           
-                                (int)(yR * buff + buff/2.0) ),                                                         
-                  radius, cvScalarAll( bins[i] / maximum ), CV_FILLED );                                               
-    }                                                                                                                  
-    imgInWindow( map, msg );                                                                                           
-    cvReleaseImage( &map );                                                                                            
-    RETURN;                                                                                                            
-}                                                                                                                      
+#include "somhistogram.h"
+
+using namespace std;
+
+SOMHistogram::SOMHistogram(){}
+
+SOMHistogram::SOMHistogram( const SizePlus<int>& sz)
+{
+    grid = HexGrid<double>( sz );
+}
+
+SOMHistogram::~SOMHistogram(){}
+
+void SOMHistogram::increment( const PointPlus<int>& pt )
+{
+    grid[pt]++;
+}
+
+void SOMHistogram::increment( int idx )
+{
+    grid[idx]++;
+}
+
+void SOMHistogram::normalize()
+{
+    /// @todo  investigate other normalizations.
+    double minVal = grid[0];
+    double maxVal = grid[0];
+    for( int i=1; i<grid.l(); i++ )
+    {
+        minVal = min( grid[i], minVal );
+        maxVal = max( grid[i], maxVal );
+    }
+    for( int i=0; i<grid.l(); i++ )
+        grid[i] = ( grid[i] - minVal ) / maxVal;
+}
+
+double SOMHistogram::bin( int idx )
+{
+    return grid[idx];
+}
+
+cv::Mat SOMHistogram::vizHistogram()
+{
+    double minVal = grid[0];
+    double maxVal = grid[0];
+    for( int i=0; i<grid.l(); i++ )
+    {
+        minVal = min( minVal, grid[i] );
+        maxVal = max( maxVal, grid[i] );
+    }
+
+    int radius = 10;
+    double buff = 2.5 * radius;
+    mapSz = SizePlus<int>( (int)( 0.5 * buff + buff * w ), (int)( buff * h * HG_B ) );
+    cv::Mat map( mapSz );
+    map.setTo( 0 );
+    PointPlus<double> pt;
+    for( int i=0; i<l; i++ )
+    {
+        pt = grid.realCoords( grid.coords(i) );
+        pt.x = pt.x * buff + buff / 2.0;
+        pt.y = pt.y * buff + buff / 2.0;
+        cv::circle( map, pt, radius, cv::Scalar( ( grid[i] - minVal ) / maxVal * 255 ), CV_FILLED );
+    }
+    return map;
+}

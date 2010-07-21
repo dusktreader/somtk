@@ -44,5 +44,5 @@ public:
     void resetFeatureSz( const SizePlus<int>& featSz );
 
     /** Generates the next feature from this Suspect */
-    virtual void getNextFeature( Feature& feat );
+    virtual Feature* getNextFeature();
 };

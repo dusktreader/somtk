@@ -10,6 +10,8 @@
 #include "hexgrid.hpp"
 #include "suspect.h"
 
+#include <list>
+
 /** A slope tuning parameter for an inverse exponential function */
 #define A 0.1
 
@@ -30,15 +32,14 @@ private:
     /** The back-end Multilayer Perceptron Neural Network for classification */
     CvANN_MLP* ann;
 
-    HexGrid grid;
+    HexGrid<Feature*> grid;
 
     /** Trains the SOM component of the HSOM
       * @param  somEpochs  - The number of training epochs to use
       * @param  initAlpha  - The initial training weight
       * @param  initR      - The intial radius of the training neighborhood
-      * @return A boolean indicating if the training was interrupted
       */
-    bool trainSOM( int somEpochs, double initAlpha, double initR );
+    void trainSOM( int somEpochs, double initAlpha, double initR );
 
     /** Generates the SOMHistograms needed for trainning the HSOM
       * @return A boolean indicating if the training was interrupted
@@ -50,18 +51,18 @@ private:
       * @param  annEps     - The minimum adjustment size for ANN training
       * @return A boolean indicating if the training was interrupted
       */
-    bool trainANN( int annIters, double annEps );
+    void trainANN( int annIters, double annEps );
 
 protected:
 
     /** A list of suspects for training or classification */
-    std::vector<Suspect*> suspects;
+    std::list<Suspect> suspects;
 
     /** A set of precalculated gaussian weights for updating the SOM */
     std::vector<double> weights;
 
     /** The number of categories that this Hybrid SOM will classifiy */
-    int catCt;
+    int _catCt;
 
     /** Performs a status check that may interface to an interactive control
       * @param  iteration - The current iteration
@@ -72,9 +73,8 @@ protected:
       */
     virtual bool statusCheck( int iteration, std::string msg1="", std::string msg2="", int maxIters=0 );
 
-    /** Preprocessing for the suspects.  May be implemented by child class.
-      * This function does nothing at all in this context */
-    virtual bool analyzeSuspects( );
+    /** Preprocessing for the suspects.  Implemented by child class. */
+    virtual bool analyzeSuspects( ) = 0;
 
     /** Initializes the features of this SOM */
     virtual void initFeatures() = 0;
