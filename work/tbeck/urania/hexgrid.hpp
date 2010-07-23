@@ -45,13 +45,6 @@ protected:
     /** A set of markers for the slots of the grid */
     std::vector<Mark> marks;
 
-    /** Clears the hex grid */
-    virtual void clear()
-    {
-        items.clear();
-        _sz = SizePlus<int>();
-    }
-
     /** Fetches the neighbors for the slot at the specified coordinates
       * @param  pt - The point coordinate of the slot
       * @return A vector of indices for the immediate neighbors ( <=6 indices )
@@ -152,6 +145,15 @@ public:
         setSize( sz );
     }
 
+    /** Constructs the hex grid with a specified size and item value
+      * @param  sz - The desired size of the hex grid
+      */
+    HexGrid( const SizePlus<int>& sz, const T& item )
+    {
+        setSize( sz );
+        setTo( item );
+    }
+
     virtual ~HexGrid(){}
 
     /** Sets the size of the grid
@@ -167,6 +169,20 @@ public:
         items  = std::vector<T>(      l() );
         values = std::vector<double>( l() );
         marks  = std::vector<Mark>(   l() );
+    }
+
+    /** Clears the hex grid */
+    virtual void clear()
+    {
+        items.clear();
+        _sz = SizePlus<int>();
+    }
+
+    /** Sets all of the slots in the grid to the specified item */
+    virtual void setTo( const T& item )
+    {
+        for( int i=0; i<l(); i++ )
+            items[i] = item;
     }
 
     /** Resets the size of the grid and re-initializes it

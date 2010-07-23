@@ -27,8 +27,6 @@ SOURCES += feature.cpp \
     imagesuspect.cpp \
     hufeature.cpp \
     traindialog.cpp \
-    hexgridtest.cpp \
-    unittest.cpp \
     ../tools/tools.cpp \
 
 HEADERS += feature.h \
@@ -44,8 +42,6 @@ HEADERS += feature.h \
     imagesuspect.h \
     hufeature.h \
     traindialog.h \
-    hexgridtest.h \
-    unittest.h \
     ../tools/tools.hpp \
     ../tools/cvtools.hpp \
     ../tools/cvtypesplus.hpp \

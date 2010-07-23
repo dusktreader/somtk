@@ -11,6 +11,11 @@ SOMHistogram::SOMHistogram( const SizePlus<int>& sz)
 
 SOMHistogram::~SOMHistogram(){}
 
+void SOMHistogram::reset()
+{
+    grid.setTo( 0.0 );
+}
+
 void SOMHistogram::increment( const PointPlus<int>& pt )
 {
     grid[pt]++;
@@ -38,6 +43,11 @@ void SOMHistogram::normalize()
 double SOMHistogram::bin( int idx )
 {
     return grid[idx];
+}
+
+double SOMHistogram::bin( const PointPlus<int>& pt )
+{
+    return grid[pt];
 }
 
 cv::Mat SOMHistogram::vizHistogram()
