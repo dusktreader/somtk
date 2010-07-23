@@ -12,6 +12,7 @@
 #include <omp.h>
 #include <cfloat>
 #include <cmath>
+#include <cstdlib>
 
 #ifndef PI
 #define PI 3.1415926535897931
@@ -188,13 +189,6 @@ R convert( const I& in )
     R ret();
     ASSERT_MSG( !( ss >> ret ).fail(), "Conversion failed" );
     return ret;
-}
-
-/** Converts a numerical character value to an int */
-int char2Int( char a )
-{
-    ASSERT_MSG( a >= '0' && a <= '9', "Character must be a numeral" );
-    return (int)(a-'0');
 }
 
 /** Prints a labeled variable to an output stream
@@ -375,8 +369,6 @@ public:
     }
 };
 
-unsigned int RandMaster::seed = 0;
-
 /** Utility class used to represent a numeric interval.  The intervals can be open or closed on either end independently
   * and various tests and numbers can be generated within this interval
   */
@@ -522,7 +514,9 @@ public:
     /** Returns a string representation of the interval */
     std::string str()
     {
-        return string( (_loOpen?"( ":"[ ") + num2str(_lo) + ", " + num2str(_hi) + (_hiOpen?" )":" ]") );
+        return std::string( _loOpen? "( " : "[ " ) +
+               num2str(_lo) + ", " + num2str(_hi) +
+               std::string( _hiOpen? " )" : " ]" );
     }
 
     /** Overloads the ostream operator for printing */
@@ -544,51 +538,34 @@ inline double toDegrees( double radians )
     return radians * 180.0 / PI;
 }
 
+/** Converts a numerical character value to an int */
+int char2Int( char a );
+
 /** Performs a division and modulo operation
   * @param  dividend  - The dividend   ( Numerator )
   * @param  divisor   - The divisor    ( Denominator )
   * @param  quotient  - The quotient   ( Result for division )
   * @param  remainder - The remeainder ( Result for modulo )
   */
-void divmod( int dividend, int divisor, int &quotient, int &remainder )
-{
-    quotient = dividend / divisor;
-    remainder = dividend - divisor * quotient;
-}
+void divmod( int dividend, int divisor, int &quotient, int &remainder );
 
+/** Provides a mathematically correct integer modulus function
+  * @param  a - The dividend
+  * @param  b - The divisor
+  * @return The result of the modulus operation
+  */
+int mod( int a, int b );
 
 /** Converts a set of coordinates for an n-dimensional cartesian space into a linear array index
   * @param  idx    - The store reference for the calculated index
   * @param  dims   - The dimension sizes of the cartesian n-space
   * @param  coords - The cartesian coordinates to convert
   */
-void coords2index( int &idx, const std::vector<int> &dims, const std::vector<int> &coords )
-{
-    ASSERT_MSG( coords.size() == dims.size(), "Dimension missmatch" );
-    for( int i=0; i<(int)coords.size(); i++ )
-        ASSERT_MSG( coords[i] < dims[i], "Coorinate " + num2str(i) + " exceeds dimensional limit" );
-    idx = 0;
-    int t;
-    for( int i=0; i<(int)dims.size(); i++ )
-    {
-        t = coords[i];
-        for( int j=i+1; j<(int)dims.size(); j++ )
-            t *= dims[j];
-        idx += t;
-    }
-}
+void coords2index( int &idx, const std::vector<int> &dims, const std::vector<int> &coords );
 
 /** Converts a linear array index into a set of coordiantes for an n-dimensional cartesian space
   * @param  idx    - The linear array index to convert
   * @param  dims   - The dimension sizes of the cartesian n-space
   * @param  coords - The cartesian coordinates to convert
   */
-void index2coords( int idx, const std::vector<int> &dims, std::vector<int> &coords )
-{
-    int t = idx;
-    coords = vector<int>( dims.size(), 0 );
-    for( int i=dims.size()-1; i>1; i-- )
-        divmod( t, dims[i], t, coords[i] );
-    divmod( t, dims[1], coords[0], coords[1] );
-}
-
+void index2coords( int idx, const std::vector<int> &dims, std::vector<int> &coords );

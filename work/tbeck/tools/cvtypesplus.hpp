@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cxcore.h>
-#include "tools.h"
+#include "tools.hpp"
 
 /** Describes a thin wrapper for the cv::Point_ class that adds some extra functionality */
 template <class T>
@@ -128,6 +128,14 @@ public:
     {
         this->w *= scale;
         this->h *= scale;
+        return *this;
+    }
+
+    /** Copies data from another SizePlust */
+    SizePlus<T>& operator=( const SizePlus<T>& other )
+    {
+        this->width  = other.width;
+        this->height = other.height;
         return *this;
     }
 

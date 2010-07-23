@@ -43,6 +43,9 @@ public:
     /** Destructs the ImageHSOM */
     virtual ~ImageHSOM();
 
+    /** Initializes the features in the HSOM */
+    virtual void initFeatures();
+
     /** Fetches the size of features for this ImageHSOM */
     void featSz();
 
@@ -53,38 +56,17 @@ public:
       */
     virtual bool loadSuspects( std::string dirPath, const std::vector<std::string> &fileList );
 
-    /** Creates an ImageSuspect from an image, category, and name
-      * @param  img     - The picture of the suspect
-      * @param  msk     - The mask image of the suspect ( if provided )
-      * @param  realCat - The category of the suspect
-      * @param  name    - The name of the suspect
-      * @return The new suspect
-      */
-    ImageSuspect* createSuspect( IplImage* img, IplImage* msk=NULL, int realCat=0, std::string name="unnamed" );
-
     /** Analyzes the hu moments of features from the suspect list to calibrate the sigmoid function */
-    virtual bool analyzeSuspects();
-
-    /** Initializes the features in the HSOM */
-    virtual void initFeatures();
+    virtual void analyzeSuspects();
 
     /** Reads ImageHSOM configuration from a file storage object
-      * @param  fs   - The file storage from which to read
-      * @param  node - The node at which to begin looking.  If NULL, start from the root
+      * @param  fs   - The file node from which to read
       */
-    virtual void read(  CvFileStorage* fs, CvFileNode* node=NULL );
+    virtual void read( const cv::FileNode& fn );
 
     /** Writes the ImageHSOM configuration to a file storage object
       * @param  fs - The file storage in which to write
       */
-    virtual void write( CvFileStorage* fs );
-
-    /* The following functions add compatability with SubClassifier framework */
-
-    virtual void AddData( ThumbData &input );
-    virtual void Train();
-    virtual void Read( CvFileStorage* fs, CvFileNode* fsNode );
-    virtual void Write( CvFileStorage* fs );
-    std::vector<int> PredictCategorical( ThumbData &input );
+    virtual void write( cv::FileStorage& fs );
 
 };

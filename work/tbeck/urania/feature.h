@@ -46,7 +46,7 @@ public:
 
     bool empty();
 
-    void read( CvFileStorage* fs, CvFileNode* node=NULL );
-    void write( CvFileStorage* fs );
+    void read( const cv::FileNode& fn );
+    void write( cv::FileStorage& fs );
 
 };

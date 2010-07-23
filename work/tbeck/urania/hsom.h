@@ -56,7 +56,7 @@ private:
 protected:
 
     /** A list of suspects for training or classification */
-    std::list<Suspect> suspects;
+    std::list<Suspect*> suspects;
 
     /** A set of precalculated gaussian weights for updating the SOM */
     std::vector<double> weights;
