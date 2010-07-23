@@ -47,19 +47,19 @@ void SOMHistogramTest::vizHistogramTest()
 
     string fileName = "~/test.jpg";
     reset();
-    for( int i=0; i<l(); i++ )
+    for( int i=0; i<grid.l(); i++ )
         for( int j=0; j<i; j++ )
             increment( i );
-    cv::Mat viz = visHistogram();
-    cv::imwrite( fileName, viz );
+    cv::Mat viz = vizHistogram();
+    //SHOWW( viz );
 
-    string answer;
-    while( answer != "yes" || answer != "no" )
+    string answer = "yes";
+    while( answer != "yes" && answer != "no" )
     {
         cout << "Please enter 'yes' or 'no'" << endl;
         cout << "Is the output image (" + fileName + ") correct?" << endl;
         cin >> answer;
-        transform( answer.begin(), answer.end(), answer.begin(), tolower );
+        transform( answer.begin(), answer.end(), answer.begin(), ::tolower );
     }
     ASSERT_MSG( answer == "yes",
                 "Failed " + funcName + " test " + num2str(testNum++) + " : Visualize histogram test" );
@@ -99,15 +99,15 @@ void SOMHistogramTest::normalizeTest()
                 "Failed " + funcName + " test " + num2str(testNum++) + " : Normalize test 0" );
 
     reset();
-    int index = 27;
+    index = 27;
     for( int i=index; i<index+4; i++ )
-        for( int j=1; j<i+1-index; j++ )
+        for( int j=0; j<i+1-index; j++ )
             increment( i );
     normalize();
-    ASSERT_MSG( bin( 26 ) - 0.25 < EPSILON &&
-                bin( 27 ) - 0.50 < EPSILON &&
-                bin( 28 ) - 0.75 < EPSILON &&
-                bin( 29 ) - 1.00 < EPSILON &&
-                bin( 30 ) - 0.00 < EPSILON,
+    ASSERT_MSG( bin( 27 ) - 0.25 < EPSILON &&
+                bin( 28 ) - 0.50 < EPSILON &&
+                bin( 29 ) - 0.75 < EPSILON &&
+                bin( 30 ) - 1.00 < EPSILON &&
+                bin( 31 ) - 0.00 < EPSILON,
                 "Failed " + funcName + " test " + num2str(testNum++) + " : Normalize test 1" );
 }

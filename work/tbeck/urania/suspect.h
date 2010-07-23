@@ -11,14 +11,14 @@
 /** This abstract base class provides the basic functionality for a HSOM suspect */
 class Suspect
 {
-private:
+protected:
     int _predCat;
     int _realCat;
     SOMHistogram hist;
     std::string _name;
     cv::Mat_<double> _cats;
 
-    Feature* currFeature;
+    Feature* currFeat;
 
 public:
 
@@ -48,13 +48,16 @@ public:
     void setCats( const cv::Mat_<double>& output );
 
     /** Fetches this Suspect's predicted category vector */
-    cv::Mat<double> cats();
+    cv::Mat_<double> cats();
 
     /** Fetches the actual category of this Suspect */
     int realCat();
 
     /** Gets the predicted category of this Suspect */
     int predCat();
+
+    /** Gets the number of cats possible for this Suspect */
+    int catCt();
 
     /** Increments a bin in this Suspect's histogram at a specified location
       * @param  idx - The index of the bin to increment

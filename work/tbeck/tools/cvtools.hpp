@@ -25,111 +25,21 @@
 #define SHOWW( img )   { cv::namedWindow( #img, 0 ), cv::imshow( #img, img ); cv::waitKey(0); }
 #define SHOWN( img ) {  cv::namedWindow( #img, 0 ), cv::imshow( #img, img ); }
 
-#ifndef EPS
-#define EPS 1e-10
+#ifndef EPSILON
+#define EPSILON 1e-10
 #endif
 
-/// @todo  Document this file
-
-cv::Mat crop( const cv::Mat& src, const RectPlus<int>& roi )
-{
-    cv::Mat sub( roi.size(), src.type() );
-    sub.setTo( 0 );
-
-    if( roi.right() <= 0 || roi.bottom() <= 0 || roi.left() > src.cols || roi.top() > src.rows )
-        return sub;
-
-    RectPlus<int> srcRoi, subRoi;
-    srcRoi = roi;
-
-    srcRoi.x = max( 0, roi.x );
-    srcRoi.y = max( 0, roi.y );
-
-    subRoi.x = srcRoi.x - roi.x;
-    subRoi.y = srcRoi.y - roi.y;
-
-    subRoi.width  = srcRoi.width  = min( roi.width  - subRoi.x, src.cols - srcRoi.x );
-    subRoi.height = srcRoi.height = min( roi.height - subRoi.y, src.rows - srcRoi.y );
-
-    cv::Mat wrk( sub, subRoi );
-    cv::Mat( src, srcRoi ).copyTo( wrk );
-
-    return sub;
-}
-
-
-void tophat1D( const cv::Mat& src, cv::Mat& dst, int crownW=10, int brimW=5, int height=3, bool overX=true, bool overY=false, bool invert=false, bool norm=false, const cv::Mat& msk=cv::Mat() )
-{
-    ASSERT_MSG( src.cols > 0 && src.rows > 0, "The source image must have a valid size" );
-    ASSERT_MSG( msk.empty() || msk.size() == src.size(), "Mask must be the same size as the source image" );
-    ASSERT_MSG( height > 0 && height <=255, "The height must lie in the range [1..255]" );
-    ASSERT_MSG( crownW > 1, "The crown width must be greater than 2 " );
-    ASSERT_MSG( brimW > 0, "The brim width must be greater than 0" );
-    ASSERT_MSG( overX != overY, "X-wise or Y-wise operations are mutually exclusive" );
-
-    vector<cv::Mat> srcStack, dstStack;
-    cv::split( src, srcStack );
-    for( unsigned int idx=0; idx<srcStack.size(); idx++ )
-    {
-        cv::Mat wrk = srcStack[idx];
-        if( invert )
-            wrk = ~wrk;
-
-        int w, h;
-        h = w = 2 * brimW + crownW;
-
-        cv::Mat dst( wrk.size(), CV_8UC1 );
-        dst.setTo( 0 );
-
-        cv::Mat crownMaskX( cv::Size(w,1), CV_8UC1 );
-        for( int j=0; j<w; j++ )
-            crownMaskX.at<uchar>(0,j) = j >= brimW && j < w - brimW ? 255 : 0;
-        cv::Mat brimMaskX = ~crownMaskX;
-
-        cv::Mat crownMaskY( cv::Size(1,h), CV_8UC1 );
-        for( int i=0; i<h; i++ )
-            crownMaskY.at<uchar>(i,0) = i >= brimW && i < h - brimW ? 255 : 0;
-        cv::Mat brimMaskY = ~crownMaskY;
-
-        cv::Mat roiX, roiY;
-        cv::Scalar brimMean, crownMean;
-
-        #pragma omp parallel for private( roiX, roiY, brimMean, crownMean )
-        for( int i=h/2; i<wrk.rows-h/2; i++ )
-        {
-            for( int j=w/2; j<wrk.cols-w/2; j++ )
-            {
-                if( !msk.empty() && msk.at<uchar>(i,j) == 0 )
-                    continue;
-                if( overX )
-                {
-                    roiX = cv::Mat( wrk, cv::Rect(j-w/2,i,w,1) );
-                    brimMean = cv::mean( roiX, brimMaskX );
-                    crownMean = cv::mean( roiX, crownMaskX );
-                }
-
-                if( overY )
-                {
-                    roiY = cv::Mat( wrk, cv::Rect(j,i-h/2,1,h) );
-                    brimMean = cv::mean( roiY, brimMaskY );
-                    crownMean = cv::mean( roiY, crownMaskY );
-                }
-
-                int diff = (int)abs( crownMean[0] - brimMean[0] );
-                if( diff > height )
-                    dst.at<uchar>( i, j ) = diff;
-            }
-        }
-        if( norm )
-            cv::normalize( dst, dst, 0, 255, cv::NORM_MINMAX );
-        dstStack.push_back( dst );
-    }
-    cv::merge( dstStack, dst );
-}
-
-
+/** Prints a cv::Mat to an output stream
+  * @param  M          - The matrix to print
+  * @param  label      - The string label to apply to the matrix print out
+  * @param  abbreviate - Only print the corners of the matrix
+  * @param  prec       - The precision to print for matrices composed of double and float values
+  * @param  width      - The width of printed matrix values
+  * @param  out        - The output stream in which to print the matrix
+  */
 template<class T>
-void printCVMat( cv::Mat_<T> M, std::string label="matrix", bool abbreviate=false, int prec=2, int width=0, std::ostream &out=std::cout ){
+void printCVMat( cv::Mat_<T> M, std::string label="matrix", bool abbreviate=false, int prec=2, int width=0, std::ostream &out=std::cout )
+{
     out << label << std::endl
         << "------------" << std::endl;
     for( int i=0; i<M.rows; i++ )
@@ -153,7 +63,6 @@ void printCVMat( cv::Mat_<T> M, std::string label="matrix", bool abbreviate=fals
     }
 }
 
-
 /** Prints the file, line, matrix name, and matrix values
   * @param  mat - The matrix to report
   */
@@ -162,138 +71,63 @@ void printCVMat( cv::Mat_<T> M, std::string label="matrix", bool abbreviate=fals
                                    printCVMat( mat, #mat, true, 2, 0, op ); \
                                    std::cout << op.str() << std::flush; }
 
+/** Crops the specified rectangle out of the image.
+  * @param  src - The image from which to crop the selection
+  * @param  roi - The rectangular region to crop from the image
+  * @note   Parts of the rectangle that fall out of the source image are set to black
+  */
+cv::Mat crop( const cv::Mat& src, const RectPlus<int>& roi );
 
-void makeHisto1D( const cv::Mat& src, std::vector<double>& hist, int binCt, const cv::Mat& msk=cv::Mat() )
-{
-    ASSERT_MSG( src.type() == CV_8UC1, "This method can only use 8 bit single channel images" );
-    ASSERT_MSG( msk.type() == CV_8UC1, "Only an 8 bit single channel mask may be used" );
+/** Performs a 1D TopHat filter on the image
+  * @param  src    - The source image to filter
+  * @param  dst    - The filtered version of the source image
+  * @param  crownW - The width of the crown of the filter
+  * @param  brimW  - The width of the brim of the filter
+  * @param  height - The height of the crown above the brim
+  * @param  overX  - Filter the image in an x-wise fasion
+  * @param  overY  - Filter the image in an y-wise fasion
+  * @param  invert - Invert the source image before filtering
+  * @param  norm   - Normalize the result image after filtering
+  * @param  msk    - The image filtering binary mask
+  */
+void tophat1D( const cv::Mat& src, cv::Mat& dst, int crownW=10, int brimW=5, int height=3, bool overX=true, bool overY=false, bool invert=false, bool norm=false, const cv::Mat& msk=cv::Mat() );
 
-    hist = vector<double>( binCt, 0.0 );
-    int N = 0;
+/** Makes a 1D histogram of the matrix values
+  * @param  src   - The matrix to profile
+  * @param  hist  - The vector of doubles in which to store the histogram values
+  * @param  binCt - The number of bins in which to store the profile
+  * @param  msk   - The binary operation mask for the source image
+  */
+void makeHisto1D( const cv::Mat& src, std::vector<double>& hist, int binCt, const cv::Mat& msk=cv::Mat() );
 
-    for( int i=0; i<src.rows; i++ )
-    {
-        for( int j=0; j<src.rows; j++ )
-        {
-            if( !msk.empty() && msk.at<uchar>(i,j) == 0 )
-                continue;
-            hist[ src.at<uchar>( i, j ) * binCt / 256 ]++;
-            N++;
-        }
-    }
-    for( int i=0; i<binCt; i++ )
-    {
-        hist[i] /= N;
-    }
+/** Performs a multi-level Otsu thresholding operation
+  * @param  src - The source image on which to perform the thresholding
+  * @param  dst - The image that will store the results of the thresholding
+  * @param  M   - The number of levels to use for thresholding
+  * @note   Any value of M greater than 5 will be extremely slow
+  */
+void multiOtsu( const cv::Mat& src, cv::Mat& dst, int M=4 );
 
+/** Perform a Difference of Gaussians filterin operation
+  * @param  src   - The source image on which to perform the DoG filter
+  * @param  dst   - The image that will store the results of the DoG filter
+  * @param  size0 - The width of the first Gaussian aperature
+  * @param  size1 - The width of the second Gaussian aperature
+  */
+void filterDoG( const cv::Mat& src, cv::Mat& dst, int size0, int size1 );
 
-}
+/** Visualizes points as colored circles on an image
+  * @param  src    - The source image on which to draw the points
+  * @param  points - The vector of points to draw
+  * @param  radius - The radius of the circles which shall be drawn
+  * @param  width  - The thickness of the circles which shall be drawn
+  * @param  color  - The color of the circles which shall be drawn
+  * @return A copy of the source image with colored circles drawn on it
+  */
+cv::Mat drawPoints( const cv::Mat& src, std::vector< PointPlus<double> >& points, int radius=3, int width=1, cv::Scalar color=CV_NRED );
 
-void multiOtsu( const cv::Mat& src, cv::Mat& dst, int M=4 )
-{
-    int L = 256;
-    vector<double> p;
-    makeHisto1D( src, p, L );
-
-    cv::Mat_<double> H = cv::Mat_<double>( L, L, 0.0 );
-    cv::Mat_<double> P = H.clone();
-    cv::Mat_<double> S = H.clone();
-
-    for( int u=0; u<L; u++ )
-    {
-        for( int v=u; v<L; v++ )
-        {
-            if( u == 0 )
-            {
-                if( v ==0 )
-                {
-                    P( 0, 0 ) = p[0];
-                    S( 0, 0 ) = p[0];
-                }
-                else
-                {
-                    P( 0, v ) = P( 0, v-1 ) + p[v];
-                    S( 0, v ) = S( 0, v-1 ) + v * p[v];
-                }
-            }
-            else
-            {
-                P( u, v ) = P( 0, v ) - P( 0, u - 1 );
-                S( u, v ) = S( 0, v ) - S( 0, u - 1 );
-            }
-            H( u, v ) = pow( S( u, v ), 2.0 ) / P( u, v );
-        }
-    }
-
-    int w = L - M,
-        h = M - 1;
-    int divs[h];
-    for( int i=0; i<h; i++ )
-        divs[i] = i;
-    divs[h-1] = divs[h-2];
-    double varMax = 0.0;
-    vector< pair<int,int> > tMax;
-    while( divs[0] < w )
-    {
-        int i = h - 1;
-        divs[i]++;
-        while( divs[i] > i + w )
-            divs[--i]++;
-        while( ++i < h )
-            divs[i] = divs[i-1] + 1;
-
-        vector< pair<int,int> > t;
-        t.push_back( pair<int,int>( 0, divs[0] ) );
-        for( int i=1; i<M-1; i++ )
-            t.push_back( pair<int,int>( divs[i-1]+1, divs[i] ) );;
-        t.push_back( pair<int,int>( divs[h-1]+1, L-1 ) );
-
-        double var = 0.0;
-        for( unsigned int j=0; j<t.size(); j++ )
-            var += H[t[j].first][t[j].second];
-
-        if( var > varMax )
-        {
-            varMax = var;
-            tMax = t;
-        }
-    }
-
-    vector<int> clrMap(256,0);
-
-    for( int i=0; i<M; i++ )
-        for( int j=tMax[i].first; j<=tMax[i].second; j++ )
-            clrMap[j] = i * 255 / ( M-1 );
-
-    //printList( clrMap, 256, "clrMap", false );
-
-    dst = cv::Mat( src.size(), CV_8UC1 );
-    for( int i=0; i<dst.rows; i++ )
-        for( int j=0; j<dst.cols; j++ )
-            dst.at<uchar>( i, j ) = clrMap[ src.at<uchar>( i, j ) ];
-}
-
-void filterDoG( const cv::Mat& src, cv::Mat& dst, int size0, int size1 )
-{
-    cv::Mat dog1, dog2;
-    cv::GaussianBlur( src, dog1, cv::Size( size0, size0 ), 0 );
-    cv::GaussianBlur( src, dog2, cv::Size( size1, size1 ), 0 );
-    dst = cv::abs( dog1 - dog2 );
-}
-
-cv::Mat drawPoints( const cv::Mat& src, std::vector< PointPlus<double> >& points, int radius=3, int width=1, cv::Scalar color=CV_NRED )
-{
-    cv::Mat ptImg;
-    if( src.channels() == 1 )
-        cv::cvtColor( src, ptImg, CV_GRAY2RGB );
-    else
-        ptImg = src.clone();
-    for( unsigned int i=0; i<points.size(); i++ )
-        cv::circle( ptImg, points[i], radius, color, width );
-    return ptImg;
-}
-
-cv::Mat strel( int size )
-{
-    return cv::getStructuringElement( cv::MORPH_ELLIPSE, cv::Size(size,size) );
-}
+/** Creates a structuring element for OpenCV morphological image filters
+  * @param  size - The width of the structuring element
+  * @return A structuring element of the specified size
+  */
+cv::Mat strel( int size );

@@ -5,9 +5,9 @@ using namespace std;
 Suspect::Suspect( string name, int realCat, int catCt, const SizePlus<int>& sz )
     : _name(name), _realCat(realCat)
 {
-    currFeat = NULL;
+    Feature* currFeat;
     hist = SOMHistogram( sz );
-    _cats = cv::Mat_<double>( SizePlus<int>( 1, catCt, 0.0 ) );
+    _cats = cv::Mat_<double>( SizePlus<int>( catCt, 1 ), 0.0 );
 }
 
 Suspect::~Suspect()
@@ -19,17 +19,17 @@ Suspect::~Suspect()
 void Suspect::setANNVectors( cv::Mat_<double>& input, cv::Mat_<double>& output )
 {
     ASSERT_MSG( output.empty() || output.size() == _cats.size(), "Ouput size missmatch" );
-    for( int i=0; i<inputW; i++ )
-        input[0,i] = hist.grid()[i];
+    for( int i=0; i<hist.l(); i++ )
+        input(0,i) = hist[i];
     if( output.empty() )
         return;
     output = -1.0;
-    output[ 0, _realCat ] = 1.0;
+    output(0,_realCat) = 1.0;
 }
 
 void Suspect::setCats( const cv::Mat_<double>& output )
 {
-    ASSERT_MSG( output.size() = _cats.size(), "Output size missmatch" );
+    ASSERT_MSG( output.size() == _cats.size(), "Output size missmatch" );
     _cats = output;
 }
 
@@ -49,23 +49,28 @@ int Suspect::predCat()
     double maxVal = -DBL_MAX;
     for( int i=0; i<_cats.size().width; i++ )
     {
-        if( _cats[0,i] > maxVal )
+        if( _cats(0,i) > maxVal )
         {
             maxIdx = i;
-            maxVal = _cats[0,i];
+            maxVal = _cats(0,i);
         }
     }
     return maxIdx;
 }
 
+int Suspect::catCt()
+{
+    return _cats.size().width;
+}
+
 void Suspect::incrementHistogram( int idx )
 {
-    hist.grid()[idx]++;
+    hist.increment( idx );
 }
 
 void Suspect::incrementHistogram( const PointPlus<int>& pt )
 {
-    hist.grid()[pt]++;
+    hist.increment( pt );
 }
 
 void Suspect::normalizeHistogram()

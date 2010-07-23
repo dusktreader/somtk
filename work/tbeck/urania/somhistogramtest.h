@@ -4,6 +4,8 @@
 #include "unittest.hpp"
 
 #include "highgui.h"
+#include <algorithm>
+#include "cvtools.hpp"
 
 class SOMHistogramTest : public SOMHistogram, public UnitTest
 {

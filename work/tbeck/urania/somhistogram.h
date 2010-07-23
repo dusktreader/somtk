@@ -8,7 +8,7 @@
 
 class SOMHistogram
 {
-private:
+protected:
 
     /** The grid that contains the histogram's bins */
     HexGrid<double> grid;
@@ -24,7 +24,7 @@ public:
     SOMHistogram( const SizePlus<int>& sz );
 
     virtual ~SOMHistogram();
-    
+
     /** Rests this SOMHistogram's bins to 0 */
     void reset();
 
@@ -41,21 +41,29 @@ public:
     /** Creates a visualization of the normalized histogram */
     cv::Mat vizHistogram();
 
-    
+
     /** Gets the value of a bin at the given index
     * @param  idx - The index of the bin from wich to fetch the value
     */
     double bin( int idx );
-    
+    double operator[]( int idx );
+
     /** Gets the value of a bin at the given index
     * @param  pt - The coordiates of the bin from which to fetch the value
     */
     double bin( const PointPlus<int>& pt );
+    double operator[]( const PointPlus<int>&pt );
+
 
     /** Normalizes the histogram to itself */
     void normalize();
+    
+    /** Fetches the size of this histogram */
+    SizePlus<int> size();
+    
+    /** Fetches the lenght of this histogram */
+    int l();
 
 };
 
-#endif                                                                                                                  // SOMHISTOGRAM_H
 
