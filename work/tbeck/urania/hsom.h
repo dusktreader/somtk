@@ -44,7 +44,7 @@ private:
     /** Generates the SOMHistograms needed for trainning the HSOM
       * @return A boolean indicating if the training was interrupted
       */
-    bool generateHistograms();
+    void generateHistograms();
 
     /** Trains the ANN component of the HSOM
       * @param  annIters   - The number of iterations for ANN training
@@ -145,12 +145,9 @@ public:
     void train( int somEpochs, double initAlpha, double initR, int annIters, double annEps );
 
     /** Report classification results
-      * @param  report   - The string that will contain the report
-      * @param  hitRate  - The rate of exactly correct classifications
-      * @param  missRate - The rate of completely incorrect classifications
-      * @param  nearRate - The rate of close classifications
+      * @param  text - The string that will contain the report
       */
-    void getReport( std::string &report, double &hitRate, double &missRate, double &nearRate );
+    double report( std::string &report );
 
     /** Classifies suspects
       * @param  A flag indicating if the function finished or was terminated
@@ -162,7 +159,7 @@ public:
       * @param  input   - The input matrix for the ANN
       * @param  output  - The output matrix for the ANN
       */
-    void classify( Suspect* suspect, cv::Mat& input = cv::Mat(), cv::Mat& output = cv::Mat() );
+    void classify( Suspect* suspect, cv::Mat& input, cv::Mat& output );
 
     /** Fetches the name of this HSOM */
     std::string getName();
@@ -180,15 +177,14 @@ public:
       */
     void load( std::string fileName );
 
-    /** Reads HSOM configuration from a file storage object
-      * @param  fs   - The file storage from which to read
-      * @param  node - The node at which to begin looking.  If NULL, start from the root
-      */
-    virtual void read(  CvFileStorage* fs, CvFileNode* node=NULL );
+    /** Reads ImageHSOM configuration from a file storage object
+    * @param  fs   - The file node from which to read
+    */
+    virtual void read( cv::FileNode& fn );
 
-    /** Writes the HSOM configuration to a file storage object
-      * @param  fs - The file storage in which to write
-      */
-    virtual void write( CvFileStorage* fs );
+    /** Writes the ImageHSOM configuration to a file storage object
+    * @param  fs - The file storage in which to write
+    */
+    virtual void write( cv::FileStorage& fs );
 
 };

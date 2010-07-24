@@ -343,25 +343,6 @@ IplImage* cvtTo64f1c( IplImage* src, int imgW, int imgH ){
     RETURN dst;
 }
 
-bool hasContent( IplImage* src ){
-    ENTER;
-    if( cvGetReal2D( src, src->width / 2, src->height / 2 ) == 0 ){                                                     // If the center pixel is zero, there is no content
-        RETURN false;
-    }
-    IplImage* msk = createMask( src,
-                                cvRect( 1, 1, src->width-2, src->height-2 ),
-                                true );                                                                                 // This will create a ring mask around the border of the image
-    double minVal, maxVal;
-    cvMinMaxLoc( src, &minVal, &maxVal, NULL, NULL, msk );                                                              // Find the maximum and minimum pixel values along the border
-    cvReleaseImage( &msk );
-    if( minVal == 0 && maxVal != 0 ){                                                                                   // 	If there is at least one zero pixel and one non-zero pixel on the border, then the image has content
-        RETURN true;
-    }
-    else{
-        RETURN false;
-    }
-}
-
 IplImage* shellImage( IplImage* src, bool zero ){
     ENTER;
     IplImage* dst = cvCreateImage( IPL_SZ( src ), src->depth, src->nChannels );

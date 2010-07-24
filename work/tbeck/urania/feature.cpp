@@ -4,13 +4,17 @@ using namespace std;
 
 const string Feature::alias = "Feature";
 
-Feature::Feature(){}
+Feature::Feature()
+{
+    _empty = true;
+}
 
 Feature::~Feature(){}
 
 void Feature::setData( const vector<double> &newData )
 {
     data = newData;
+    _empty = false;
     return;
 }
 
@@ -32,6 +36,11 @@ void Feature::adjust( const Feature& other, double scaleFactor )
 int Feature::l()
 {
     return data.size();
+}
+
+bool Feature::empty()
+{
+    return _empty;
 }
 
 void Feature::read( const cv::FileNode& fn )

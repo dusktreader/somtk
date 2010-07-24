@@ -15,6 +15,9 @@ class ImageHSOM : public HSOM
 {
 private:
 
+    /** The size of the steps that each suspect takes as it produces features */
+    int stepSz;
+    
     /** The size of features in this HSOM */
     SizePlus<int> _featSz;
 
@@ -24,11 +27,12 @@ public:
     ImageHSOM();
 
     /** Constructs an Image HSOM with specified size, feature size, and wrapping
-      * @param  sz     - The desired size of the HSOM's grid
-      * @param  featSz - The desired size of the features in the HSOM
+    * @param  gridSz - The desired size of the HSOM's grid
+    * @param  featSz - The desired size of the features in the HSOM
+    * @param  stepSz - The size of steps that each suspect takes as it produces features
       * @param  catCt - The number of possible suspect classes
       */
-    ImageHSOM( const SizePlus<int>& sz, const SizePlus<int>& featSz, int catCt );
+    ImageHSOM( const SizePlus<int>& gridSz, const SizePlus<int>& featSz, int stepSz, int catCt );
 
     /** Constructs an Image HSOM from a save file
       * @param  fileName - The name of the file from which to load the HSOM
@@ -58,15 +62,5 @@ public:
 
     /** Analyzes the hu moments of features from the suspect list to calibrate the sigmoid function */
     virtual void analyzeSuspects();
-
-    /** Reads ImageHSOM configuration from a file storage object
-      * @param  fs   - The file node from which to read
-      */
-    virtual void read( const cv::FileNode& fn );
-
-    /** Writes the ImageHSOM configuration to a file storage object
-      * @param  fs - The file storage in which to write
-      */
-    virtual void write( cv::FileStorage& fs );
 
 };

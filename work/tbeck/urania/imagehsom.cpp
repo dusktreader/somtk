@@ -6,8 +6,8 @@ const string ImageHSOM::alias = "ImageHSOM";
 
 ImageHSOM::ImageHSOM() : HSOM(){}
 
-ImageHSOM::ImageHSOM( const SizePlus<int>& sz, const SizePlus<int>& featSz, int catCt )
-    : HSOM( sz, catCt ), _featSz(featSz)
+ImageHSOM::ImageHSOM( const SizePlus<int>& gridSz, const SizePlus<int>& featSz, int stepSz, int catCt )
+    : HSOM( gridSz, catCt ), _featSz(featSz), stepSz(stepSz)
 {
     initFeatures();
 }
@@ -41,7 +41,7 @@ void ImageHSOM::loadSuspects( string dirPath, const vector<string> &fileList )
     string fileName;
     int suspectCt = fileList.size();
     int realCat;
-    cv::Mat tmp, img, msk;
+    cv::Mat tmp, img;
     ASSERT( statusCheck( 0, "Loading Suspects", "Loading Suspects", suspectCt ) );
     for( int i=0; i<suspectCt; i++ )
     {
@@ -49,9 +49,8 @@ void ImageHSOM::loadSuspects( string dirPath, const vector<string> &fileList )
         fileName = dirPath + OS_SEP_STR + fileList[i];
         tmp = cv::imread( fileName, 0 );
         cv::resize( tmp, img, SizePlus<int>( 128, 128 ), 0, 0, cv::INTER_LANCZOS4 );
-        msk = starMask( img );
         realCat = char2Int( fileList[i][0] );
-        suspects.push_back( new ImageSuspect( img, mask, realCat, _catCt, grid.size(), featSz(), fileList[i] ) );
+        suspects.push_back( new ImageSuspect( img, realCat, _catCt, grid.size(), featSz(), fileList[i] ) );
     }
 }
 

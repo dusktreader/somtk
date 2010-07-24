@@ -11,31 +11,27 @@
 #include "cvtools.hpp"
 #include "cvtypesplus.hpp"
 
-/// @todo Make step size a parameter of ImageSuspect's constructor
-#define STEP_SIZE 2
-
 class ImageSuspect : public Suspect
 {
 private:
     cv::Mat img;
-    cv::Mat msk;
     RectPlus<int> roi;
     PointPlus<int> imgPt;
     SizePlus<int> featSz;
-    HuFeature currFeat;
+    int stepSz;
 
 public:
 
     /** Creates a new ImageSuspect
       * @param  img     - The image that this Suspect represents
-      * @param  msk     - A masked version of the image
       * @param  realCat - The actual category for this Suspect
       * @param  catCt   - The number of categories possilbel for this Suspect
-      * @param  sz      - The size of this Suspect's histogram
+      * @param  histSz  - The size of this Suspect's histogram
       * @param  featSz  - The size of features this Suspect generates
+      * @param  stepSz  - The size of steps this Suspect takes as it traverses an image
       * @param  name    - The name of this Suspect
       */
-    ImageSuspect( const cv::Mat& img, const cv::Mat& msk, int realCat, int catCt, const SizePlus<int>& sz, const SizePlus<int>& featSz, std::string name );
+    ImageSuspect( const cv::Mat& img, int realCat, int catCt, const SizePlus<int>& histSz, const SizePlus<int>& featSz, int stepSz, std::string name );
 
     /** Destructs this suspect */
     virtual ~ImageSuspect();

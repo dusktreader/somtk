@@ -2,24 +2,22 @@
 
 using namespace std;
 
-ImageSuspect::ImageSuspect( const cv::Mat& img, const cv::Mat& msk,
+ImageSuspect::ImageSuspect( const cv::Mat& img,
                             int realCat, int catCt,
                             const SizePlus<int>& sz,
                             const SizePlus<int>& featSz,
-                            string name ) :
-Suspect( name, realCat, catCt, sz )
+                            int stepSz,
+                            string name )
+    : Suspect( name, realCat, catCt, sz )
 {
     this->img = img.clone();
     roi = RectPlus<int>( featSz );
-    if( msk.empty() )
-        this->msk = starMask( img );
-    else
-        this->msk = msk.clone();
+    this->stepSz = stepSz;
 }
 
 ImageSuspect::~ImageSuspect(){}
 
-void ImageSuspect::resetFeatureSz( const SizePlus<int>& featSz )
+void ImageSuspect::setFeatureSz( const SizePlus<int>& featSz )
 {
     roi = RectPlus<int>( featSz );
 }
@@ -28,26 +26,20 @@ Feature* ImageSuspect::getNextFeature()
 {
     if( currFeat != NULL )
         delete currFeat;
-    currFeat = NULL;
-    cv::Mat imgSub, mskSub;
     RectPlus<int> bounds( img.size() );
-    currFeat = HuFeature();
-    while( bounds.contains( roi ) && currFeat.empty() )
+    currFeat = new HuFeature( crop( msk, roi ) );
+    while( bounds.contains( roi ) && currFeat->empty() )
     {
-        mskSub = crop( msk, roi );
-        if( hasContent( mskSub ) )
-        {
-            //imgSub = crop( img, roi );
-            currFeat = new HuFeature( mskSub );
-            //feat = HuFeature( imgSub );
-            //feat = new ImageFeature( featW, featH, imgSub );
-        }
-        roi += PointPlus<int>( STEP_SIZE, 0 );
+        roi += PointPlus<int>( stepSz, 0 );
         if( roi.left() > bounds.left() )
-            roi.anchorOn( PointPlus<int>( roi.y % STEP_SIZE, roi.y + STEP_SIZE ) );
+            roi.anchorOn( PointPlus<int>( roi.y % stepSz, roi.y + stepSz ) );
     }
-    if( currFeat == NULL )
+    if( currFeat->empty() )
+    {
         roi.anchorOn( PointPlus<int>() );
-    return currFeat;
+        return NULL;
+    }
+    else
+        return currFeat;
 }
 

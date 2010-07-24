@@ -12,7 +12,7 @@ HSOM::HSOM()
 
 HSOM::HSOM( const SizePlus<int>& sz, int catCt )
 {
-    grid = HexGrid( sz );
+    grid = HexGrid<Feature*>( sz );
     _catCt = catCt;
     ann = NULL;
     name = "unnamed";
@@ -47,10 +47,10 @@ void HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat )
 {
     ASSERT_MSG( initRadRat <= 0.5, "Inital radius ratio may not exceed 1/2" );
 
-    ASSERT_MSG( statusCheck, "Beginning SOM training...", "Training SOM" );
+    ASSERT( statusCheck( 0, "Beginning SOM training...", "Training SOM" ) );
 
     double radius;
-    double radius0 = initRadRat * w;                                                                                    /// @todo  Make radius_tf, radius_Nf, alpha_tf, alpha_Nf arguments to this function
+    double radius0 = initRadRat * grid.size().w;                                                                        /// @todo  Make radius_tf, radius_Nf, alpha_tf, alpha_Nf arguments to this function
     double radius_tf = 0.25;
     double radius_Nf = 0.5;
     double radius_gamma = -log( radius_Nf ) / ( radius_tf * somEpochs );
@@ -71,10 +71,10 @@ void HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat )
         radius = radius0 * exp( -radius_gamma * E );
         preCalcWeights( alpha, radius );                                                                                // Pre-calculate the gaussian weights for updating the SOM
         int i = 0;
-        for( list<Suspect>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+        for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ )
         {
-            ASSERT( statusCheck( i, "Processing " + suspects[i]->getName() ) );
-            Suspect& suspect = *s;
+            Suspect* suspect = *s;
+            ASSERT( statusCheck( i, "Processing " + suspect->name() ) );
             updateSOM( suspect );
         }
     }
@@ -85,10 +85,10 @@ void HSOM::generateHistograms()
     ASSERT( statusCheck( 0, "---", "Generating histograms" ) );
 
     int i = 0;
-    for( list<Suspect>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ )
     {
-        ASSERT( statusCheck( i++, "Processing " + suspects[i]->getName() ) );
-        Suspect& suspect = *s;
+        Suspect* suspect = *s;
+        ASSERT( statusCheck( i++, "Processing " + suspect->name() ) );
         updateHistogram( suspect );
     }
 }
@@ -97,43 +97,43 @@ void HSOM::trainANN( int annIters, double annEps )
 {
     ASSERT( statusCheck( 0, "---", "Training ANN" ) );
 
-    int l = grid.l();
-
-    cv::Mat_<double>  input( suspects.size(), l, 0.0 );                                                                 // Make an input matrix for training the back-end MLPANN.  This is a matrix composed of vectors of size l = grid width x grid height
-    cv::Mat_<double> output( suspects.size(), catCt, 0.0 );                                                             // Make an output matrix for trainig the back-end MLPANN.  This is a matrix composed of vectors of size catCt.
+    cv::Mat_<double>  input( suspects.size(), grid.l(), 0.0 );                                                          // Make an input matrix for training the back-end MLPANN.  This is a matrix composed of vectors of size l = grid width x grid height
+    cv::Mat_<double> output( suspects.size(), _catCt, 0.0 );                                                            // Make an output matrix for trainig the back-end MLPANN.  This is a matrix composed of vectors of size catCt.
 
     cv::Mat_<double> inRow, outRow;
 
-    for( list<Suspect>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+    int i = 0;
+    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++, i++ )
     {
-        Suspect& suspect = *s;
-        ASSERT( statusCheck( i++, "Extracting ANN inputs from " + suspect.name() ) );
+        Suspect* suspect = *s;
+        ASSERT( statusCheck( i, "Extracting ANN inputs from " + suspect->name() ) );
         inRow = input.row( i );
         outRow = output.row( i );
-        suspect.setANNVectors( inRow, outRow );
+        suspect->setANNVectors( inRow, outRow );
     }
 
-    int tcType = 0;
+    cv::TermCriteria tc;
+    tc.type = 0;
     if( annIters != 0 )
-        tcType += cv::TermCriteria::MAX_ITER;
+        tc.type += cv::TermCriteria::MAX_ITER;
     if( annEps != 0.0 )
-        tcType += cv::TermCriteria::EPS;
+        tc.type += cv::TermCriteria::EPS;
 
-    cv::ANN_MLP_TrainParams tParams( tcType, CvANN_MLP_TrainParams::RPROP, annIters, annEps );
+    cv::ANN_MLP_TrainParams tParams( tc, CvANN_MLP_TrainParams::RPROP, annIters, annEps );
 
     int normFlag = 0;
 
     cv::Mat_<int> layerSizes( 4, 1 );                                                                                   /// @todo  Make this more dynamic, so that the size and count of input layers is dependent on the number of ANN inputs
-    layerSizes[0,0] = l;                                                                                                // Input layer.
-    layerSizes[1,0] = l/2;                                                                                              // First hidden layer is 1/2 the size of the input layer
-    layerSizes[2,0] = l/4;                                                                                              // Second hidden layer is 1/4 the size of the input layer
-    layerSizes[3,0] = catCt;                                                                                            // The output layer has one node for each category
+    layerSizes(0,0) = grid.l();                                                                                         // Input layer.
+    layerSizes(1,0) = grid.l()/2;                                                                                       // First hidden layer is 1/2 the size of the input layer
+    layerSizes(2,0) = grid.l()/4;                                                                                       // Second hidden layer is 1/4 the size of the input layer
+    layerSizes(3,0) = _catCt;                                                                                           // The output layer has one node for each category
 
     if( ann != NULL )
         delete ann;
     ann = new CvANN_MLP( layerSizes, CvANN_MLP::SIGMOID_SYM );
 
-    ann->train( input, output, NULL, NULL, tParams, normFlag );
+    ann->train( input, output, cv::Mat(), cv::Mat(), tParams, normFlag );
 }
 
 void HSOM::train( int somEpochs, double initAlpha, double initR, int annIters, double annEps )
@@ -154,66 +154,71 @@ void HSOM::train( int somEpochs, double initAlpha, double initR, int annIters, d
     }
 }
 
-double HSOM::getReport( string &report )
+double HSOM::report( string &text )
 {
-    report.clear();
-    hitRate = 0.0;
-    string hitReport;
+    text.clear();
+    double hitRate = 0.0;
+    string hitReport, missReport;
     int suspectCt = suspects.size();
-    cv::Mat_<int> confusionMatrix( catCt, catCt, 0 );
+    cv::Mat_<int> confusionMatrix( _catCt, _catCt, 0 );
 
-    for( list<Suspect>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ )
     {
-        Suspect& suspect = *s;
+        Suspect* suspect = *s;
 
-        confusionMatrix[ suspect.predCat, suspect.realCat ]++;
-        if( suspect.realCat() == suspect.predCat() )
+        confusionMatrix( suspect->predCat(), suspect->realCat() )++;
+        if( suspect->realCat() == suspect->predCat() )
         {
-            hitReport.append( suspect.name() + " --> Class " + num2str( suspect.predCat() ) + "\n" );
+            hitReport.append( suspect->name() + " --> Class " + num2str( suspect->predCat() ) + "\n" );
             hitRate++;
         }
         else
         {
-            missReport.append( suspect.name() + " --> Class " + num2str( suspect.realCat() ) + "\n" );
-            missReport.append( "  " + printList( suspect.cats(), _catCt, "votes" ) );
+            missReport.append( suspect->name() + " --> Class " + num2str( suspect->realCat() ) + "\n" );
+            missReport.append( "  votes: <" );
+            vector<double> cats = suspect->cats();
+            for( int i=0; i<_catCt; i++ )
+                missReport.append( num2str(cats[i]) + "  " );
+            missReport.append( "\n" );
         }
     }
 
-    report.append( "Hits\n----\n" + hitReport );
-    report.append( "\nMisses\n------\n" + missReport );
+    text.append( "Hits\n----\n" + hitReport );
+    text.append( "\nMisses\n------\n" + missReport );
 
-    report.append( "\n\nConfusion Matrix\n----------------\n\n" );
-    report.append( "              Actual\n" );
-    for( int i=-2; i<catCt; i++ )
+    text.append( "\n\nConfusion Matrix\n----------------\n\n" );
+    text.append( "              Actual\n" );
+    for( int i=-2; i<_catCt; i++ )
     {
         if( i < 0 )
-            report.append( "             " );
+            text.append( "             " );
         else
         {
-            if( i == catCt / 2 )
-                report.append( "Predicted" );
+            if( i == _catCt / 2 )
+                text.append( "Predicted" );
             else
-                report.append( "         " );
-            report.append( num2str( i, 0, 3 ) + "|" );
+                text.append( "         " );
+            text.append( num2str( i, 0, 3 ) + "|" );
         }
-        for( int j=0; j<catCt; j++ )
+        for( int j=0; j<_catCt; j++ )
         {
             switch( i )
             {
                 case -2:
-                    report.append( num2str( j, 0, 5 ) );
+                    text.append( num2str( j, 0, 5 ) );
                     break;
                 case -1:
-                    report.append( "-----" );
+                    text.append( "-----" );
                     break;
                 default:
-                    report.append( num2str( confusionMatrix[i,j], 0, 5 ) );
+                    text.append( num2str( confusionMatrix(i,j), 0, 5 ) );
             }
         }
-        report.append( "\n" );
+        text.append( "\n" );
     }
 
-    hitRat /= suspectCt;
+    hitRate /= suspectCt;
+    return hitRate;
 }
 
 void HSOM::classify()
@@ -221,15 +226,14 @@ void HSOM::classify()
     string title = "Analyzing with " + name;
     ASSERT( statusCheck( 0, title + "__size_buffer__", title, suspects.size() ) );
 
-    int l = grid.l();
+    cv::Mat_<double>  input( 1, grid.l(), 0.0 );
+    cv::Mat_<double> output( 1, _catCt, 0.0 );
 
-    cv::Mat_<double>  input( 1, l, 0.0 );
-    cv::Mat_<double> output( 1, catCt, 0.0 );
-
-    for( list<Suspect>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+    int i=0;
+    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++, i++ )
     {
-        Suspect& suspect = *s;
-        ASSERT( statusCheck( i++, "Classifying " + suspect.name() ) );
+        Suspect* suspect = *s;
+        ASSERT( statusCheck( i, "Classifying " + suspect->name() ) );
         classify( suspect, input, output );
     }
 }
