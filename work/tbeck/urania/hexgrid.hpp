@@ -7,17 +7,11 @@
 
 #include "feature.h"
 
-/** Enumration for marks in the HexGrid */
-enum Mark { HG_DEFAULT_MARK, HG_WINNING_MARK, HG_VISITED_MARK, HG_ORIGIN_MARK, HG_NEIGHBOR_MARK, HG_EXCLUDE_MARK };
-
 /** The default width of a HexGrid */
 #define HG_DEFAULT_W      64
 
 /** The default height of a HexGrid */
 #define HG_DEFAULT_H      64
-
-/** Default value for cells */
-#define HG_DEFAULT_VALUE  0.0
 
 /** Defines the vertical distance between cells in the grid */
 #define HG_B              0.86602540378443837
@@ -27,8 +21,12 @@ enum Mark { HG_DEFAULT_MARK, HG_WINNING_MARK, HG_VISITED_MARK, HG_ORIGIN_MARK, H
   * neighborhood searches, edge wrapping, and other functionality.
   */
 template <class T>
-class HexGrid{
+class HexGrid
+{
 protected:
+
+    /** Enumration for marks in the HexGrid */
+    enum Mark { MK_DEFAULT, MK_WINNER, MK_VISITED, MK_ORIGIN, MK_NEIGHBOR, MK_EXCLUDE };
 
     /** The alias for this class */
     static const std::string alias;
@@ -39,11 +37,83 @@ protected:
     /** A set of items for the slots of the grid */
     std::vector<T> items;
 
-    /** A set of real values for the slots of the grid */
-    std::vector<double> values;
+    /** A set of distances for the slots of the grid in a given neighborhood*/
+    std::vector<int> distances;
 
     /** A set of markers for the slots of the grid */
     std::vector<Mark> marks;
+
+public:
+
+    /** Constructs an empty hex grid */
+    HexGrid(){}
+
+    /** Constructs the hex grid with a specified size
+      * @param  sz - The desired size of the hex grid
+      */
+    HexGrid( const SizePlus<int>& sz )
+    {
+        setSize( sz );
+    }
+
+    /** Constructs the hex grid with a specified size and item value
+      * @param  sz - The desired size of the hex grid
+      */
+    HexGrid( const SizePlus<int>& sz, const T& item )
+    {
+        setSize( sz );
+        setTo( item );
+    }
+
+    virtual ~HexGrid(){}
+
+    /** Sets the size of the grid
+      * @param  sz - The desired size of the hex grid
+      */
+    void setSize( const SizePlus<int>& sz )
+    {
+        ASSERT_MSG( sz.w > 0,      "Grid width must be greater than 0"             );
+        ASSERT_MSG( sz.h > 0,      "Grid height must be greater than 0"            );
+        ASSERT_MSG( sz.h % 2 == 0, "Grids must have even height for edge wrapping" );
+
+        _sz = sz;
+        items  = std::vector<T>(      l() );
+        distances = std::vector<int>( l() );
+        marks  = std::vector<Mark>(   l() );
+    }
+
+    /** Clears the hex grid */
+    virtual void clear()
+    {
+        items.clear();
+        _sz = SizePlus<int>();
+    }
+
+    /** Sets all of the slots in the grid to the specified item */
+    virtual void setTo( const T& item )
+    {
+        for( int i=0; i<l(); i++ )
+            items[i] = item;
+    }
+
+    /** Resets the size of the grid and re-initializes it
+      * @param  sz - The desired size of the hex grid
+      */
+    void resetSize( const SizePlus<int>& sz )
+    {
+        clear();
+        setSize( sz );
+    }
+
+    int distance( int idx )
+    {
+        return distances[idx];
+    }
+
+    int distance( PointPlus<int>& pt )
+    {
+        return distances[ index(pt) ];
+    }
 
     /** Fetches the neighbors for the slot at the specified coordinates
       * @param  pt - The point coordinate of the slot
@@ -95,20 +165,20 @@ protected:
     std::vector<int> neighborhood( double r, int idx )
     {
         resetMarks();                                                                                                   // The marks vector will be used to keep track of which cells have been visited
-        resetValues();                                                                                                  // The values vector will be used to store the distance of a cell from the neighborhood's origin cell
+        resetDistances();                                                                                               // The distances vector will be used to store the distance of a cell from the neighborhood's origin cell
         std::vector<int> results;                                                                                       // The results vector will contain the indices of all cells in the neighborhood
         std::deque<int> pending;                                                                                        // The pending vector will hold potential neighbors awaiting examination
         std::vector<int> neighbors;                                                                                     // The neighbors vector will temporarily hold indices of immediate neighbors
-        marks[idx] = HG_ORIGIN_MARK;                                                                                    // All visited cells should be marked with something besides their default mark.  The origin cell is the only cell marked as the winner.
-        values[idx] = 0.0;                                                                                              // Obviously the distance between the origin and itself is 0.0
+        marks[idx] = HexGrid::MK_ORIGIN;                                                                                // All visited cells should be marked with something besides their default mark.  The origin cell is the only cell marked as the winner.
+        distances[idx] = 0;                                                                                             // Obviously the distance between the origin and itself is 0.0
         pending.push_back( idx );                                                                                       // Put the origin cell into the queue to begin the breadth first traversal
-        double dist;                                                                                                    // Temporary distance variable holds the current distance
+        int dist;                                                                                                       // Temporary distance variable holds the current distance
         while( !pending.empty() )                                                                                       // Process idices in the queue until the queue is empty ( meaning the traversal is done )
         {
             idx = pending.front();                                                                                      // Get the index at the front of the queue
             pending.pop_front();
             results.push_back( idx );                                                                                   // Add the popped index to the results
-            dist = values[idx];                                                                                         // Record the current distance
+            dist = distances[idx];                                                                                      // Record the current distance
             if( r - dist < EPSILON )                                                                                    // If the current distance is greater than or equal to the radius limit, do not examine the neighbors of the current cell.
                 continue;
             neighbors = neighborIndices( idx );                                                                         // Otherwise, get all the neighbors of the current cell
@@ -118,10 +188,10 @@ protected:
                 for( int i=0; i<(int)neighbors.size(); i++ )
                 {
                     idx = neighbors[i];
-                    if( marks[idx] != HG_DEFAULT_MARK )                                                                 // If the current neighbor has already been marked, it has already been examined.  Pass it up
+                    if( marks[idx] != MK_DEFAULT )                                                                      // If the current neighbor has already been marked, it has already been examined.  Pass it up
                         continue;
-                    values[idx] = dist + 1.0;                                                                           // Otherwise record its distance.  For simplicity, distances are simply a count of the number of steps away from the origin cell.
-                    marks[idx] = HG_NEIGHBOR_MARK;                                                                      // Mark the cell as being a part of the neighborhood.  This ensures that each neighbor cell is examined only once.
+                    distances[idx] = dist + 1;                                                                          // Otherwise record its distance.  For simplicity, distances are simply a count of the number of steps away from the origin cell.
+                    marks[idx] = MK_NEIGHBOR;                                                                           // Mark the cell as being a part of the neighborhood.  This ensures that each neighbor cell is examined only once.
                     #pragma omp critical
                     {
                         pending.push_back( idx );                                                                       // Add the cell to the queue
@@ -130,68 +200,6 @@ protected:
             }                                                                                                           // -omp
         }
         return results;
-    }
-
-public:
-
-    /** Constructs the hex grid with default values */
-    HexGrid(){}
-
-    /** Constructs the hex grid with a specified size
-      * @param  sz - The desired size of the hex grid
-      */
-    HexGrid( const SizePlus<int>& sz )
-    {
-        setSize( sz );
-    }
-
-    /** Constructs the hex grid with a specified size and item value
-      * @param  sz - The desired size of the hex grid
-      */
-    HexGrid( const SizePlus<int>& sz, const T& item )
-    {
-        setSize( sz );
-        setTo( item );
-    }
-
-    virtual ~HexGrid(){}
-
-    /** Sets the size of the grid
-      * @param  sz - The desired size of the hex grid
-      */
-    void setSize( const SizePlus<int>& sz )
-    {
-        ASSERT_MSG( sz.w > 0,      "Grid width must be greater than 0"             );
-        ASSERT_MSG( sz.h > 0,      "Grid height must be greater than 0"            );
-        ASSERT_MSG( sz.h % 2 == 0, "Grids must have even height for edge wrapping" );
-
-        _sz = sz;
-        items  = std::vector<T>(      l() );
-        values = std::vector<double>( l() );
-        marks  = std::vector<Mark>(   l() );
-    }
-
-    /** Clears the hex grid */
-    virtual void clear()
-    {
-        items.clear();
-        _sz = SizePlus<int>();
-    }
-
-    /** Sets all of the slots in the grid to the specified item */
-    virtual void setTo( const T& item )
-    {
-        for( int i=0; i<l(); i++ )
-            items[i] = item;
-    }
-
-    /** Resets the size of the grid and re-initializes it
-      * @param  sz - The desired size of the hex grid
-      */
-    void resetSize( const SizePlus<int>& sz )
-    {
-        clear();
-        setSize( sz );
     }
 
     /** Fetches the size of the grid */
@@ -211,8 +219,8 @@ public:
     {
         for( unsigned int i=0; i<l(); i++ )
         {
-            marks[i] = HG_DEFAULT_MARK;
-            values[i] = HG_DEFAULT_VALUE;
+            marks[i] = MK_DEFAULT;
+            distances[i] = -1;
         }
     }
 
@@ -220,14 +228,14 @@ public:
     void resetMarks()
     {
         for( int i=0; i<l(); i++ )
-            marks[i] = HG_DEFAULT_MARK;
+            marks[i] = MK_DEFAULT;
     }
 
-    /** Resets the values for the slots of the grid */
-    void resetValues()
+    /** Resets the distances for the slots of the grid */
+    void resetDistances()
     {
         for( int i=0; i<l(); i++ )
-            values[i] = HG_DEFAULT_VALUE;
+            distances[i] = -1;
     }
 
     T& operator[]( const PointPlus<int>& pt )

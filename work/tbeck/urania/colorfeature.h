@@ -3,6 +3,8 @@
 #include "feature.h"
 #include "tools.hpp"
 
+#include "cv.h"
+#include "cxcore.h"
 
 class ColorFeature : public Feature
 {
@@ -12,7 +14,7 @@ private:
 public:
     ColorFeature();
     ColorFeature( int red, int green, int blue );
-    ColorFeature( cv::Vec3b& bgr );
+    ColorFeature( const cv::Vec3b& bgr );
     virtual ~ColorFeature();
 
     cv::Vec3b cvColor();

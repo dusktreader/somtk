@@ -58,7 +58,7 @@ void ColorHSOM::write( cv::FileStorage& fs )
     fs << "}";
 }
 
-void ColorHSOM::read( const cv::FileNode& fn )
+void ColorHSOM::read( cv::FileNode& fn )
 {
     cv::FileNode root = fn[alias];
     HSOM::read( root );

@@ -10,13 +10,14 @@
 #include "hexgrid.hpp"
 #include "suspect.h"
 
-#include <list>
-
 /** A slope tuning parameter for an inverse exponential function */
 #define A 0.1
 
 /** Adjustment parameter for the initial width of the neighborhood function */
 #define B 0.20
+
+/** A constant describing the conversion factor between FWHM and sigma */
+#define FWHM_FACTOR 2.3548200450309493
 
 /** The SOM class provides an abstract base class for Self-Organizing Maps */
 class HSOM
@@ -27,12 +28,10 @@ private:
     static const std::string alias;
 
     /** The name of this HSOM */
-    std::string name;
+    std::string _name;
 
     /** The back-end Multilayer Perceptron Neural Network for classification */
     CvANN_MLP* ann;
-
-    HexGrid<Feature*> grid;
 
     /** Trains the SOM component of the HSOM
       * @param  somEpochs  - The number of training epochs to use
@@ -55,8 +54,11 @@ private:
 
 protected:
 
+    /** The grid of features used by the SOM */
+    HexGrid<Feature*> grid;
+
     /** A list of suspects for training or classification */
-    std::list<Suspect*> suspects;
+    std::vector<Suspect*> suspects;
 
     /** A set of precalculated gaussian weights for updating the SOM */
     std::vector<double> weights;
@@ -74,7 +76,7 @@ protected:
     virtual bool statusCheck( int iteration, std::string msg1="", std::string msg2="", int maxIters=0 );
 
     /** Preprocessing for the suspects.  Implemented by child class. */
-    virtual bool analyzeSuspects( ) = 0;
+    virtual void analyzeSuspects( ) = 0;
 
     /** Initializes the features of this SOM */
     virtual void initFeatures() = 0;
@@ -83,14 +85,14 @@ protected:
       * @param  feat - The input feature to compare against map features
       * @return The index of the closest feature
       */
-    int closestFeature( Feature* feat );
+    int closestFeatureIndex( Feature* feat );
 
     /** Finds the coordinates of the closest feature to the input feature
       * @param  feat - The input feature to compare against map features
       * @param  x    - The 'x' coordinate of the closest feature
       * @param  y    - The 'x' coordinate of the closest feature
       */
-    void closestFeature( Feature* feat, int &x, int &y );
+    PointPlus<int> closestFeatureCoords( Feature* feat );
 
     /** Precalculates Gaussian wieghts given a radius and an alpha
       * @param  alpha - The learning rate
@@ -119,11 +121,17 @@ public:
       */
     HSOM( const SizePlus<int>& sz, int catCt );
 
-    /** Destructs the SOM */
+    /** Destructs the HSOM */
     virtual ~HSOM();
 
-    /** Clears the SOM */
+    /** Clears the HSOM */
     virtual void clear();
+
+    /** Fetches the name of this HSOM */
+    std::string name();
+
+    /** Fetches the number of categories this HSOM can classify */
+    int catCt();
 
     /** Loads the suspects from a directory.  Implemented by derived class
       * @param  dirPath - The directory holding the image files
@@ -159,7 +167,7 @@ public:
       * @param  input   - The input matrix for the ANN
       * @param  output  - The output matrix for the ANN
       */
-    void classify( Suspect* suspect, cv::Mat& input, cv::Mat& output );
+    void classify( Suspect* suspect, cv::Mat_<double>& input, cv::Mat_<double>& output );
 
     /** Fetches the name of this HSOM */
     std::string getName();
@@ -170,12 +178,12 @@ public:
     /** Saves an SOM to file
       * @param  fileName - The name of the file to save
       */
-    void save( std::string fileName );
+    void save( const std::string& fileName );
 
     /** Loads an SOM from file
       * @param  fileName - The name of the file to load
       */
-    void load( std::string fileName );
+    void load( const std::string& fileName );
 
     /** Reads ImageHSOM configuration from a file storage object
     * @param  fs   - The file node from which to read

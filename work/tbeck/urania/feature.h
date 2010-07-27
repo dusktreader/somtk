@@ -34,13 +34,13 @@ public:
       * @param  other - The other feature to compare against
       * @return The distance between the two features
       */
-    virtual double dist( const Feature& other );
+    virtual double dist( Feature* other );
 
     /** Adjusts the value of this Feature given another and other parameters
       * @param  other       - The other Feature to compare against
       * @param  scaleFactor - A scaling factor for adjustment
       */
-    virtual void adjust( const Feature& other, double scaleFactor );
+    virtual void adjust( Feature* other, double scaleFactor );
 
     int l();
 

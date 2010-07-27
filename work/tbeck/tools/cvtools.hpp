@@ -4,7 +4,6 @@
 #include "cxcore.h"
 #include "highgui.h"
 #include "ml.h"
-#include "cvaux.h"
 
 #include "tools.hpp"
 #include "cvtypesplus.hpp"

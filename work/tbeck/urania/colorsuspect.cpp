@@ -1,6 +1,8 @@
 #include "colorsuspect.h"
 
-ColorSuspect::ColorSuspect( const cv::Mat& img, const cv::Mat& msk,
+using namespace std;
+
+ColorSuspect::ColorSuspect( const cv::Mat& img,
                             int realCat, int catCt,
                             const SizePlus<int>& histSz,
                             string name )

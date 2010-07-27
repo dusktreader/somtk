@@ -10,6 +10,9 @@
 
 class ColorHSOM : public HSOM
 {
+private:
+    static const std::string alias;
+
 public:
     ColorHSOM();
     ColorHSOM( const SizePlus<int>& gridSz, int catCt );
@@ -23,5 +26,4 @@ public:
 
     virtual void read(  cv::FileNode&    fn);
     virtual void write( cv::FileStorage& fs);
-
-}
+};

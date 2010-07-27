@@ -15,7 +15,7 @@ HSOM::HSOM( const SizePlus<int>& sz, int catCt )
     grid = HexGrid<Feature*>( sz );
     _catCt = catCt;
     ann = NULL;
-    name = "unnamed";
+    _name = "unnamed";
 }
 
 HSOM::~HSOM()
@@ -70,12 +70,10 @@ void HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat )
         alpha = alpha0 * exp( -alpha_gamma * E );
         radius = radius0 * exp( -radius_gamma * E );
         preCalcWeights( alpha, radius );                                                                                // Pre-calculate the gaussian weights for updating the SOM
-        int i = 0;
-        for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+        for( unsigned int i=0; i<suspects.size(); i++ )
         {
-            Suspect* suspect = *s;
-            ASSERT( statusCheck( i, "Processing " + suspect->name() ) );
-            updateSOM( suspect );
+            ASSERT( statusCheck( i, "Processing " + suspects[i]->name() ) );
+            updateSOM( suspects[i] );
         }
     }
 }
@@ -84,12 +82,10 @@ void HSOM::generateHistograms()
 {
     ASSERT( statusCheck( 0, "---", "Generating histograms" ) );
 
-    int i = 0;
-    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+    for( unsigned int i=0; i<suspects.size(); i++ )
     {
-        Suspect* suspect = *s;
-        ASSERT( statusCheck( i++, "Processing " + suspect->name() ) );
-        updateHistogram( suspect );
+        ASSERT( statusCheck( i++, "Processing " + suspects[i]->name() ) );
+        updateHistogram( suspects[i] );
     }
 }
 
@@ -102,14 +98,12 @@ void HSOM::trainANN( int annIters, double annEps )
 
     cv::Mat_<double> inRow, outRow;
 
-    int i = 0;
-    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++, i++ )
+    for( unsigned int i=0; i<suspects.size(); i++ )
     {
-        Suspect* suspect = *s;
-        ASSERT( statusCheck( i, "Extracting ANN inputs from " + suspect->name() ) );
+        ASSERT( statusCheck( i, "Extracting ANN inputs from " + suspects[i]->name() ) );
         inRow = input.row( i );
         outRow = output.row( i );
-        suspect->setANNVectors( inRow, outRow );
+        suspects[i]->setANNVectors( inRow, outRow );
     }
 
     cv::TermCriteria tc;
@@ -123,15 +117,22 @@ void HSOM::trainANN( int annIters, double annEps )
 
     int normFlag = 0;
 
-    cv::Mat_<int> layerSizes( 4, 1 );                                                                                   /// @todo  Make this more dynamic, so that the size and count of input layers is dependent on the number of ANN inputs
-    layerSizes(0,0) = grid.l();                                                                                         // Input layer.
-    layerSizes(1,0) = grid.l()/2;                                                                                       // First hidden layer is 1/2 the size of the input layer
-    layerSizes(2,0) = grid.l()/4;                                                                                       // Second hidden layer is 1/4 the size of the input layer
-    layerSizes(3,0) = _catCt;                                                                                           // The output layer has one node for each category
+    uchar tmp[4];
+    tmp[0] = grid.l();
+    tmp[1] = grid.l()/2;
+    tmp[2] = grid.l()/4;
+    tmp[3] = _catCt;
+    CvMat ls = cvMat( 4, 1, CV_8U, tmp );
+
+//    cv::Mat_<int> layerSizes( 4, 1, CV_8U );                                                                          /// @todo  Make this more dynamic, so that the size and count of input layers is dependent on the number of ANN inputs
+//    layerSizes(0,0) = grid.l();                                                                                       // Input layer.
+//    layerSizes(1,0) = grid.l()/2;                                                                                     // First hidden layer is 1/2 the size of the input layer
+//    layerSizes(2,0) = grid.l()/4;                                                                                     // Second hidden layer is 1/4 the size of the input layer
+//    layerSizes(3,0) = _catCt;                                                                                         // The output layer has one node for each category
 
     if( ann != NULL )
         delete ann;
-    ann = new CvANN_MLP( layerSizes, CvANN_MLP::SIGMOID_SYM );
+    ann = new CvANN_MLP( &ls, CvANN_MLP::SIGMOID_SYM );
 
     ann->train( input, output, cv::Mat(), cv::Mat(), tParams, normFlag );
 }
@@ -162,21 +163,20 @@ double HSOM::report( string &text )
     int suspectCt = suspects.size();
     cv::Mat_<int> confusionMatrix( _catCt, _catCt, 0 );
 
-    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++ )
+    for( unsigned int i=0; i<suspects.size(); i++ )
     {
-        Suspect* suspect = *s;
 
-        confusionMatrix( suspect->predCat(), suspect->realCat() )++;
-        if( suspect->realCat() == suspect->predCat() )
+        confusionMatrix( suspects[i]->predCat(), suspects[i]->realCat() )++;
+        if( suspects[i]->realCat() == suspects[i]->predCat() )
         {
-            hitReport.append( suspect->name() + " --> Class " + num2str( suspect->predCat() ) + "\n" );
+            hitReport.append( suspects[i]->name() + " --> Class " + num2str( suspects[i]->predCat() ) + "\n" );
             hitRate++;
         }
         else
         {
-            missReport.append( suspect->name() + " --> Class " + num2str( suspect->realCat() ) + "\n" );
+            missReport.append( suspects[i]->name() + " --> Class " + num2str( suspects[i]->realCat() ) + "\n" );
             missReport.append( "  votes: <" );
-            vector<double> cats = suspect->cats();
+            vector<double> cats = suspects[i]->cats();
             for( int i=0; i<_catCt; i++ )
                 missReport.append( num2str(cats[i]) + "  " );
             missReport.append( "\n" );
@@ -223,22 +223,20 @@ double HSOM::report( string &text )
 
 void HSOM::classify()
 {
-    string title = "Analyzing with " + name;
+    string title = "Analyzing with " + _name;
     ASSERT( statusCheck( 0, title + "__size_buffer__", title, suspects.size() ) );
 
     cv::Mat_<double>  input( 1, grid.l(), 0.0 );
     cv::Mat_<double> output( 1, _catCt, 0.0 );
 
-    int i=0;
-    for( list<Suspect*>::iterator s = suspects.begin(); s != suspects.end(); s++, i++ )
+    for( unsigned int i=0; i<suspects.size(); i++ )
     {
-        Suspect* suspect = *s;
-        ASSERT( statusCheck( i, "Classifying " + suspect->name() ) );
-        classify( suspect, input, output );
+        ASSERT( statusCheck( i, "Classifying " + suspects[i]->name() ) );
+        classify( suspects[i], input, output );
     }
 }
 
-void HSOM::classify( Suspect& suspect, cv::Mat& input, cv::Mat& output )
+void HSOM::classify( Suspect* suspect, cv::Mat_<double>& input, cv::Mat_<double>& output )
 {
     if( input.empty() )
     {                                                                                                                   // If the input and output matrix arent' specified, they need to be allocated and de-allocated in this function
@@ -247,9 +245,9 @@ void HSOM::classify( Suspect& suspect, cv::Mat& input, cv::Mat& output )
     }
 
     updateHistogram( suspect );                                                                                         // Update the histogram with features from the suspect
-    suspect.setANNVectors( input, output );                                                                             // Set the inputs for the back-end ANN classifier
+    suspect->setANNVectors( input, output );                                                                             // Set the inputs for the back-end ANN classifier
     ann->predict( input, output );                                                                                      // Classify the suspect using the histogram and the ANN classifier
-    suspect.setCats( output );                                                                                          // Update the vote vector for the suspect based on the output of the ANN
+    suspect->setCats( output );                                                                                          // Update the vote vector for the suspect based on the output of the ANN
 }
 
 int HSOM::closestFeatureIndex( Feature* feat )
@@ -264,7 +262,7 @@ int HSOM::closestFeatureIndex( Feature* feat )
         #pragma omp for
         for( int i=0; i<grid.l(); i++ )
         {
-            double dist = feat->dist( *grid[i] );                                                                       // Calculate the distance between the input feature and the map feature at index i
+            double dist = feat->dist( grid[i] );                                                                        // Calculate the distance between the input feature and the map feature at index i
             if( dist  < localMinDist )
             {
                 localMinDist = dist;
@@ -285,7 +283,7 @@ int HSOM::closestFeatureIndex( Feature* feat )
 
 PointPlus<int> HSOM::closestFeatureCoords( Feature* feat )
 {
-    return grid.getCoords( closestFeatureIndex( feat ) );                                                               // Use the protected closestFeature to find the index and translate it into coordinates
+    return grid.coords( closestFeatureIndex( feat ) );
 }
 
 void HSOM::preCalcWeights( const double alpha, const double radius )
@@ -297,36 +295,34 @@ void HSOM::preCalcWeights( const double alpha, const double radius )
         weights[i] = alpha * exp( -pow( i, 2.0 ) / twoSigmaSquared );                                                   // Calculate the gaussian weighting function.  This function is dependant on alpha, sigma, and current distance from origin.
 }
 
-void HSOM::updateSOM( const Suspect& suspect )
+void HSOM::updateSOM( Suspect* suspect )
 {
     int dist, idx, x, y;
     vector<int> neighbors;
-    Feature* feat = suspect.getNextFeature();
-    for( int i=0; i<suspect.featureCt(); i++ )
+    Feature* feat = suspect->getNextFeature();
     while( feat != NULL )                                                                                               // While the suspect has features to provide
     {
-        idx = closestFeature( feat );                                                                                   // Find the feature that is closest to the training feature
-        neighbors = grid.getNeighborhood( (double)weights.size(), idx );                                                // Get all indices of features within the neighborhood radius.  The distances are pre-calculated and stored in the values slot
+        PointPlus<int> pt = closestFeatureCoords( feat );                                                               // Find the feature that is closest to the training feature
+        neighbors = grid.neighborhood( (double)weights.size(), pt );                                                    // Get all indices of features within the neighborhood radius.  The distances are pre-calculated and stored in the values slot
 
         #pragma omp parallel for private( idx, dist )
         for( unsigned int i=0; i<neighbors.size(); i++ )
         {                                                                                                               // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
-            int dist = (int)( grid.values[neighbors[i]] );
             Feature* closest = grid[neighbors[i]];
-            closest->adjust( feat, weights[dist] );                                                                     // Adjust the SOM feature using the precalculated weight and distance
+            closest->adjust( feat, weights[ grid.distance( i ) ] );                                                     // Adjust the SOM feature using the precalculated weight and distance
         }
         feat = suspect->getNextFeature();                                                                               // Get the next feature in the suspect
     }
 }
 
-void HSOM::updateHistogram( Suspect& suspect )
+void HSOM::updateHistogram( Suspect* suspect )
 {
     int idx;
     Feature* feat = suspect->getNextFeature();                                                                          // Fetch the first feature from the suspect
     while( feat != NULL )                                                                                               // While the suspect still has features to count,
     {
-        idx = closestFeature( feat );                                                                                   // Find the feature that is closest to the training feature
-        suspect.incrementHistogram( idx );                                                                              // Increment the corresponding historam bin
+        idx = closestFeatureIndex( feat );                                                                              // Find the feature that is closest to the training feature
+        suspect->incrementHistogram( idx );                                                                             // Increment the corresponding historam bin
         feat = suspect->getNextFeature();                                                                               // Get the next feature in the suspect
     }
 }
@@ -352,37 +348,37 @@ void HSOM::load( const string& fileName )
 {
     cv::FileStorage fs( fileName, cv::FileStorage::READ );
     _name = fileName;
-    read( fs );
+    cv::FileNode root = fs.root();
+    read( root );
 }
 
-void HSOM::read( const cv::FileNode& fn )
+void HSOM::read( cv::FileNode& fn )
 {
     clear();
     cv::FileNode root = fn[alias];
-    _catCt = (string)root["catCt"];
-    grid.setSize( (int)root["w"], (int)root["h"] );
-    catCt = cvReadIntByName( fs, node, "catCt" );
+    _catCt = (int)root["catCt"];
+    grid.setSize( SizePlus<int>( (int)root["w"], (int)root["h"] ) );
     initFeatures();
 
-    for( int i=0; i<grid.l(); itr++, i++ )
+    for( int i=0; i<grid.l(); i++ )
     {
-        grid[i].read( root["feats"][i] );
+        grid[i]->read( root["feats"][i] );
     }
 
     if( ann == NULL )
         ann = new CvANN_MLP();
-    ann->read( fn.fs, root["ann"].node );
+    ann->read( const_cast<CvFileStorage*>(fn.fs), const_cast<CvFileNode*>(root["ann"].node) );
 }
 
 void HSOM::write( cv::FileStorage& fs )
 {
     fs << alias << "{";
         fs << "catCt" << _catCt;
-        fs << "w"     << w;
-        fs << "h"     << h;
+        fs << "w"     << grid.size().w;
+        fs << "h"     << grid.size().h;
         fs << "feats" << "[";
         for( int i=0; i<grid.l(); i++ )
-            grid[i].write( fs );
+            grid[i]->write( fs );
         ann->write( fs.fs, "ann" );
     fs << "}";
 }

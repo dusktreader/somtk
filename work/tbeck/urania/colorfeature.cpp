@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ColorFeature::RandMaster rng;
+RandMaster ColorFeature::rng;
 
 ColorFeature::ColorFeature()
 {
@@ -17,7 +17,7 @@ ColorFeature::ColorFeature( int red, int green, int blue )
     data.push_back( blue );
 }
 
-ColorFeature( cv::Vec3b& bgr )
+ColorFeature::ColorFeature( const cv::Vec3b& bgr )
 {
     data.push_back( bgr[2] );
     data.push_back( bgr[1] );
