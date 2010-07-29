@@ -3,7 +3,7 @@
 
 using namespace std;
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow( QWidget* parent )
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -19,24 +19,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui->classifyThumbGraphicsView->setAlignment( Qt::AlignLeft | Qt::AlignTop );
     classifyThumbPixmap.setPos( 0, 0 );
 
-    connect( ui->actionOpen, SIGNAL(triggered()),
-             this, SLOT(openMuses()) );
-    connect( ui->addBtn, SIGNAL(clicked()),
-             this, SLOT(openMuses()) );
-    connect( ui->actionNew_HSOM, SIGNAL(triggered()),
-             this, SLOT(newMuse()) );
-    connect( ui->newBtn, SIGNAL(clicked()),
-             this, SLOT(newMuse()) );
-    connect( ui->actionRemove_HSOM, SIGNAL(triggered()),
-             this, SLOT(killMuse()) );
-    connect( ui->remBtn, SIGNAL(clicked()),
-             this, SLOT(killMuse()) );
+    connect( ui->actionOpen, SIGNAL(triggered()), SLOT(openMuses()) );
+    connect( ui->addBtn, SIGNAL(clicked()), SLOT(openMuses()) );
+    connect( ui->actionNew_HSOM, SIGNAL(triggered()), SLOT(newMuse()) );
+    connect( ui->newBtn, SIGNAL(clicked()), SLOT(newMuse()) );
+    connect( ui->actionRemove_HSOM, SIGNAL(triggered()), SLOT(killMuse()) );
+    connect( ui->remBtn, SIGNAL(clicked()), SLOT(killMuse()) );
 
 }
 
-void MainWindow::loadClassifyDirTree( QString dirPath ){
+void MainWindow::loadClassifyDirTree( QString dirPath )
+{
     QDir classifyDir( dirPath );
-    if( !classifyDir.exists() ){
+    if( !classifyDir.exists() )
+    {
         ui->statusBar->showMessage( "Couldn't load classify directory" );
         return;
     }

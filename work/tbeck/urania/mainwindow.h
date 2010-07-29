@@ -1,11 +1,9 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QtGui/QMainWindow>
-#include "qimagehsom.h"
-#include "qlocal.h"
-#include "local.h"
 
+#include "traindialog.h"
+#include "qimagehsom.h"
 
 namespace Ui
 {
@@ -17,7 +15,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow( QWidget *parent=0 );
     ~MainWindow();
 
 private:

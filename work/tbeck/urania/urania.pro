@@ -16,13 +16,12 @@ QMAKE_CXXFLAGS_DEBUG += -g
 
 SOURCES += feature.cpp \
     imagehsom.cpp \
-    local.cpp \
+    colorhsom.cpp \
     hsom.cpp \
     somhistogram.cpp \
     qmain.cpp \
     mainwindow.cpp \
     qimagehsom.cpp \
-    qlocal.cpp \
     suspect.cpp \
     imagesuspect.cpp \
     hufeature.cpp \
@@ -32,12 +31,11 @@ SOURCES += feature.cpp \
 HEADERS += feature.h \
     hexgrid.hpp \
     imagehsom.h \
-    local.h \
+    colorhsom.h \
     hsom.h \
     somhistogram.h \
     mainwindow.h \
     qimagehsom.h \
-    qlocal.h \
     suspect.h \
     imagesuspect.h \
     hufeature.h \

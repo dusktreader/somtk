@@ -3,13 +3,12 @@
 
 using namespace std;
 
-TrainDialog::TrainDialog( QWidget *parent, QProgressDialog* pgrs ) : QDialog(parent), m_ui(new Ui::TrainDialog)
+TrainDialog::TrainDialog( QWidget *parent, QProgressDialog* pgrs ) : QDialog(parent), m_ui(new Ui::TrainDialog), pgrs(pgrs)
 {
     m_ui->setupUi(this);
-    this->pgrs = pgrs;
     int i = 2;
-    m_ui->tableWidget->item( 0, 0 )->setText( TRAIN_DIR );
-    m_ui->tableWidget->item( 1, 0 )->setText( tr(SOM_DIR) + "/newHSOM.xml" );
+    m_ui->tableWidget->item( 0, 0 )->setText( "." );
+    m_ui->tableWidget->item( 1, 0 )->setText( "./newHSOM.xml" );
     hsomW = m_ui->tableWidget->item( i++, 0 )->text().toInt();
     hsomH = m_ui->tableWidget->item( i++, 0 )->text().toInt();
     featureW = m_ui->tableWidget->item( i++, 0 )->text().toInt();
@@ -29,75 +28,82 @@ TrainDialog::~TrainDialog()
     delete m_ui;
 }
 
-void TrainDialog::changeEvent(QEvent *e)
+void TrainDialog::changeEvent( QEvent* e )
 {
-    QDialog::changeEvent(e);
-    switch (e->type()) {
+    QDialog::changeEvent( e );
+    switch ( e->type() )
+    {
     case QEvent::LanguageChange:
-        m_ui->retranslateUi(this);
+        m_ui->retranslateUi( this );
         break;
     default:
         break;
     }
 }
 
-void TrainDialog::on_tableWidget_cellClicked( int row, int col ){
+void TrainDialog::on_tableWidget_cellClicked( int row, int col )
+{
     if( col == 0 )
         return;
     QString tmp;
-    switch( row ){
+    switch( row )
+    {
         case 0:                                                                                                         //The training directory dialog propmpt
-            tmp = QFileDialog::getExistingDirectory(
-                    this, "Select Training Directory", TRAIN_DIR,
-                    QFileDialog::ShowDirsOnly );
+            tmp = QFileDialog::getExistingDirectory( this,
+                                                     "Select Training Directory",
+                                                     "",
+                                                     QFileDialog::ShowDirsOnly );
             if( tmp != "" )
                 m_ui->tableWidget->item( row, col-1 )->setText( tmp );
             break;
         case 1:
-            tmp = QFileDialog::getSaveFileName(
-                    this, "Select HSOM Save File", SOM_DIR,
-                    "HSOM Files ( *.xml )" );
+            tmp = QFileDialog::getSaveFileName( this,
+                                                "Select HSOM Save File",
+                                                "",
+                                                "HSOM Files ( *.xml )" );
             if( tmp != "" )
                 m_ui->tableWidget->item( row, col-1 )->setText( tmp );
             break;
-        }
+    }
 }
 
-void TrainDialog::on_tableWidget_cellChanged( int row, int col ){
+void TrainDialog::on_tableWidget_cellChanged( int row, int col )
+{
     if( col != 0 )
         return;
     QTableWidgetItem* item = m_ui->tableWidget->item( row, col );
     int tint;
     double tdouble;
     bool ok;
-    switch( row ){
+    switch( row )
+    {
         case  2:                                                                                                        //hsomW
             tint = item->text().toInt( &ok );
             if( !ok || tint < 6 || tint > 64 )
                 item->setText( QString::number( hsomW ) );
             else
-                hsomW = tint;
+                gridSz.w = tint;
             break;
         case  3:                                                                                                        //hsomH
             tint = item->text().toInt( &ok );
             if( !ok || tint < 6 || tint > 64)
                 item->setText( QString::number( hsomH ) );
             else
-                hsomH = tint;
+                gridSz.h = tint;
             break;
         case  4:                                                                                                        //featureW
             tint = item->text().toInt( &ok );
             if( !ok || (tint&1) == 0 || tint < 3 || tint > 49 )
                 item->setText( QString::number( featureW ) );
             else
-                featureW = tint;
+                featSz.w = tint;
             break;
         case  5:                                                                                                        //featureH
             tint = item->text().toInt( &ok );
             if( !ok || (tint&1) == 0 || tint < 3 || tint > 49 )
                 item->setText( QString::number( featureH ) );
             else
-                featureH = tint;
+                featSz.h = tint;
             break;
         case  6:                                                                                                        //catCt
             tint = item->text().toInt( &ok );
@@ -146,52 +152,53 @@ void TrainDialog::on_tableWidget_cellChanged( int row, int col ){
         }
 }
 
-void TrainDialog::on_buttonBox_accepted(){
+void TrainDialog::on_buttonBox_accepted()
+{
     QDir trainDir( m_ui->tableWidget->item( 0, 0 )->text() );
-    if( !trainDir.exists() ){
+    if( !trainDir.exists() )
+    {
         msgBox.setText( "Invalid trainig directory!" );
         msgBox.exec();
-        RETURN;
+        return;
     }
     QStringList nameFilter;
     nameFilter << "*.tif" << "*.png" << "*.jpg";                                                                        /// @todo  Add more image types
     QStringList trainFiles = trainDir.entryList( nameFilter, QDir::Files | QDir::NoDotAndDotDot );
-    if( trainFiles.length() < 1 ){
+    if( trainFiles.length() < 1 )
+    {
         msgBox.setText( "No training files in specified directory!" );
         msgBox.exec();
-        RETURN;
+        return;
     }
     QFileInfo hsomFile( m_ui->tableWidget->item( 1, 0 )->text() );
-    if( !hsomFile.absoluteDir().isReadable() ){
+    if( !hsomFile.absoluteDir().isReadable() )
+    {
         msgBox.setText( "Invalid file name or lack of permissions" );
         msgBox.exec();
-        RETURN;
+        return;
     }
 
-    hsom = new QImageHSOM( pgrs, hsomW, hsomH, featureW, featureH, catCt );
+    if( hsom != NULL )
+        delete hsom;
+    hsom = new QImageHSOM( pgrs, gridSz, featSz, stepSz, catCt );
 
     pgrs->show();
-    if( !hsom->loadSuspects( trainDir.absolutePath(), trainFiles ) ){
-        delete hsom;
-        hsom = NULL;
-        return;
+    try
+    {
+        hsom->loadSuspects( trainDir.absolutePath(), trainFiles );
+        hsom->train( trainEpochs, initAlpha, initRad, annIters, annEpsilon );
+        hsom->save( hsomFile.absoluteFilePath().toStdString() );
+        ASSERT( m_ui->tableWidget->item( 12, 0 )->checkState() == Qt::Checked );
     }
-    if( !hsom->train( trainEpochs, initAlpha, initRad, annIters, annEpsilon ) ){
-        delete hsom;
-        hsom = NULL;
-        return;
-    }
-    hsom->save( hsomFile.absoluteFilePath().toStdString() );
-    if( m_ui->tableWidget->item( 12, 0 )->checkState() == Qt::Unchecked ){
+    catch( LocalAssert err )
+    {
         delete hsom;
         hsom = NULL;
     }
     pgrs->hide();
-    RETURN;
 }
 
-QImageHSOM* TrainDialog::fetchHSOM(){
-    QImageHSOM* rhsom = hsom;
-    hsom = NULL;
-    return rhsom;
+QImageHSOM* TrainDialog::fetchHSOM()
+{
+    return hsom;
 }
