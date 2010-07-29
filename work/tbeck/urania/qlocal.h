@@ -1,14 +1,5 @@
 #pragma once
 
-#include <QImage>
-#include <QPixmap>
-#include <QDir>
-#include <QDirModel>
-#include <QFileDialog>
-#include <QProgressDialog>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
-#include <QMessageBox>
 #include "traindialog.h"
 #include "qimagehsom.h"
 #include "local.h"
@@ -31,5 +22,3 @@ QPixmap iplToQPixmap( IplImage* ipl,
                       QSize* size=NULL,
                       Qt::TransformationMode tmode=Qt::SmoothTransformation,
                       Qt::AspectRatioMode amode=Qt::KeepAspectRatio );
-
-#endif                                                                                                                  // QLOCAL_H
