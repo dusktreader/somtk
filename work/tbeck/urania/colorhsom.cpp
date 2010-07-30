@@ -63,3 +63,25 @@ void ColorHSOM::read( cv::FileNode& fn )
     cv::FileNode root = fn[alias];
     HSOM::read( root );
 }
+
+cv::Mat ColorHSOM::vizHSOM()
+{
+    int radius = 10;
+    double buff = 2.5 * radius;
+    SizePlus<int> gridSz = grid.size();
+    PointPlus<double> pt( grid.realCoords( gridSz.w - 1, gridSz.h - 1 ) );
+    SizePlus<int> vizSz( (int)( pt.x * buff + 0.5 * buff ), (int)( pt.y * buff + 0.5 * buff ) );
+    cv::Mat viz( vizSz, CV_8UC3 );
+    viz.setTo( 0 );
+    ColorFeature* clrFeat;
+    for( int i=0; i<grid.l; i++ )
+    {
+        pt = grid.realCoords( i );
+        pt.x = pt.x * buff + 0.5 * buff;
+        pt.y = pt.y * buff + 0.5 * buff;
+        clrFeat = dynamic_cast<ColorFeature*>( grid[i] );
+        cv::Scalar clr( clrFeat->cvColor() );
+        cv::circle( viz, pt, radius, clr, CV_FILLED );
+    }
+    return viz;
+}

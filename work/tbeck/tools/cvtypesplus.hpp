@@ -107,6 +107,9 @@ public:
     /** Creates a SizePlus from a width and height */
     SizePlus( T width, T height ) : cv::Size_<T>(width,height), w(this->width), h(this->height){}
 
+    /** Creates a SizePlus from a PointPlus describing a lower-left corner */
+    SizePlus( const PointPlus<T>& pt ) : cv::Size_<T>(pt.x, pt.y), w(this->width), h(this->height){}
+
     /** Creates a SizePlus from a standard cv::Size_ */
     SizePlus( const cv::Size_<T>& s ) : cv::Size_<T>(s), w(this->width), h(this->height){}
 
