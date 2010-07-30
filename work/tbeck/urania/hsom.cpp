@@ -117,12 +117,12 @@ void HSOM::trainANN( int annIters, double annEps )
 
     int normFlag = 0;
 
-    uchar tmp[4];
+    int tmp[4];
     tmp[0] = grid.l();
     tmp[1] = grid.l()/2;
     tmp[2] = grid.l()/4;
     tmp[3] = _catCt;
-    CvMat ls = cvMat( 4, 1, CV_8U, tmp );
+    CvMat ls = cvMat( 4, 1, CV_32S, tmp );
 
 //    cv::Mat_<int> layerSizes( 4, 1, CV_8U );                                                                          /// @todo  Make this more dynamic, so that the size and count of input layers is dependent on the number of ANN inputs
 //    layerSizes(0,0) = grid.l();                                                                                       // Input layer.

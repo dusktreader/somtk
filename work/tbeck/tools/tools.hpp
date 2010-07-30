@@ -298,12 +298,14 @@ public:
         lastGauss = DBL_MAX;
     }
 
-    inline int random()
+    int random()
     {
+        int r;
         #pragma omp critical
         {
-            return rand();
+            r = rand();
         }
+        return r;
     }
 
     /** Returns a random int with a uniform distribution in the specified range

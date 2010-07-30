@@ -5,7 +5,7 @@ using namespace std;
 Suspect::Suspect( string name, int realCat, int catCt, const SizePlus<int>& sz )
     : _name(name), _realCat(realCat)
 {
-    Feature* currFeat;
+    currFeat = NULL;
     hist = SOMHistogram( sz );
     _cats = cv::Mat_<double>( SizePlus<int>( catCt, 1 ), 0.0 );
 }

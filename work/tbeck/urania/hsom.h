@@ -136,9 +136,8 @@ public:
     /** Loads the suspects from a directory.  Implemented by derived class
       * @param  dirPath - The directory holding the image files
       * @param  fileList - The list of image files
-      * @return A flag indicating if loading was successful
       */
-    virtual bool loadSuspects( std::string dirPath, const std::vector<std::string> &fileList ) = 0;
+    virtual void loadSuspects( const std::string& dirPath, const std::vector<std::string> &fileList ) = 0;
 
     /** Clears the suspect list */
     void clearSuspects();

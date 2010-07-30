@@ -22,7 +22,7 @@ Feature* ColorSuspect::getNextFeature()
     currFeat = new ColorFeature( img.at<cv::Vec3b>( imgPt ) );
     while( imgPt.inside( bounds ) && currFeat->empty() )
     {
-        imgPt.x + 1;
+        imgPt.x += 1;
         if( imgPt.x > bounds.left() )
         {
             imgPt.x = 0;
