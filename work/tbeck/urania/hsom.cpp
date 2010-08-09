@@ -73,12 +73,9 @@ void HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat )
         for( unsigned int i=0; i<suspects.size(); i++ )
         {
             ASSERT( statusCheck( i, "Processing " + suspects[i]->name() ) );
-            Suspect* s;
             updateSOM( suspects[i] );
         }
     }
-    cv::Mat viz = visualize();
-    SHOWW( viz );
 }
 
 void HSOM::generateHistograms()
@@ -293,7 +290,7 @@ void HSOM::preCalcWeights( const double alpha, const double radius )
 {
     double sigma = radius / FWHM_FACTOR;                                                                                // The radius will be used to describe the Full Width at Half Maximum of the gaussian weighting function.  We back-compute sigma from this.
     double twoSigmaSquared = 2 * pow( sigma, 2 );                                                                       // Value of 2 * sigma^2
-    weights = vector<double>( (int)radius + 1, 0.0 );
+    weights = vector<double>( (int)radius + 1 );
     for( unsigned int i=0; i<weights.size(); i++ )
         weights[i] = alpha * exp( -pow( i, 2.0 ) / twoSigmaSquared );                                                   // Calculate the gaussian weighting function.  This function is dependant on alpha, sigma, and current distance from origin.
 }
@@ -305,12 +302,12 @@ void HSOM::updateSOM( Suspect* suspect )
     while( feat != NULL )                                                                                               // While the suspect has features to provide
     {
         PointPlus<int> pt = closestFeatureCoords( feat );                                                               // Find the feature that is closest to the training feature
-        neighbors = grid.neighborhood( (double)weights.size(), pt );                                                    // Get all indices of features within the neighborhood radius.  The distances are pre-calculated and stored in the values slot
+        neighbors = grid.neighborhood( weights.size(), pt );                                                            // Get all indices of features within the neighborhood radius.
         #pragma omp parallel for
         for( unsigned int i=0; i<neighbors.size(); i++ )
         {                                                                                                               // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
-            Feature* closest = grid[neighbors[i]];
-            closest->adjust( feat, weights[ grid.distance( i ) ] );                                                     // Adjust the SOM feature using the precalculated weight and distance
+            int nIdx = neighbors[i];
+            grid[ nIdx ]->adjust( feat, weights[ grid.distance( nIdx ) ] );
         }
         feat = suspect->getNextFeature();                                                                               // Get the next feature in the suspect
     }
@@ -342,6 +339,7 @@ void HSOM::save( const string& fileName )
 {
     cv::FileStorage fs( fileName, cv::FileStorage::WRITE );
     _name = fileName;
+    DB_REP_VAR( fileName );
     write( fs );
 }
 
@@ -373,11 +371,12 @@ void HSOM::read( cv::FileNode& fn )
 
 void HSOM::write( cv::FileStorage& fs )
 {
+    DB_REP;
     fs << alias << "{";
         fs << "catCt" << _catCt;
         fs << "w"     << grid.size().w;
         fs << "h"     << grid.size().h;
-        fs << "feats" << "[";
+        fs << "feats" << "{";
         for( int i=0; i<grid.l(); i++ )
             grid[i]->write( fs );
         ann->write( fs.fs, "ann" );

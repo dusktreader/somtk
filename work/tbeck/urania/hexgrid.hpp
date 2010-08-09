@@ -152,7 +152,7 @@ public:
       * @param  pt - The point coordinate of the slot
       * @return A vector of indices of neighborhood slots
       */
-    std::vector<int> neighborhood( double r, const PointPlus<double>& pt )
+    std::vector<int> neighborhood( int r, const PointPlus<double>& pt )
     {
         return neighborhood( r, index(pt) );
     }
@@ -162,7 +162,7 @@ public:
       * @param  idx  - The index of the slot
       * @return A vector of indices of neighborhood slots
       */
-    std::vector<int> neighborhood( double r, int idx )
+    std::vector<int> neighborhood( int r, int idx )
     {
         resetMarks();                                                                                                   // The marks vector will be used to keep track of which cells have been visited
         resetDistances();                                                                                               // The distances vector will be used to store the distance of a cell from the neighborhood's origin cell
@@ -179,7 +179,7 @@ public:
             pending.pop_front();
             results.push_back( idx );                                                                                   // Add the popped index to the results
             dist = distances[idx];                                                                                      // Record the current distance
-            if( r - dist < EPSILON )                                                                                    // If the current distance is greater than or equal to the radius limit, do not examine the neighbors of the current cell.
+            if( dist >= r )                                                                                             // If the current distance is greater than or equal to the radius limit, do not examine the neighbors of the current cell.
                 continue;
             neighbors = neighborIndices( idx );                                                                         // Otherwise, get all the neighbors of the current cell
             #pragma omp parallel private( idx )
@@ -296,6 +296,39 @@ public:
         ASSERT_MSG( pt.x >= 0 && pt.x < _sz.w, "x coordinate must be in the range [ 0 , w )" );
         ASSERT_MSG( pt.y >= 0 && pt.y < _sz.h, "y coordinate must be in the range [ 0 , h )" );
         return PointPlus<double>( pt.x + ( pt.y % 2 ) * 0.5, pt.y * HG_B );
+    }
+
+    cv::Mat visualize()
+    {
+        int globalMaxDist = 0;
+        int localMaxDist = 0;
+        #pragma omp parallel
+        {
+            #pragma omp for firstprivate( localMaxDist )
+            for( int i=0; i<l(); i++ )
+                localMaxDist = distances[i] > localMaxDist ? distances[i] : localMaxDist;
+            #pragma omp critical
+            {
+                globalMaxDist = localMaxDist > globalMaxDist ? localMaxDist : globalMaxDist;
+            }
+        }
+        int radius = 10;
+        double buff = 2.5 * radius;
+        PointPlus<double> pt( realCoords( PointPlus<int>( size().w - 1, size().h - 1 ) ) );
+        SizePlus<int> vizSz( (int)( ( pt.x + 1 ) * buff ), (int)( ( pt.y + 1 ) * buff ) );
+        cv::Mat viz( vizSz, CV_8UC1 );
+        viz.setTo( 0 );
+        for( int i=0; i<l(); i++ )
+        {
+            pt = realCoords( coords(i) );
+            pt.x = pt.x * buff + 0.5 * buff;
+            pt.y = pt.y * buff + 0.5 * buff;
+            if( distances[i] == -1 )
+                continue;
+            cv::Scalar clr( ( 255 * ( globalMaxDist - distances[i] ) ) / globalMaxDist );
+            cv::circle( viz, pt, radius, clr, CV_FILLED );
+        }
+        return viz;
     }
 
 };

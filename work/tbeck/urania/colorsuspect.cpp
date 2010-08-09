@@ -8,7 +8,7 @@ ColorSuspect::ColorSuspect( const cv::Mat& img,
                             string name )
     : Suspect( name, realCat, catCt, histSz )
 {
-    this->img = img.clone();
+    cv::resize( img, this->img, cv::Size( 20, 20 ), 0, 0, cv::INTER_CUBIC );
 }
 
 ColorSuspect::~ColorSuspect(){}

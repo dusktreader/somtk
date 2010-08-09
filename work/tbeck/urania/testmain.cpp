@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    string imgDir = "/data/src/dusktreader/work/astrocv/trunk/lib/demo_lib/combinded";
+    string imgDir = "/home/d3x874/astrocv/trunk/lib/demo_lib/combinded";
     vector<string> fileList;
     for( int i=1; i<=20; i++ )
     {
@@ -13,7 +13,7 @@ int main()
         fileList.push_back( string( "1_" ) + ( i < 10 ? "0" : "" ) + num2str( i ) + ".jpg" );
     }
 
-    HSOM* hsom = new ColorHSOM( SizePlus<int>(8,8), 2 );
+    HSOM* hsom = new ColorHSOM( SizePlus<int>(20,20), 2 );
     hsom->loadSuspects( imgDir, fileList );
     try
     {
@@ -29,4 +29,6 @@ int main()
     }
     cv::Mat viz = hsom->visualize();
     SHOWW( viz );
+    hsom->save( "testhsom.xml" );
+    hsom->load( "testhsom.xml" );
 }

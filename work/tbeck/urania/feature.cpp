@@ -4,10 +4,7 @@ using namespace std;
 
 const string Feature::alias = "Feature";
 
-Feature::Feature()
-{
-    //_empty = true;
-}
+Feature::Feature(){}
 
 Feature::~Feature(){}
 

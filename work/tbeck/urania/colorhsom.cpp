@@ -53,6 +53,7 @@ void ColorHSOM::analyzeSuspects(){}
 
 void ColorHSOM::write( cv::FileStorage& fs )
 {
+    DB_REP;
     fs << alias << "{";
         HSOM::write( fs );
     fs << "}";
