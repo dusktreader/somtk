@@ -5,23 +5,31 @@ using namespace std;
 RandMaster ColorFeature::rng;
 
 ColorFeature::ColorFeature()
+    : Feature()
 {
-    for( int i=0; i<3; i++ )
-        data.push_back( rng.randi(0,255) );
+    vector<double> newData( 3.0 );
+    newData[0] = rng.randi(0,255);
+    newData[1] = rng.randi(0,255);
+    newData[2] = rng.randi(0,255);
+    setData( newData );
 }
 
 ColorFeature::ColorFeature( int red, int green, int blue )
 {
-    data.push_back( red );
-    data.push_back( green );
-    data.push_back( blue );
+    vector<double> newData( 3.0 );
+    newData[0] = red;
+    newData[1] = green;
+    newData[2] = blue;
+    setData( newData );
 }
 
 ColorFeature::ColorFeature( const cv::Vec3b& bgr )
 {
-    data.push_back( bgr[2] );
-    data.push_back( bgr[1] );
-    data.push_back( bgr[0] );
+    vector<double> newData( 3.0 );
+    newData[0] = bgr[2];
+    newData[1] = bgr[1];
+    newData[2] = bgr[0];
+    setData( newData );
 }
 
 ColorFeature::~ColorFeature(){}
@@ -29,4 +37,17 @@ ColorFeature::~ColorFeature(){}
 cv::Vec3b ColorFeature::cvColor()
 {
     return cv::Vec3b( data[2], data[1], data[0] );
+}
+
+bool ColorFeature::hasContent()
+{
+    return data[0] > 10 && data[1] > 10 && data[2] > 10;
+}
+
+cv::Mat ColorFeature::visualize()
+{
+    cv::Mat viz( SizePlus<int>( 20, 20 ), CV_8UC3 );
+    viz.setTo( 0 );
+    cv::circle( viz, PointPlus<int>(10,10), 10, cv::Scalar( cvColor() ), CV_FILLED );
+    return viz;
 }

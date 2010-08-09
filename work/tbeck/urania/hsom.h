@@ -5,6 +5,7 @@
 #include "ml.h"
 
 #include "tools.hpp"
+#include "cvtools.hpp"
 #include "cvtypesplus.hpp"
 
 #include "hexgrid.hpp"
@@ -173,6 +174,9 @@ public:
 
     /** Gets the number of categories this HSOM is trained for */
     int getCatCt();
+
+    /** Gets a visualization of the HSOM */
+    virtual cv::Mat visualize() = 0;
 
     /** Saves an SOM to file
       * @param  fileName - The name of the file to save

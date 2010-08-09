@@ -15,25 +15,21 @@ ColorSuspect::~ColorSuspect(){}
 
 Feature* ColorSuspect::getNextFeature()
 {
-    if( currFeat != NULL )
-        delete currFeat;
-    currFeat = new ColorFeature( );
     RectPlus<int> bounds( img.size() );
-    currFeat = new ColorFeature( img.at<cv::Vec3b>( imgPt ) );
-    while( imgPt.inside( bounds ) && currFeat->empty() )
+    while( imgPt.inside( bounds )  )
     {
+        if( currFeat != NULL )
+            delete currFeat;
+        currFeat = new ColorFeature( img.at<cv::Vec3b>( imgPt ) );
         imgPt.x += 1;
-        if( imgPt.x > bounds.left() )
+        if( imgPt.x >= bounds.right() )
         {
             imgPt.x = 0;
             imgPt.y += 1;
         }
+        if( currFeat->hasContent() )
+            return currFeat;
     }
-    if( currFeat->empty() )
-    {
-        imgPt = PointPlus<int>();
-        return NULL;
-    }
-    else
-        return currFeat;
+    imgPt = PointPlus<int>();
+    return NULL;
 }

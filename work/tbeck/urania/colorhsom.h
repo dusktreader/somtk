@@ -24,7 +24,7 @@ public:
     virtual void loadSuspects( const std::string& dirPath, const std::vector<std::string>& fileList );
     virtual void analyzeSuspects();
 
-    cv::Mat vizHSOM();
+    virtual cv::Mat visualize();
 
     virtual void read(  cv::FileNode&    fn);
     virtual void write( cv::FileStorage& fs);

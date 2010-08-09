@@ -73,9 +73,12 @@ void HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat )
         for( unsigned int i=0; i<suspects.size(); i++ )
         {
             ASSERT( statusCheck( i, "Processing " + suspects[i]->name() ) );
+            Suspect* s;
             updateSOM( suspects[i] );
         }
     }
+    cv::Mat viz = visualize();
+    SHOWW( viz );
 }
 
 void HSOM::generateHistograms()
@@ -84,7 +87,7 @@ void HSOM::generateHistograms()
 
     for( unsigned int i=0; i<suspects.size(); i++ )
     {
-        ASSERT( statusCheck( i++, "Processing " + suspects[i]->name() ) );
+        ASSERT( statusCheck( i, "Processing " + suspects[i]->name() ) );
         updateHistogram( suspects[i] );
     }
 }
@@ -297,15 +300,13 @@ void HSOM::preCalcWeights( const double alpha, const double radius )
 
 void HSOM::updateSOM( Suspect* suspect )
 {
-    int dist, idx, x, y;
     vector<int> neighbors;
     Feature* feat = suspect->getNextFeature();
     while( feat != NULL )                                                                                               // While the suspect has features to provide
     {
         PointPlus<int> pt = closestFeatureCoords( feat );                                                               // Find the feature that is closest to the training feature
         neighbors = grid.neighborhood( (double)weights.size(), pt );                                                    // Get all indices of features within the neighborhood radius.  The distances are pre-calculated and stored in the values slot
-
-        #pragma omp parallel for private( idx, dist )
+        #pragma omp parallel for
         for( unsigned int i=0; i<neighbors.size(); i++ )
         {                                                                                                               // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
             Feature* closest = grid[neighbors[i]];

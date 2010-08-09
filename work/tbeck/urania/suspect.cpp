@@ -3,7 +3,7 @@
 using namespace std;
 
 Suspect::Suspect( string name, int realCat, int catCt, const SizePlus<int>& sz )
-    : _name(name), _realCat(realCat)
+    : _realCat(realCat), _name(name)
 {
     currFeat = NULL;
     hist = SOMHistogram( sz );

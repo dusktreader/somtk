@@ -2,14 +2,14 @@
 
 #include "cv.h"
 
+#include "tools.hpp"
+
 /** The feature class provides an abstract base class for SOM features */
 class Feature
 {
 protected:
 
     static const std::string alias;
-
-    bool _empty;
 
     /** The data associated with the feature */
     std::vector<double> data;
@@ -42,9 +42,13 @@ public:
       */
     virtual void adjust( Feature* other, double scaleFactor );
 
-    int l();
+    /** Creates a visualization of the feature */
+    virtual cv::Mat visualize() = 0;
 
-    bool empty();
+    /** Determines if this feature has any content */
+    virtual bool hasContent() = 0;
+
+    int l();
 
     void read( const cv::FileNode& fn );
     void write( cv::FileStorage& fs );
