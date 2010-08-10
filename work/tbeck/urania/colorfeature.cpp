@@ -41,7 +41,7 @@ cv::Vec3b ColorFeature::cvColor()
 
 bool ColorFeature::hasContent()
 {
-    return data[0] > 50 && data[1] > 50 && data[2] > 50;
+    return data[0] > 100 || data[1] > 100 || data[2] > 100;
 }
 
 cv::Mat ColorFeature::visualize()

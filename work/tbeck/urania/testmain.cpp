@@ -17,7 +17,7 @@ int main()
     hsom->loadSuspects( imgDir, fileList );
     try
     {
-        hsom->train( 10, 0.1, 0.5, 1000, 1e-10 );
+        hsom->train( 100, 0.1, 0.5, 1000, 1e-10 );
     }
     catch( LocalAssert err )
     {
