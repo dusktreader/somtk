@@ -4,7 +4,7 @@ Astronomical Computer Vision Group Notes
 Tucker Beck, Russell Jensen, and Bob Lewis; WSU Tri-Cities
 ----------------------------------------------------------
 
-Last edited: 7/20/10 (RRL)
+Last edited: 8/10/10 (RRL)
 
 Overview
 ........
@@ -29,20 +29,14 @@ Scheduled for Discussion
 These are the papers we plan to discuss, in reverse chronological
 order.
 
-* Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
-  AVI97_
-  
-  + TB: Discusses history of galaxy classification.  Suggests that the
-    current historical segmentations are non-optimal and
-    non-intiuitive, and have been over-refined.  Suggests application
-    of an SOM to naturally create an intuitive mapping of galaxies
-    into a 2 dimensional topology where adjacent map locations
-    indicate feature commonality.
-
 * Miller and Coe, "Star/galaxy classification using Kohonen
   self-organizing maps" MIL95_
 
   + TB: Applies SOM to binary segmentation between stars and galaxies.
+
+  + discussed on 8/3/10 (in TB's absence)
+
+  + to be continued on 8/17/10
 
 Not Yet Scheduled for Discussion
 ................................
@@ -167,6 +161,18 @@ chronological order.
   + referenced in BAN10_
 
   + discussed 7/20/10
+
+* Naim, et al., "Galaxy Morphology Without Classification: Self-organizing maps"
+  AVI97_
+  
+  + TB: Discusses history of galaxy classification.  Suggests that the
+    current historical segmentations are non-optimal and
+    non-intiuitive, and have been over-refined.  Suggests application
+    of an SOM to naturally create an intuitive mapping of galaxies
+    into a 2 dimensional topology where adjacent map locations
+    indicate feature commonality.
+
+  + discussed 7/27/10
 
 .. _AVG96: 1996ApJS..107....1A.pdf
 .. _BLK04: 2004MNRAS.348.1038B.pdf
