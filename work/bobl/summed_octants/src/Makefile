@@ -6,7 +6,7 @@ gaussian: gaussian.cpp
 	$(CXX) $(CXX_FLAGS) $< -o $@ $(LIBS)
 
 clean:
-	rm -f *.o *~
+	rm -f *.o *~ core
 
 immaculate: clean
 	rm -f gaussian
