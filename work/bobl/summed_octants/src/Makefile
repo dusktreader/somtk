@@ -1,9 +1,16 @@
-CXX_FLAGS = -Wall $$(pkg-config --cflags --libs opencv)
+CXXFLAGS = -g -Wall $$(pkg-config --cflags opencv)
+LD_FLAGS = -g -Wall $$(pkg-config --cflags --libs opencv)
+
+SRCS = \
+	gaussian.cpp \
+	tier.cpp
+
+OBJS = $(SRCS:.cpp=.o)
 
 main: gaussian
 
-gaussian: gaussian.cpp
-	$(CXX) $(CXX_FLAGS) $< -o $@ $(LIBS)
+gaussian: $(OBJS)
+	$(CXX) $(LD_FLAGS) $^ -o $@ $(LIBS)
 
 clean:
 	rm -f *.o *~ core
