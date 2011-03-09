@@ -1,22 +1,22 @@
-#include <iostream>
-using namespace std;
+#include <unistd.h>
+#include <stdio.h>
 
 #include "cv.h"
 using namespace cv;
 
 #include "tier.h"
 
-void printKernel(int tier, double height, Mat kernel)
+void kernel_print(const Mat &kernel, const int tierNumber, const double height)
 {
     Size size = kernel.size();
 
     if (height == 0.0)
-        printf("tier %d (initial)\n", tier);
+        printf("tier %d (initial)\n", tierNumber);
     else
-        printf("after tier %d of height: %f\n", tier, height);
-    for (int i = 0; i < size.height; i++) {
+        printf("after tier %d of height: %f\n", tierNumber, height);
+    for (int i = 0; i < kernel.rows; i++) {
         printf("%d: ", i);
-        for (int j = 0; j < size.width; j++) {
+        for (int j = 0; j < kernel.cols; j++) {
             if (kernel.at<double>(i,j) == 0.0)
                 printf("%8s ", "");
             else
@@ -27,7 +27,10 @@ void printKernel(int tier, double height, Mat kernel)
     printf("\n");
 }
 
-void trim(Mat m, int &tierNumber, struct Tier *tier)
+void tier_trim(const Tier *tier, Mat &m, int &tierNumber)
+/*
+ * removes `tier` from `m` (in-place)
+ */
 {
     int n = m.rows;
     int i0 = (n - tier->h) / 2;
@@ -50,33 +53,28 @@ void trim(Mat m, int &tierNumber, struct Tier *tier)
         i++;
     }
     assert(i == i0 + tier->h);
-    printKernel(tierNumber++, tier->z, m);
+    kernel_print(m, tierNumber++, tier->z);
 }
 
-void printTiers(Mat &m, int filterWidth)
+void tiers_print(Mat &m, int filterWidth)
 {
     int tierNumber = 0;
-    struct TierDecomposition *tierDecomposition;
+    TierDecomposition *tierDecomposition;
 
     tierDecompositions_init(m, filterWidth);
-    printKernel(tierNumber++, 0.0, m);
+    kernel_print(m, tierNumber++, 0.0);
     tierDecomposition = getTierDecomposition(filterWidth);
     for (int i = 0; ; i++) {
-        struct Tier *tier = &tierDecomposition->tier[i];
-        trim(m, tierNumber, tier);
+        Tier *tier = &tierDecomposition->tier[i];
+        tier_trim(tier, m, tierNumber);
         if (tier->w <= 2 && tier->h <= 2)
             break;  // last entry
     }
 }
 
-int main(int argc, char *argv[])
+Mat gaussianKernel2D(const int filterWidth, const double sigma)
 {
-    int filterWidth = 10;
-    double sigma = filterWidth / 6.0;
     Mat kernel1D;
-
-    if (argc == 2)
-        filterWidth = atoi(argv[1]);
     Mat kernel2D(filterWidth, filterWidth, CV_64F);
 
     kernel1D = getGaussianKernel(filterWidth, sigma);
@@ -86,5 +84,37 @@ int main(int argc, char *argv[])
                 kernel1D.at<double>(i) * kernel1D.at<double>(j);
         }
     }
-    printTiers(kernel2D, filterWidth);
+    return kernel2D;
+}
+
+void help(char *progName)
+{
+    fprintf(stderr,"syntax: %s [-w width] [-h]\n", progName);
+}
+
+int main(int argc, char *argv[])
+{
+    int filterWidth = 3;
+    double sigma = filterWidth / 6.0;
+    int opt;
+
+    while ((opt = getopt(argc, argv, "hw:")) != -1) {
+        switch (opt) {
+
+        case 'h':
+            help(argv[0]);
+            exit(EXIT_FAILURE);
+
+        case 'w':
+            filterWidth = atoi(optarg);
+            break;
+        }
+    }
+    if (optind < argc) {
+        help(argv[0]);
+        fprintf(stderr, "extra argument(s) provided -- exiting\n");
+        exit(EXIT_FAILURE);
+    }
+    Mat kernel2D = gaussianKernel2D(filterWidth, sigma);
+    tiers_print(kernel2D, filterWidth);
 }
