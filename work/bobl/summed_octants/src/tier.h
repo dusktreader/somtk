@@ -1,4 +1,4 @@
-#include "cv.h"
+#include "cv.h" // for Mat
 using namespace cv;
 
 // in "tier.cc"
@@ -8,10 +8,11 @@ struct Tier {
     double z; // coefficient ("z height") of tier
 };
 
-enum { MAX_TIERS = 20 }; // maximum number of tiers per decomposition
+enum { MAX_TIERS = 32 }; // maximum number of tiers per decomposition
 struct TierDecomposition {
+    int nTier;  // number of tiers in this decomposition
     struct Tier tier[MAX_TIERS];
 };
 
-extern struct TierDecomposition *getTierDecomposition(int n);
-extern void tierDecompositions_init(Mat &m, int filterWidth);
+extern struct TierDecomposition *getTierDecomposition(const int n);
+extern void tier_init(const Mat &m, const int filterWidth, const int rectOnly);
