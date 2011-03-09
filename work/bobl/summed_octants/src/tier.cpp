@@ -1,6 +1,11 @@
 #include <assert.h>
 #include "tier.h"
 
+/*
+ * A word of warning: Don't try to nest tier arrays within each other:
+ * The tier ecomposition of a w x w filter is not necessarily a subset
+ * of that for a (w+1) x (w+1) filter.
+ */
 static struct TierDecomposition octagonalTierDecompositions[] =
 {
     /*
@@ -8,33 +13,23 @@ static struct TierDecomposition octagonalTierDecompositions[] =
      * these sets of tuples denotes the filter width that tuple
      * applies to.
      */
-    {
-    nTier: -1, // == nTier (will be set in tierDecomposition_init()
-        {
+    {{
             { 1, 1, 0 }  // e.g., filter width = 1
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 2, 2, 0 },  // e.g., filter width = 2, and so on
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 3, 3, 0 },
             { 3, 3, 1 },
             { 1, 1, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 4, 4, 0 },
             { 4, 4, 1 },
             { 2, 2, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 5, 5, 0 },
             { 5, 5, 1 },
             { 5, 5, 2 },
@@ -42,9 +37,7 @@ static struct TierDecomposition octagonalTierDecompositions[] =
             { 3, 3, 1 },
             { 1, 1, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 6, 6, 0 },
             { 6, 6, 1 },
             { 6, 6, 2 },
@@ -52,9 +45,7 @@ static struct TierDecomposition octagonalTierDecompositions[] =
             { 4, 4, 1 },
             { 2, 2, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 7, 7, 0 },
             { 7, 7, 1 },
             { 7, 7, 2 },
@@ -66,9 +57,7 @@ static struct TierDecomposition octagonalTierDecompositions[] =
             { 3, 3, 1 },
             { 1, 1, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 8, 8, 0 },
             { 8, 8, 1 },
             { 8, 8, 2 },
@@ -80,9 +69,7 @@ static struct TierDecomposition octagonalTierDecompositions[] =
             { 4, 4, 1 },
             { 2, 2, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 9, 9, 0 },
             { 9, 9, 1 },
             { 9, 9, 2 },
@@ -100,9 +87,7 @@ static struct TierDecomposition octagonalTierDecompositions[] =
             { 3, 3, 1 },
             { 1, 1, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 10, 10, 0 },
             { 10, 10, 1 },
             { 10, 10, 2 },
@@ -128,36 +113,26 @@ static struct TierDecomposition rectangularTierDecompositions[] =
     /*
      * (as above, except that there are no diagonal entires (d == 0))
      */
-    {
-    nTier: -1,
-        {
+    {{
             { 1, 1, 0 }  // e.g., filter width = 1
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 2, 2, 0 },  // e.g., filter width = 2, and so on
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 3, 3, 0 },
             { 3, 1, 0 },
             { 1, 3, 0 },
             { 1, 1, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 4, 4, 0 },
             { 4, 2, 0 },
             { 2, 4, 0 },
             { 2, 2, 0 },
             { 0, 0, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 5, 5, 0 },
             { 5, 3, 0 },
             { 3, 5, 0 },
@@ -169,9 +144,7 @@ static struct TierDecomposition rectangularTierDecompositions[] =
             { 1, 1, 0 },
             { 0, 0, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 6, 6, 0 },
             { 6, 4, 0 },
             { 4, 6, 0 },
@@ -183,9 +156,7 @@ static struct TierDecomposition rectangularTierDecompositions[] =
             { 2, 2, 0 },
             { 0, 0, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 7, 7, 0 },
             { 7, 5, 0 },
             { 5, 7, 0 },
@@ -204,9 +175,7 @@ static struct TierDecomposition rectangularTierDecompositions[] =
             { 1, 1, 0 },
             { 0, 0, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 8, 8, 0 },
             { 8, 6, 0 },
             { 6, 8, 0 },
@@ -226,7 +195,6 @@ static struct TierDecomposition rectangularTierDecompositions[] =
             { 0, 0, 0 },
         }},
     {
-    nTier: -1,
         {
             { 9, 9, 0 },
             { 9, 7, 0 },
@@ -255,9 +223,7 @@ static struct TierDecomposition rectangularTierDecompositions[] =
             { 1, 1, 0 },
             { 0, 0, 0 },
         }},
-    {
-    nTier: -1,
-        {
+    {{
             { 10, 10, 0 },
             {  8, 10, 0 },
             { 10,  8, 0 },
@@ -284,7 +250,7 @@ static struct TierDecomposition rectangularTierDecompositions[] =
             {  2,  4, 0 },
             {  2,  2, 0 },
             {  0,  0, 0 },
-        }},
+    }},
 };
 
 /*

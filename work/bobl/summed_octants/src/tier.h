@@ -10,8 +10,10 @@ struct Tier {
 
 enum { MAX_TIERS = 32 }; // maximum number of tiers per decomposition
 struct TierDecomposition {
+    // these are statically initialized
+    struct Tier tier[MAX_TIERS]; // initialized
+    // this is computed (and defaults to zero)
     int nTier;  // number of tiers in this decomposition
-    struct Tier tier[MAX_TIERS];
 };
 
 extern struct TierDecomposition *getTierDecomposition(const int n);
