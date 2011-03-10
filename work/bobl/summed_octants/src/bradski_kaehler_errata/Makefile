@@ -1,3 +1,5 @@
+CXXFLAGS = -g -Wall
+
 main: tilt_sum_t
 
 tilt_sum_t: tilt_sum_t.cpp

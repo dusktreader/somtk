@@ -1,4 +1,4 @@
-N = 5 # largest index + 1
+N = 6 # largest index + 1
 
 BOOK = 0
 DOC  = 1
@@ -28,7 +28,7 @@ def tilt_sum(X, Y, source):
             print (X-rhs) * '      ',
             for x in range(-rhs+X, rhs+X+1):
                 if 0 <= x < N and 0 <= y < N:
-                    print "(%d,%d)" % (x, y),
+                    print "(%d,%d)" % (y, x),
             print
     else:
         assert(source == DOC)
@@ -43,12 +43,13 @@ def tilt_sum(X, Y, source):
             xhi = X + Y - y - 2
             print xlo * '      ',
             for x in range(xlo, xhi+1):
-                print "(%d,%d)" % (x, y),
+                if 0 <= x < N and 0 <= y < N:
+                    print "(%d,%d)" % (y, x),
             print
 
 X = 2
-Y = 2
-print 'the indices (x,y) used to compute tilt_sum(%d,%d)...' % (X, Y)
+Y = 4
+print 'the indices (y,x) used to compute tilt_sum(%d,%d)...' % (X, Y)
 print
 print '  from the book:'
 print
@@ -58,6 +59,6 @@ print '  what the documentation says:'
 print
 tilt_sum(X, Y, DOC)
 print
-print '  what I think it should be:'
+print '  what I think it should be (IMHO):'
 print
 tilt_sum(X, Y, ME)
