@@ -23,20 +23,11 @@ The repository itself can be reached via::
 
   $ svn checkout svn+ssh://peacock.tricity.wsu.edu/home/bobl/svn/astrocv
 
-Scheduled for Discussion
-........................
+Schedule
+........
 
 These are the papers we plan to discuss, in reverse chronological
 order.
-
-* Miller and Coe, "Star/galaxy classification using Kohonen
-  self-organizing maps" MIL95_
-
-  + TB: Applies SOM to binary segmentation between stars and galaxies.
-
-  + discussed on 8/3/10 (in TB's absence)
-
-  + to be continued on 8/17/10
 
 Not Yet Scheduled for Discussion
 ................................
@@ -173,6 +164,15 @@ chronological order.
     indicate feature commonality.
 
   + discussed 7/27/10
+
+* Miller and Coe, "Star/galaxy classification using Kohonen
+  self-organizing maps" MIL95_
+
+  + TB: Applies SOM to binary segmentation between stars and galaxies.
+
+  + discussed on 8/3/10 (in TB's absence)
+
+  + to be continued on 8/17/10
 
 .. _AVG96: 1996ApJS..107....1A.pdf
 .. _BLK04: 2004MNRAS.348.1038B.pdf
