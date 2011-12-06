@@ -1,56 +1,108 @@
 #pragma once
+
+#include <QSharedPointer>
+#include <QVector>
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
 #include "feature.h"
 #include "tools.hpp"
-#define HU7_FIX
 
-/** The HuFeature class provides a feature based upon image data */
+namespace hsom {
+
+/// The HuFeature class provides a feature based upon image data */
 class HuFeature : public Feature
 {
-private:
-
-    static const std::string alias;
-    static RandMaster rng;
-
-    std::vector<double> huVals;
-
-    static std::vector<double> huAlpha;                                                                                                                        // Generated with training set and epsilon = 0.625
-    static std::vector<double> huMean;
-    static std::vector<double> huStdv;
 
 public:
 
-    /** Default Constructor */
+    /// Constructs a hu feature
     HuFeature();
 
     /** Constructs a feature image with specified size and source image
-      * @param  img - The image source for the data
       * @note   The image may be color or grayscale and any size
       */
-    HuFeature( const cv::Mat& img );
+    HuFeature(
+        const cv::Mat& img ///< The image source for the data
+        );
 
+    /// Initializes this hu feature
+    virtual void initialize();
+
+    /// Destructs a Hu Feature
     virtual ~HuFeature();
 
-    /** Get the original Hu moments calculated for this feature */
-    std::vector<double> getOriginalHus();
+    /*
+    // Generated with training set and epsilon = 0.625
+    /// @todo  figure out what the hell the above comment means
 
-    /** Sets the parameters for the sigmoid correction function
-      @param  huMean  - The mean values for all hu features
-      @param  huStdv  - The standard deviations for all hu features
-      @param  huAlpha - The alpha tunting parameter for all hu features
-      */
-    static void setSigmoidParams( const std::vector<double>& huMean, const std::vector<double>& huStdv, const std::vector<double>& huAlpha );
+    /// Retains the alpha values for the sigmoid function
+    static QVector<double> huAlpha;
 
-    /** Fetches the parameters for the sigmoid correction function
-      @param  huMean  - The mean values for all hu features
-      @param  huStdv  - The standard deviations for all hu features
-      @param  huAlpha - The alpha tunting parameter for all hu features
-      */
-    static void getSigmoidParams( std::vector<double>& huMean, std::vector<double>& huStdv, std::vector<double>& huAlpha );
+    /// Retains the mean of hu values
+    static QVector<double> huMean;
 
-    /** This sigmoid squashing function maps hu values to the range ( 0, 1 )
-      * @param  t   - The input hu value
-      * @param  idx - The index of the hu value
-      */
-    double sigmoid( double t, int idx );
+    /// Retains the standard deviaton of hu values
+    static QVector<double> huStdv;
+    /// Sets the parameters for the sigmoid correction function
+    static void setSigmoidParams(
+        const QVector<double>& huMean, ///< The mean values for all hu features
+        const QVector<double>& huStdv, ///< The standard deviations for all hu features
+        const QVector<double>& huAlpha ///< The alpha tuning parameter for all hu features
+        );
 
+    /// Fetches the parameters for the sigmoid correction function
+    static void sigmoidParams(
+        QVector<double>& huMean, ///< The mean values for all hu features
+        QVector<double>& huStdv, ///< The standard deviations for all hu features
+        QVector<double>& huAlpha ///< The alpha tuning parameter for all hu features
+        ) const;
+
+    /// Uses a sigmoid squashing function to map hu values to the range ( 0, 1 )
+    static double sigmoid(
+        double t, ///< The input hu value
+        int idx   ///< The index of the hu value to quash
+        );
+
+QVector<double> HuFeature::huAlpha;
+QVector<double> HuFeature::huMean;
+QVector<double> HuFeature::huStdv;
+void HuFeature::setSigmoidParams( const QVector<double> &huMean,
+                                  const QVector<double> &huStdv,
+                                  const QVector<double> &huAlpha )
+{
+    ASSERT_SET(  HuFeature::huMean,  huMean,  huMean.size()  == 7, "A Hu vector must have 7 elements" );
+    ASSERT_SET(  HuFeature::huStdv,  huStdv,  huStdv.size()  == 7, "A Hu vector must have 7 elements" );
+    ASSERT_SET(  HuFeature::huAlpha, huAlpha, huAlpha.size() == 7, "A Hu vector must have 7 elements" );
+}
+
+void HuFeature::sigmoidParams( QVector<double> &huMean, QVector<double> &huStdv, QVector<double> &huAlpha ) const
+{
+    ASSERT_SET( huMean, HuFeature::huMean,
+                HuFeature::huMean.size() == 7,   "The Hu mean sigmoid parameter has not been set"  );
+    ASSERT_SET( huStdv, HuFeature::huStdv,
+                HuFeature::huStdv.size() == 7,   "The Hu stdv sigmoid parameter has not been set"  );
+    ASSERT_SET( huAlpha, HuFeature::huAlpha,
+                HuFeature::huAlpha.size() == 7,  "The Hu alpha sigmoid parameter has not been set" );
+}
+
+const QVector<double>& HuFeature::originalHus() const
+{
+    return huVals;
+}
+
+
+
+
+double HuFeature::sigmoid( double t, int idx )
+{
+    // Execute the sigmoid function
+    return 1 / ( 1 + exp( -huAlpha[idx] * ( t - huMean[idx] ) ) );
+}
+        */
 };
+
+typedef QSharedPointer<HuFeature> HuFeaturePtr;
+
+} // namespace hsom

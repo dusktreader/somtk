@@ -1,303 +1,227 @@
 #pragma once
 
-#include <deque>
+#include <QVector>
+#include <QSize>
+#include <QPoint>
+#include <QPointF>
 
 #include "tools.hpp"
-#include "cvtypesplus.hpp"
 
 #include "feature.h"
 
-/** The default width of a HexGrid */
-#define HG_DEFAULT_W      64
+/// Defines the vertical distance between cells in the grid
+#define HG_B 0.86602540378443837
 
-/** The default height of a HexGrid */
-#define HG_DEFAULT_H      64
+namespace hsom {
 
-/** Defines the vertical distance between cells in the grid */
-#define HG_B              0.86602540378443837
-
-/** The HexGrid class provides the basis for the spatial organization of the
-  * Self Organizing Map.  It provides a hexagonal grid which supports
-  * neighborhood searches, edge wrapping, and other functionality.
+/** The HexGrid class provides the basis for the spatial organization of the Self Organizing Map.  It provides a
+  * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
   */
 template <class T>
 class HexGrid
 {
 protected:
 
-    /** Enumration for marks in the HexGrid */
-    enum Mark { MK_DEFAULT, MK_WINNER, MK_VISITED, MK_ORIGIN, MK_NEIGHBOR, MK_EXCLUDE };
+    /// The dimensions of the hex grid
+    QSize _size;
 
-    /** The alias for this class */
-    static const std::string alias;
+    /// A set of items for the slots of the grid
+    QVector<T> items;
 
-    /** The width of the hex grid */
-    SizePlus<int> _sz;
-
-    /** A set of items for the slots of the grid */
-    std::vector<T> items;
-
-    /** A set of distances for the slots of the grid in a given neighborhood*/
-    std::vector<int> distances;
-
-    /** A set of markers for the slots of the grid */
-    std::vector<Mark> marks;
+    /// A set of distances for the slots of the grid in a given neighborhood
+    QVector<int> distances;
 
 public:
 
-    /** Constructs an empty hex grid */
+    /// Constructs a hex grid with no size information
     HexGrid(){}
 
-    /** Constructs the hex grid with a specified size
-      * @param  sz - The desired size of the hex grid
-      */
-    HexGrid( const SizePlus<int>& sz )
+    /// Constructs the hex grid with a specified size
+    HexGrid(
+        const QSize& size ///< The size of the new grid
+        )
     {
-        setSize( sz );
+        setSize( size );
     }
 
-    /** Constructs the hex grid with a specified size and item value
-      * @param  sz - The desired size of the hex grid
-      */
-    HexGrid( const SizePlus<int>& sz, const T& item )
-    {
-        setSize( sz );
-        setTo( item );
-    }
-
+    /// Destructs the HexGrid
     virtual ~HexGrid(){}
 
-    /** Sets the size of the grid
-      * @param  sz - The desired size of the hex grid
-      */
-    void setSize( const SizePlus<int>& sz )
+    /// Sets the size of the grid
+    void setSize( const QSize& size )
     {
-        ASSERT_MSG( sz.w > 0,      "Grid width must be greater than 0"             );
-        ASSERT_MSG( sz.h > 0,      "Grid height must be greater than 0"            );
-        ASSERT_MSG( sz.h % 2 == 0, "Grids must have even height for edge wrapping" );
+        ASSERT_MSG( size.width() > 0,       "Grid width must be greater than 0"                 );
+        ASSERT_MSG( size.height() > 0,      "Grid height must be greater than 0"                );
+        ASSERT_MSG( size.height() % 2 == 0, "Grids must have even height ( for edge wrapping )" );
 
-        _sz = sz;
-        items  = std::vector<T>(      l() );
-        distances = std::vector<int>( l() );
-        marks  = std::vector<Mark>(   l() );
+        _size = size;
+        items  = QVector<T>( size.width() * size.height() );
+        distances = QVector<int>( items.size() );
     }
 
-    /** Clears the hex grid */
+    /// Clears the hex grid
     virtual void clear()
     {
         items.clear();
-        _sz = SizePlus<int>();
+        distances.clear();
+        _size.setWidth( 0 );
+        _size.setHeight( 0 );
     }
 
-    /** Sets all of the slots in the grid to the specified item */
-    virtual void setTo( const T& item )
+    /// Sets all of the slots in the grid to the specified item
+    void setTo( const T& item )
     {
-        for( int i=0; i<l(); i++ )
-            items[i] = item;
+        items.fill( item );
     }
 
-    /** Resets the size of the grid and re-initializes it
-      * @param  sz - The desired size of the hex grid
-      */
-    void resetSize( const SizePlus<int>& sz )
+    /// Resets the size of the grid and re-initializes it
+    void resetSize( const QSize& size )
     {
         clear();
-        setSize( sz );
+        setSize( size );
     }
 
+    /// Fetches the distance calculated for the given index
     int distance( int idx )
     {
         return distances[idx];
     }
 
-    int distance( PointPlus<int>& pt )
+    /// Fetches the distance calculated for the given point
+    int distance( QPoint& point )
     {
-        return distances[ index(pt) ];
+        return distances[ index(point) ];
     }
 
-    /** Fetches the neighbors for the slot at the specified coordinates
-      * @param  pt - The point coordinate of the slot
-      * @return A vector of indices for the immediate neighbors ( <=6 indices )
-      * @note   Will have fewer than 6 if the slot is on the border and
-      *         wrapping is not available
-      */
-    std::vector<int> neighborIndices( const PointPlus<int>& pt )
+    /// Fetches indices for all slots within a radius of the slot at x, y
+    QVector<int> neighborhood(
+        int r,              ///< The radius within which a cell must lie to be part of the neighborhood
+        const QPoint& point ///< The origin cell for the neighborhood ( center cell )
+        )
     {
-        ASSERT_MSG( pt.x >= 0 && pt.x < _sz.w, "x coordinate must be in the range [ 0 , w )" );
-        ASSERT_MSG( pt.y >= 0 && pt.y < _sz.h, "y coordinate must be in the range [ 0 , h )" );
-        std::vector<int> indices;                                                                                       // Will contain the indices of all neighbor cells
-        int o = ( pt.y + 1 ) % 2;                                                                                       // An offset for rows.  If this row is odd ( shorter by 1 ) the offset is 1.  Alleviates problem with staggering;
-        indices.push_back( index( PointPlus<int>( mod(   pt.x-1, _sz.w ),                 pt.y ) ) );                   // Neighbor to the left.  Notice that we use correct modular arithmethic to wrap around edges.  The % operator will not perform correctly here
-        indices.push_back( index( PointPlus<int>( mod(   pt.x+1, _sz.w ),                 pt.y ) ) );                   // Neighbor to the right
-        indices.push_back( index( PointPlus<int>( mod(   pt.x-o, _sz.w ), mod( pt.y-1, _sz.h ) ) ) );                   // Neighbor to the up-left
-        indices.push_back( index( PointPlus<int>( mod( pt.x+1-o, _sz.w ), mod( pt.y-1, _sz.h ) ) ) );                   // Neighbor to the up-right
-        indices.push_back( index( PointPlus<int>( mod(   pt.x-o, _sz.w ), mod( pt.y+1, _sz.h ) ) ) );                   // Neighbor to the down-left
-        indices.push_back( index( PointPlus<int>( mod( pt.x+1-o, _sz.w ), mod( pt.y+1, _sz.h ) ) ) );                   // Neighbor to the down-right
-        return indices;
+        return neighborhood( r, index(point) );
     }
 
-    /** Fetches the neighbors for the specified slot
-      * @param  idx - The index of the slot
-      * @return A vector of indices for the immediate neighbors ( <=6 indices )
-      * @note   Will have fewer than 6 if the slot is on the border and
-      *         wrapping is not available
-      */
-    std::vector<int> neighborIndices( int idx )
+    /// Fetches indices for all slots within a radius of the specified slot
+    QVector<int> neighborhood(
+        int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
+        int idx ///< The origin index for the neighborhood ( center cell )
+        )
     {
-        return neighborIndices( coords( idx ) );
-    }
+        // Fetch the coordinate of the origin index
+        QPoint origin = coords( idx );
 
-    /** Fetches indices for all slots within a radius of the slot at x, y
-      * @param  r  - The radius within which to search
-      * @param  pt - The point coordinate of the slot
-      * @return A vector of indices of neighborhood slots
-      */
-    std::vector<int> neighborhood( int r, const PointPlus<double>& pt )
-    {
-        return neighborhood( r, index(pt) );
-    }
+        // The neighbors vector will contain the indices of all cells in the neighborhood
+        QVector<int> globalNeighbors;
 
-    /** Fetches indices for all slots within a radius of the specified slot
-      * @param  r     - The radius within which to search
-      * @param  idx  - The index of the slot
-      * @return A vector of indices of neighborhood slots
-      */
-    std::vector<int> neighborhood( int r, int idx )
-    {
-        resetMarks();                                                                                                   // The marks vector will be used to keep track of which cells have been visited
-        resetDistances();                                                                                               // The distances vector will be used to store the distance of a cell from the neighborhood's origin cell
-        std::vector<int> results;                                                                                       // The results vector will contain the indices of all cells in the neighborhood
-        std::deque<int> pending;                                                                                        // The pending vector will hold potential neighbors awaiting examination
-        std::vector<int> neighbors;                                                                                     // The neighbors vector will temporarily hold indices of immediate neighbors
-        marks[idx] = HexGrid::MK_ORIGIN;                                                                                // All visited cells should be marked with something besides their default mark.  The origin cell is the only cell marked as the winner.
-        distances[idx] = 0;                                                                                             // Obviously the distance between the origin and itself is 0.0
-        pending.push_back( idx );                                                                                       // Put the origin cell into the queue to begin the breadth first traversal
-        int dist;                                                                                                       // Temporary distance variable holds the current distance
-        while( !pending.empty() )                                                                                       // Process idices in the queue until the queue is empty ( meaning the traversal is done )
+        // The local neighbors vector will contain all cells within the neighborhood discovered by each omp thread
+        QVector<int> localNeighbors;
+
+        #pragma omp parallel
         {
-            idx = pending.front();                                                                                      // Get the index at the front of the queue
-            pending.pop_front();
-            results.push_back( idx );                                                                                   // Add the popped index to the results
-            dist = distances[idx];                                                                                      // Record the current distance
-            if( dist >= r )                                                                                             // If the current distance is greater than or equal to the radius limit, do not examine the neighbors of the current cell.
-                continue;
-            neighbors = neighborIndices( idx );                                                                         // Otherwise, get all the neighbors of the current cell
-            #pragma omp parallel private( idx )
-            {                                                                                                           // +omp
-                #pragma omp for
-                for( int i=0; i<(int)neighbors.size(); i++ )
-                {
-                    idx = neighbors[i];
-                    if( marks[idx] != MK_DEFAULT )                                                                      // If the current neighbor has already been marked, it has already been examined.  Pass it up
-                        continue;
-                    distances[idx] = dist + 1;                                                                          // Otherwise record its distance.  For simplicity, distances are simply a count of the number of steps away from the origin cell.
-                    marks[idx] = MK_NEIGHBOR;                                                                           // Mark the cell as being a part of the neighborhood.  This ensures that each neighbor cell is examined only once.
-                    #pragma omp critical
-                    {
-                        pending.push_back( idx );                                                                       // Add the cell to the queue
-                    }
-                }
-            }                                                                                                           // -omp
+            #pragma omp for private( localNeighbors )
+            for( int i = 0; i < this->l(); i++ )
+            {
+                // Fetch the coordinate of the current index
+                QPoint point = coords( i );
+
+                // Calculate the distance ( on the hex grid ) to the origin point
+                int dy = abs( origin.y() - point.y() );
+                dy = std::min( dy, _size.height() - dy );
+
+                int dx = abs( origin.x() - point.x() );
+                dx = std::min( dx, _size().width() - dx );
+
+                distances[i] = dy - std::max( dx - dy / 2, 0 );
+
+                // If the distance is within the radius, add this index to the local neighbors
+                if( distances[i] < r )
+                    localNeighbors.append( i );
+            }
+
+            // Each thread adds it's local neighbor list to the global neighbor list
+            #pragma omp critical
+            {
+                globalNeighbors += localNeighbors;
+            }
         }
-        return results;
+        return globalNeighbors;
     }
 
-    /** Fetches the size of the grid */
-    SizePlus<int> size()
+    /// Fetches the size of the grid
+    const QSize& size()
     {
-        return _sz;
+        return _size;
     }
 
-    /** Fetches the linear size of the grid */
-    int l()
+    /// Fetches the linear size of the grid
+    unsigned l()
     {
-        return _sz.area();
+        return items.size();
     }
 
-    /** Resets the slots of the hex grid */
-    void reset()
+    /// Fetches the item at a specific point in the grid
+    T& operator[](
+        const QPlus& point ///< The location in the grid from which to fetch an item
+        )
     {
-        for( unsigned int i=0; i<l(); i++ )
-        {
-            marks[i] = MK_DEFAULT;
-            distances[i] = -1;
-        }
+        return item( point );
     }
 
-    /** Resets the markers for the slots of the grid */
-    void resetMarks()
+    /// Fetches the item at a specific index in the grid
+    T& operator[](
+        int idx ///< The index in the grid from which to fetch an item
+        )
     {
-        for( int i=0; i<l(); i++ )
-            marks[i] = MK_DEFAULT;
-    }
-
-    /** Resets the distances for the slots of the grid */
-    void resetDistances()
-    {
-        for( int i=0; i<l(); i++ )
-            distances[i] = -1;
-    }
-
-    T& operator[]( const PointPlus<int>& pt )
-    {
-        return item( pt );
-    }
-
-//    T& operator[]( int x, int y )
-//    {
-//        return item( PointPlus<int>( x, y ) );
-//    }
-
-    T& operator[]( int idx )
-    {
+        /// @todo Add a bounds checking here and custom exceptions would be nice
         return item( idx );
     }
 
-    /** Fetches the item at the given index
-      * @param  idx - The index of the desired slot
-      * @return A reference to the desired item
-      */
-    T& item( int idx )
+    /// Fetches the item at a specific point in the grid
+    T& item(
+        const QPoint& point ///< The location in the grid from which to fetch an item
+        )
+    {
+        return items[ index( point ) ];
+    }
+
+    /// Fetches the item at a specific index in the grid
+    T& item(
+        int idx ///< The index in the grid from which to fetch an item
+        )
     {
         return items[ idx ];
     }
-    /** Fetches the item at the given coordinates
-      * @param  pt - The coordinates of the desired slot
-      * @return A reference to the desired item
-      */
-    T& item( const PointPlus<int>& pt )
+
+    /// Fetches the index for the slot at the specified coordinates
+    int index(
+        const QPoint& point ///< The point in the grid for which to fetch the index
+        )
     {
-        return items[ index(pt) ];
+        ASSERT_MSG( point.x() >= 0 && point.x() < _size.w, "x coordinate must be in the range [ 0 , w )" );
+        ASSERT_MSG( point.y() >= 0 && point.y() < _size.h, "y coordinate must be in the range [ 0 , h )" );
+        return point.y() * _size.width() + point.x();
     }
 
-    /** Fetches the index for the slot at the specified coordinates
-      * @param  pt - The point coordinate
-      * @return The vector index of the corresponding slot
-      */
-    int index( const PointPlus<int>& pt )
+    /// Fetches the coordinates given an index
+    QPoint coords(
+        int idx ///< The index in the grid for which to fetch the coordinates
+        )
     {
-        ASSERT_MSG( pt.x >= 0 && pt.x < _sz.w, "x coordinate must be in the range [ 0 , w )" );
-        ASSERT_MSG( pt.y >= 0 && pt.y < _sz.h, "y coordinate must be in the range [ 0 , h )" );
-        return pt.y * _sz.w + pt.x;
+        ASSERT_MSG( idx < l(), "The index must not be greater than the grid's area" );
+        return QPoint( idx % _size.width(), idx / _size.width() );
     }
 
-    /** Fetches the coordinates given an index
-      * @param  index - The index of the slot for which to fetch coords
-      * @return The point coordinate for the slot
-      */
-    PointPlus<int> coords( int idx )
+    /// Fetches the real coordinates of a given point in the grid ( should only be used for visualization )
+    QPointF realCoords( const QPoint& point )
     {
-        ASSERT_MSG( idx < _sz.area(), "The index must not be greater than the grid's area" );
-        return PointPlus<int>( idx % _sz.w, idx / _sz.w );
+        ASSERT_MSG( point.x() >= 0 && point.x() < _size.width(),  "x coordinate must be in the range [ 0 , w )" );
+        ASSERT_MSG( point.y() >= 0 && point.y() < _size.height(), "y coordinate must be in the range [ 0 , h )" );
+        return QPointF( point.x() + ( point.y() % 2 ) * 0.5, point.y() * HG_B );
     }
 
-    PointPlus<double> realCoords( const PointPlus<int>& pt )
-    {
-        ASSERT_MSG( pt.x >= 0 && pt.x < _sz.w, "x coordinate must be in the range [ 0 , w )" );
-        ASSERT_MSG( pt.y >= 0 && pt.y < _sz.h, "y coordinate must be in the range [ 0 , h )" );
-        return PointPlus<double>( pt.x + ( pt.y % 2 ) * 0.5, pt.y * HG_B );
-    }
-
+    /// @todo Re-do visualize function to draw a QImage
+    /*
     cv::Mat visualize()
     {
         int globalMaxDist = 0;
@@ -329,6 +253,8 @@ public:
             cv::circle( viz, pt, radius, clr, CV_FILLED );
         }
         return viz;
-    }
+    }*/
 
 };
+
+} // namespace hsom

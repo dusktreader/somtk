@@ -1,74 +1,102 @@
 #include "hsom.h"
 
-using namespace std;
+namespace hsom {
 
-const string HSOM::alias = "HSOM";
-
-HSOM::HSOM()
+HSOM::HSOM( QObject* parent ) :
+    QThread( parent )
 {
     ann = NULL;
-    _catCt = -1;
 }
 
-HSOM::HSOM( const SizePlus<int>& sz, int catCt )
-{
-    grid = HexGrid<Feature*>( sz );
-    _catCt = catCt;
-    ann = NULL;
-    _name = "unnamed";
-}
+HSOM::HSOM( SOMPtr som, CvANN_MLP* ann, QObject* parent ) :
+    QThread( parent ),
+    _som( som ),
+    _ann( ann )
+{}
 
 HSOM::~HSOM()
-{
-    clear();
-    delete ann;
-}
-
-void HSOM::clear()
-{
-    clearSuspects();
-    for( int i=0; i<grid.l(); i++ )
-        delete grid[i];
-    grid.clear();
-}
+{}
 
 void HSOM::clearSuspects()
 {
     suspects.clear();
+    normMean.clear();
+    normStdv.clear();
+    normAlpha.clear();
 }
 
-bool HSOM::statusCheck( int iteration, string msg1, string msg2, int maxIters )
+void HSOM::normalizeFeatures( QList<FeaturePtr> &features, double epsilon, int sigmaStep, unsigned maxFeatures )
 {
-    cout << "HSOM training " << iteration << "/" << maxIters << ": " << msg1 << " ... " << msg2 << endl;
-    return true;
+    unsigned featureSize = features.first()->size();
+
+    normMean  = QVector<double>( featureSize, 0.0 );
+    normStdv  = QVector<double>( featureSize, 0.0 );
+    normAlpha = QVector<double>( featureSize, 0.0 );
+
+    /// @todo  these should probably be parameterized....
+    // double eps = 0.0625;
+    // int sigmaStep = 2;
+    unsigned featureCount = 0;
+
+    foreach( FeaturePtr feature, features )
+    {
+        if( featureCount >= maxFeatures )
+            break;
+
+        for( int i = 0; i < featureSize; i++ )
+        {
+            double t = feature->at( i ) - normMean[i];
+            normMean[i] += t / featCt;
+            normStdv[i] += t * ( feature->at( i ) - normMean[i] );
+        }
+        featureCount++;
+    }
+
+    for( int i = 0; i < featureSize; i++ )
+    {
+        normStdv[i] = sqrt( normStdv[i] / ( featureCount - 1 ) );
+        normAlpha[i] = log( 1 / epsilon - 1 ) / ( sigmaStep * normStdv[i] );
+    }
+
+
+    foreach( FeaturePtr feature, features )
+    {
+        for( int i = 0; i < featureSize; i++ )
+        {
+            double* t = *(feature->data())[i];
+            t = 1 / ( 1 + exp( -normAlpha[i] * ( t - normMean[i] ) ) );
+        }
+    }
 }
 
 void HSOM::trainSOM( int somEpochs, double initAlpha, double initRadRat )
 {
     ASSERT_MSG( initRadRat <= 0.5, "Inital radius ratio may not exceed 1/2" );
 
-    ASSERT( statusCheck( 0, "Beginning SOM training...", "Training SOM" ) );
-
     double radius;
     double radius0 = initRadRat * grid.size().w;                                                                        /// @todo  Make radius_tf, radius_Nf, alpha_tf, alpha_Nf arguments to this function
-    double radius_tf = 0.25;
-    double radius_Nf = 0.5;
+    double radius_tf = 0.25;  // This is a tuning factor...should not be hardcoded
+    double radius_Nf = 0.5;   // This is a tuning factor...should not be hardcoded
     double radius_gamma = -log( radius_Nf ) / ( radius_tf * somEpochs );
 
     double alpha;
     double alpha0 = initAlpha;
-    double alpha_tf = 0.1;
-    double alpha_Nf = 0.25;
+    double alpha_tf = 0.1;  // This is a tuning factor...should not be hardcoded
+    double alpha_Nf = 0.25; // This is a tuning factor...should not be hardcoded
     double alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * somEpochs );
 
-    for( int E=0; E<somEpochs; E++ )
-    {
-        ASSERT( statusCheck( 0, "---", "SOM Epoch " + num2str( E + 1 ) + "/" + num2str( somEpochs ) ) );
+    QList<FeaturePtr> globalFeatures;
+    foreach( SuspectPtr suspect, trainingSuspects )
+        globalFeatures.append( suspect->features() );
 
+
+
+    for( int epoch=0; epoch<somEpochs; epoch++ )
+    {
         random_shuffle( suspects.begin(), suspects.end() );                                                             // Shuffle the list of suspects so that representatives from each category appear uniformly throught the training
 
-        alpha = alpha0 * exp( -alpha_gamma * E );
-        radius = radius0 * exp( -radius_gamma * E );
+        alpha = alpha0 * exp( -alpha_gamma * epoch );
+        radius = radius0 * exp( -radius_gamma * epoch );
         preCalcWeights( alpha, radius );                                                                                // Pre-calculate the gaussian weights for updating the SOM
         for( unsigned int i=0; i<suspects.size(); i++ )
         {
@@ -262,7 +290,7 @@ int HSOM::closestFeatureIndex( Feature* feat )
         #pragma omp for
         for( int i=0; i<grid.l(); i++ )
         {
-            double dist = feat->dist( grid[i] );                                                                        // Calculate the distance between the input feature and the map feature at index i
+            double dist = feat->distance( grid[i] );                                                                        // Calculate the distance between the input feature and the map feature at index i
             if( dist  < localMinDist )
             {
                 localMinDist = dist;
@@ -279,20 +307,6 @@ int HSOM::closestFeatureIndex( Feature* feat )
         }
     }
     return globalMinIdx;
-}
-
-PointPlus<int> HSOM::closestFeatureCoords( Feature* feat )
-{
-    return grid.coords( closestFeatureIndex( feat ) );
-}
-
-void HSOM::preCalcWeights( const double alpha, const double radius )
-{
-    double sigma = radius / FWHM_FACTOR;                                                                                // The radius will be used to describe the Full Width at Half Maximum of the gaussian weighting function.  We back-compute sigma from this.
-    double twoSigmaSquared = 2 * pow( sigma, 2 );                                                                       // Value of 2 * sigma^2
-    weights = vector<double>( (int)radius + 1 );
-    for( unsigned int i=0; i<weights.size(); i++ )
-        weights[i] = alpha * exp( -pow( i, 2.0 ) / twoSigmaSquared );                                                   // Calculate the gaussian weighting function.  This function is dependant on alpha, sigma, and current distance from origin.
 }
 
 void HSOM::updateSOM( Suspect* suspect )
@@ -382,3 +396,5 @@ void HSOM::write( cv::FileStorage& fs )
         ann->write( fs.fs, "ann" );
     fs << "}";
 }
+
+} // namespace hsom

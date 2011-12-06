@@ -8,7 +8,8 @@ TEMPLATE = app
 CONFIG += qt
 
 INCLUDEPATH += /usr/local/include/opencv ../tools
-LIBS += -L /usr/local/lib -lcv -lcxcore -lhighgui -lml
+#LIBS += -L /usr/local/lib -lcv -lcxcore -lhighgui -lml
+LIBS += -L /usr/local/lib -lopencv_core -lopencv_highgui -lopencv_ml
 
 QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
 QMAKE_LFLAGS_RELEASE += -fopenmp
@@ -35,7 +36,6 @@ HEADERS += \
     ../tools/tools.hpp \
     ../tools/cvtools.hpp \
     ../tools/cvtypesplus.hpp \
-    unittest.hpp \
     hexgrid.hpp \
     hexgridtest.h \
     feature.h \

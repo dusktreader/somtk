@@ -1,56 +1,47 @@
 #pragma once
 
-#include "cv.h"
+#include "opencv2/core/core.hpp"
 
 #include "tools.hpp"
 
-/** The feature class provides an abstract base class for SOM features */
-class Feature
+#include <QVector>
+#include <QSharedPointer>
+
+namespace hsom {
+
+/// The feature class provides an abstract base class for SOM features
+class Feature : public QVector<double>
 {
-protected:
-
-    static const std::string alias;
-
-    /** The data associated with the feature */
-    std::vector<double> data;
-
-    /** Sets the size of the data vector
-      * @param  l - The length of the vector
-      */
-    void setSize( int l );
-
-    /** Sets the data to a given input vector
-      * @param  newData - The new data
-      */
-    void setData( const std::vector<double> &newData );
+    /// Generates random numbers for any features
+    static RandMaster rng;
 
 public:
 
+    /// Constructs the base Feature class
     Feature();
 
+    /// Constructs the Feature from a data vector
+    Feature( const QVector<double>& other );
+
+    /// Destructs the base Feature class
     virtual ~Feature();
 
-    /** Calculates the distance between this and another feature
-      * @param  other - The other feature to compare against
-      * @return The distance between the two features
-      */
-    virtual double dist( Feature* other );
+    /// Calculates the Euclidean distance between this and another feature
+    virtual double distance(
+        const FeaturePtr other ///< The other feature to compare against
+        ) const;
 
-    /** Adjusts the value of this Feature given another and other parameters
-      * @param  other       - The other Feature to compare against
-      * @param  scaleFactor - A scaling factor for adjustment
-      */
-    virtual void adjust( Feature* other, double scaleFactor );
+    /// Adjusts the value of this Feature to make it more like an input feature
+    virtual void adjust(
+        const FeaturePtr other, ///< The other Feature to compare against
+        double scaleFactor      ///< The scaling factor by which to augment the adjustment
+        );
 
-    /** Creates a visualization of the feature */
-    virtual cv::Mat visualize() = 0;
-
-    /** Determines if this feature has any content */
-    virtual bool hasContent() = 0;
-
-    int l();
-
-    void read( const cv::FileNode& fn );
-    void write( cv::FileStorage& fs );
+    /// Initializes this Feature
+    virtual void initialize();
 
 };
+
+typedef QSharedPointer<Feature> FeaturePtr;
+
+} // namespace hsom

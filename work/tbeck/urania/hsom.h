@@ -1,201 +1,142 @@
 #pragma once
 
-#include "cv.h"
-#include "cxcore.h"
-#include "ml.h"
+#include <QString>
+#include <QVector>
+
+#include "opencv2/core/core.hpp"
+#include "opencv2/ml/ml.hpp"
 
 #include "tools.hpp"
 #include "cvtools.hpp"
 #include "cvtypesplus.hpp"
 
-#include "hexgrid.hpp"
+#include "som.h"
 #include "suspect.h"
 
-/** A slope tuning parameter for an inverse exponential function */
-#define A 0.1
+namespace hsom {
 
-/** Adjustment parameter for the initial width of the neighborhood function */
-#define B 0.20
-
-/** A constant describing the conversion factor between FWHM and sigma */
-#define FWHM_FACTOR 2.3548200450309493
-
-/** The SOM class provides an abstract base class for Self-Organizing Maps */
-class HSOM
+/// The SOM class provides an abstract base class for Self-Organizing Maps
+class HSOM : public QThread
 {
 private:
 
-    /** The alias for this class */
-    static const std::string alias;
+    /// The SOM used by the hybrid
+    SOMPtr _som;
 
-    /** The name of this HSOM */
-    std::string _name;
+    /// The back-end Multilayer Perceptron Neural Network for classification
+    CvANN_MLP* _ann;
 
-    /** The back-end Multilayer Perceptron Neural Network for classification */
-    CvANN_MLP* ann;
+    /// Trains the SOM component of the HSOM
+    void trainSOM(
+        int somEpochs,    ///< The number of training epochs to use
+        double initAlpha, ///< The initial training weight
+        double initR      ///< The intial radius of the training neighborhood
+        );
 
-    /** Trains the SOM component of the HSOM
-      * @param  somEpochs  - The number of training epochs to use
-      * @param  initAlpha  - The initial training weight
-      * @param  initR      - The intial radius of the training neighborhood
-      */
-    void trainSOM( int somEpochs, double initAlpha, double initR );
-
-    /** Generates the SOMHistograms needed for trainning the HSOM
-      * @return A boolean indicating if the training was interrupted
-      */
+    /// Generates the SOMHistograms needed for training the HSOM
     void generateHistograms();
 
-    /** Trains the ANN component of the HSOM
-      * @param  annIters   - The number of iterations for ANN training
-      * @param  annEps     - The minimum adjustment size for ANN training
-      * @return A boolean indicating if the training was interrupted
-      */
-    void trainANN( int annIters, double annEps );
+    /// Trains the ANN component of the HSOM
+    void trainANN(
+        int annIters, ///< The number of iterations to use in training the ANN
+        double annEps ///< The minimum adjustment size to use in training the ANN
+        );
+
+    /// @todo: doc
+    QVector<double> normMean;
+    QVector<double> normStdv;
+    QVector<double> normAlpha;
+
 
 protected:
 
-    /** The grid of features used by the SOM */
-    HexGrid<Feature*> grid;
+    /// A list of suspects for training or classification
+    QList<SusepctPtr> trainingSuspects;
 
-    /** A list of suspects for training or classification */
-    std::vector<Suspect*> suspects;
-
-    /** A set of precalculated gaussian weights for updating the SOM */
-    std::vector<double> weights;
-
-    /** The number of categories that this Hybrid SOM will classifiy */
-    int _catCt;
-
-    /** Performs a status check that may interface to an interactive control
-      * @param  iteration - The current iteration
-      * @param  msg1      - An optional message
-      * @param  msg2      - Another optional message
-      * @param  maxIter   - The maximum number of iterations to perform
+    /** Checks if Performs a status check that may interface to an interactive control
       * @return A boolean indicating if processing should continue
       */
-    virtual bool statusCheck( int iteration, std::string msg1="", std::string msg2="", int maxIters=0 );
+    virtual bool statusCheck(
+        int iteration,       ///< The current iteration
+        std::string msg1="", ///< An optional message
+        std::string msg2="", ///< Another optional message
+        int maxIters=0       ///< The maximum number of iterations to perform
+        );
 
-    /** Preprocessing for the suspects.  Implemented by child class. */
-    virtual void analyzeSuspects( ) = 0;
+    /// Preprocessing for the suspects.  May be implemented by child classes.
+    virtual void analyzeSuspects();
 
-    /** Initializes the features of this SOM */
-    virtual void initFeatures() = 0;
+    /// Normalizes a list of features using a Sigmoid function to map elements between 0.0 and 1.0
+    void normalizeFeatures( QList<FeaturePtr>& features, double epsilon=0.0625, int sigmaStep=2, unsigned maxFeatures=100000 );
 
-    /** Finds the feature that is closest to the input feature
-      * @param  feat - The input feature to compare against map features
-      * @return The index of the closest feature
-      */
-    int closestFeatureIndex( Feature* feat );
+    /// Updates the SOM with a single training suspect
+    void updateSOM( SuspectPtr suspect );
 
-    /** Finds the coordinates of the closest feature to the input feature
-      * @param  feat - The input feature to compare against map features
-      * @param  x    - The 'x' coordinate of the closest feature
-      * @param  y    - The 'x' coordinate of the closest feature
-      */
-    PointPlus<int> closestFeatureCoords( Feature* feat );
-
-    /** Precalculates Gaussian wieghts given a radius and an alpha
-      * @param  alpha - The learning rate
-      * @param  radius - The width of the Gaussian weighting function
-      */
-    void preCalcWeights( const double alpha, const double radius );
-
-    /** Updates the SOM with a single training suspect
-      * @param  suspect - The suspect with which to train
-      */
-    void updateSOM( Suspect* suspect );
-
-    /** Updates the training suspects histogram given a trained SOM
-      * @param  suspect - The suspect to update
-      */
-    void updateHistogram( Suspect* suspect );
+    /// Updates the training suspect's histogram given a trained SOM
+    void updateHistogram( Suspect* suspect ) const;
 
 public:
 
-    /** Constructs an empty HSOM */
-    HSOM();
+    /// Constructs an empty Hybrid SOM
+    HSOM(
+        QObject* parent=NULL ///< The parent object for this HSOM ( inheriting from QThread )
+        );
 
-    /** Constructs the Hybrid SOM with a specified size
-      * @param  sz    - The desired size of the SOM
-      * @param  catCt - Then number of categories that this Hybrid SOM can classify
-      */
-    HSOM( const SizePlus<int>& sz, int catCt );
+    /// Constructs the Hybrid-SOM and supplies a SOM and an ANN for it to use
+    HSOM(
+        SOMPtr som,          ///< The SOM that this HSOM will use to build histograms of suspects
+        CvANN_MLP* ann,      ///< The ANN that this HSOM will use to classify histograms of suspects
+        QObject* parent=NULL ///< The parent object for this HSOM ( inheriting from QThread )
+        );
 
-    /** Destructs the HSOM */
+    /// Destructs the HSOM
     virtual ~HSOM();
 
-    /** Clears the HSOM */
+    /// Clears the HSOM
     virtual void clear();
 
-    /** Fetches the name of this HSOM */
-    std::string name();
+    /// Fetches the number of categories this HSOM can classify
+    int catCt() const;
 
-    /** Fetches the number of categories this HSOM can classify */
-    int catCt();
+    /// Loads the suspects from a directory.  Implemented by derived classes
+    virtual void loadSuspects(
+        const QString& dirPath,     ///< The directory from which to fetch suspect images
+        const QStringList& fileList ///< The list of image files to load
+        ) = 0;
 
-    /** Loads the suspects from a directory.  Implemented by derived class
-      * @param  dirPath - The directory holding the image files
-      * @param  fileList - The list of image files
-      */
-    virtual void loadSuspects( const std::string& dirPath, const std::vector<std::string> &fileList ) = 0;
-
-    /** Clears the suspect list */
+    /// Clears the suspect list
     void clearSuspects();
 
-    /** Trains the Hybrid SOM
-      * @param  somEpochs  - The number of training epochs to use
-      * @param  initAlpha  - The initial training weight
-      * @param  initR      - The intial radius of the training neighborhood
-      * @param  annIters   - The number of iterations for ANN training
-      * @param  annEps     - The minimum adjustment size for ANN training
-      */
-    void train( int somEpochs, double initAlpha, double initR, int annIters, double annEps );
+    /// Trains the Hybrid SOM
+    void train(
+        int somEpochs,    ///< The number of training epochs to use
+        double initAlpha, ///< The initial training weight
+        double initR,     ///< The inital radius of the training neighborhood
+        int annIters,     ///< The number of iterations for ANN training
+        double annEps     ///< The minimum adjustment size for ANN training
+        );
 
-    /** Report classification results
-      * @param  text - The string that will contain the report
-      */
-    double report( std::string &report );
+    /// Report classification results
+    double report(
+        QString& text ///< The string that will contain the report
+        );
 
-    /** Classifies suspects
-      * @param  A flag indicating if the function finished or was terminated
-      */
+    /// Classifies suspects
     void classify();
 
-    /** Classifies a single suspect
-      * @param  suspect - The suspect to classify
-      * @param  input   - The input matrix for the ANN
-      * @param  output  - The output matrix for the ANN
-      */
-    void classify( Suspect* suspect, cv::Mat_<double>& input, cv::Mat_<double>& output );
+    /// Classifies a single suspect
+    void classify(
+        Suspect* suspect,        ///< The suspect to classify
+        cv::Mat_<double>& input, ///< The input matrix for the ANN
+        cv::Mat_<double>& output ///< The output matrix for the ANN
+        );
 
-    /** Fetches the name of this HSOM */
-    std::string getName();
+    /// Saves an SOM to file
+    void save( const QString& fileName );
 
-    /** Gets the number of categories this HSOM is trained for */
-    int getCatCt();
-
-    /** Gets a visualization of the HSOM */
-    virtual cv::Mat visualize() = 0;
-
-    /** Saves an SOM to file
-      * @param  fileName - The name of the file to save
-      */
-    void save( const std::string& fileName );
-
-    /** Loads an SOM from file
-      * @param  fileName - The name of the file to load
-      */
-    void load( const std::string& fileName );
-
-    /** Reads ImageHSOM configuration from a file storage object
-    * @param  fs   - The file node from which to read
-    */
-    virtual void read( cv::FileNode& fn );
-
-    /** Writes the ImageHSOM configuration to a file storage object
-    * @param  fs - The file storage in which to write
-    */
-    virtual void write( cv::FileStorage& fs );
+    /// Loads an SOM from file
+    void load( const QString& fileName );
 
 };
+
+} // namespace hsom

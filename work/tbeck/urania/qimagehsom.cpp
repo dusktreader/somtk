@@ -2,17 +2,20 @@
 
 using namespace std;
 
-QImageHSOM::QImageHSOM( QProgressDialog* pgrs ) : ImageHSOM(), pgrs(pgrs){}
+QImageHSOM::QImageHSOM( QProgressDialog* pgrs )
+    : ImageHSOM(), pgrs(pgrs)
+{}
 
-QImageHSOM::QImageHSOM( QProgressDialog* pgrs,
-                        SizePlus<int> gridSz, SizePlus<int> featSz, int stepSz,
-                        int catCt ) :
-ImageHSOM( gridSz, featSz, stepSz, catCt ), pgrs(pgrs){}
+QImageHSOM::QImageHSOM( QProgressDialog* pgrs, SizePlus<int> gridSz, SizePlus<int> featSz, int stepSz, int catCt )
+    : ImageHSOM( gridSz, featSz, stepSz, catCt ), pgrs( pgrs )
+{}
 
-QImageHSOM::QImageHSOM( QProgressDialog* pgrs, QString fileName ) :
-ImageHSOM( fileName.toStdString() ), pgrs(pgrs){}
+QImageHSOM::QImageHSOM( QProgressDialog* pgrs, QString fileName )
+    : ImageHSOM( fileName.toStdString() ), pgrs( pgrs )
+{}
 
-QImageHSOM::~QImageHSOM(){}
+QImageHSOM::~QImageHSOM()
+{}
 
 void QImageHSOM::loadSuspects( QString qDirPath, const QStringList &qFileList )
 {

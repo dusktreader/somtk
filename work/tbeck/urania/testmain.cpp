@@ -1,11 +1,12 @@
 #include "hsom.h"
 #include "colorhsom.h"
+#include "imagehsom.h"
 
 using namespace std;
 
 int main()
 {
-    string imgDir = "/home/d3x874/astrocv/trunk/lib/demo_lib/combinded";
+    string imgDir = "/data/src/astrocv/trunk/lib/demo_lib/combinded";
     vector<string> fileList;
     for( int i=1; i<=20; i++ )
     {
@@ -13,7 +14,7 @@ int main()
         fileList.push_back( string( "1_" ) + ( i < 10 ? "0" : "" ) + num2str( i ) + ".jpg" );
     }
 
-    HSOM* hsom = new ColorHSOM( SizePlus<int>(20,20), 2 );
+    HSOM* hsom = new ImageHSOM( SizePlus<int>(20,20), SizePlus<int>(120,120), 2, 2 );
     hsom->loadSuspects( imgDir, fileList );
     try
     {
@@ -27,8 +28,8 @@ int main()
     {
         cout << "unknown exception" << endl;
     }
-    cv::Mat viz = hsom->visualize();
-    SHOWW( viz );
+    //cv::Mat viz = hsom->visualize();
+    //SHOWW( viz );
     hsom->save( "testhsom.xml" );
     hsom->load( "testhsom.xml" );
 }

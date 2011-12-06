@@ -1,89 +1,77 @@
 #include "suspect.h"
 
-using namespace std;
+namespace hsom {
 
-Suspect::Suspect( string name, int realCat, int catCt, const SizePlus<int>& sz )
-    : _realCat(realCat), _name(name)
-{
-    currFeat = NULL;
-    hist = SOMHistogram( sz );
-    _cats = cv::Mat_<double>( SizePlus<int>( catCt, 1 ), 0.0 );
-}
+Suspect::Suspect()
+{}
 
 Suspect::~Suspect()
+{}
+
+QList<FeaturePtr> Suspect::features()
 {
-    if( currFeat != NULL )
-        delete currFeat;
+    if( _features.empty() )
+        generateFeatures();
+    return _features;
 }
 
-void Suspect::setANNVectors( cv::Mat_<double>& input, cv::Mat_<double>& output )
+void Suspect::setHistogram( HistogramPtr histogram )
 {
-    ASSERT_MSG( output.empty() || output.size() == _cats.size(), "Ouput size missmatch" );
-    for( int i=0; i<hist.l(); i++ )
-        input(0,i) = hist[i];
-    if( output.empty() )
-        return;
-    output = -1.0;
-    output(0,_realCat) = 1.0;
+    _histogram = histogram;
 }
 
-void Suspect::setCats( const cv::Mat_<double>& output )
+HistogramPtr Suspect::histogram()
 {
-    ASSERT_MSG( output.size() == _cats.size(), "Output size missmatch" );
-    _cats = output;
+    return _histogram;
 }
 
-cv::Mat_<double> Suspect::cats()
+void Suspect::setClassification( const QVector<double>& classification )
+{
+    _classification = classification;
+    double maxCategory;
+    for( unsigned i=0; i_<classification.size(); i++ )
+    {
+        if( _classification[i] > maxCategory )
+        {
+            maxCategory = _classification[i];
+            _predCategory = i;
+        }
+    }
+}
+
+const QVector<double> Suspect::classification() const
 {
     return _cats;
 }
 
-int Suspect::realCat()
+int Suspect::realCategory()
 {
-    return _realCat;
+    return _realCategory;
 }
 
-int Suspect::predCat()
+int Suspect::predCategory()
 {
-    int maxIdx = -1;
-    double maxVal = -DBL_MAX;
-    for( int i=0; i<_cats.size().width; i++ )
-    {
-        if( _cats(0,i) > maxVal )
-        {
-            maxIdx = i;
-            maxVal = _cats(0,i);
-        }
-    }
-    return maxIdx;
-}
-
-int Suspect::catCt()
-{
-    return _cats.size().width;
+    return _predCategory;
 }
 
 void Suspect::incrementHistogram( int idx )
 {
-    hist.increment( idx );
+    histogram.increment( idx );
 }
 
 void Suspect::incrementHistogram( const PointPlus<int>& pt )
 {
-    hist.increment( pt );
+    histogram.increment( pt );
 }
 
 void Suspect::normalizeHistogram()
 {
-    hist.normalize();
+    histogram.normalize();
 }
 
 cv::Mat Suspect::vizHistogram()
 {
-    return hist.vizHistogram();
+    return histogram.vizHistogram();
 }
 
-string Suspect::name()
-{
-    return _name;
-}
+} // namespace hsom
