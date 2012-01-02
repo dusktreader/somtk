@@ -2,13 +2,25 @@
 
 namespace hsom {
 
+int Suspect::_categoryCount = -1;
+
+void Suspect::setCatergoryCount( int count )
+{
+    _categoryCount = count;
+}
+
+int Suspect::categoryCount()
+{
+    return _categoryCount;
+}
+
 Suspect::Suspect()
 {}
 
 Suspect::~Suspect()
 {}
 
-QList<FeaturePtr> Suspect::features()
+QVector<FeaturePtr> Suspect::features()
 {
     if( _features.empty() )
         generateFeatures();
@@ -39,9 +51,16 @@ void Suspect::setClassification( const QVector<double>& classification )
     }
 }
 
-const QVector<double> Suspect::classification() const
+void Suspect::setClassification( const QVector<double>& classification )
 {
-    return _cats;
+    SOMError::requireCondition( classification.size() == Suspect::categoryCount(),
+                                "Invalid classification vector.  Output count is incorrect" );
+    _classification = classification;
+}
+
+const QVector<double>& Suspect::classification() const
+{
+    return _classification;
 }
 
 int Suspect::realCategory()
@@ -52,26 +71,6 @@ int Suspect::realCategory()
 int Suspect::predCategory()
 {
     return _predCategory;
-}
-
-void Suspect::incrementHistogram( int idx )
-{
-    histogram.increment( idx );
-}
-
-void Suspect::incrementHistogram( const PointPlus<int>& pt )
-{
-    histogram.increment( pt );
-}
-
-void Suspect::normalizeHistogram()
-{
-    histogram.normalize();
-}
-
-cv::Mat Suspect::vizHistogram()
-{
-    return histogram.vizHistogram();
 }
 
 } // namespace hsom

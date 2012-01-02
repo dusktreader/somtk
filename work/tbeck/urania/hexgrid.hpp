@@ -162,7 +162,7 @@ public:
 
     /// Fetches the item at a specific point in the grid
     T& operator[](
-        const QPlus& point ///< The location in the grid from which to fetch an item
+        const QPoint& point ///< The location in the grid from which to fetch an item
         )
     {
         return item( point );

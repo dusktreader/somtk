@@ -332,6 +332,7 @@ public:
       * @param  lo - The low end of the range
       * @param  hi - The high end of the range
       * @return The randomly genereated double
+      * @todo  rename these functions
       */
     inline double randd( double lo=0.0, double hi=1.0 )
     {

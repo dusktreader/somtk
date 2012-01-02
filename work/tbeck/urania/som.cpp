@@ -1,10 +1,12 @@
 #include "som.h"
 
+namespace hsom {
+
 SOM::SOM(){}
 
 
 
-SOM::SOM( const SizePlus<int>& size )
+SOM::SOM( const QSize& size )
 {
     grid = HexGrid<FeaturePtr>( size );
 }
@@ -18,24 +20,31 @@ SOM::~SOM()
 
 
 
-void SOM::initializeTraining( int epochCount, double initalAlpha, double initialRadiusRatio, FeaturePtr featureRep )
+const QSize& SOM::size()
+{
+    return grid.size();
+}
+
+
+
+void SOM::initializeTraining( int epochCount, double initialAlpha, double initialRadiusRatio, FeaturePtr featureRep )
 {
     /// @todo  Make radius and alpha tuning values parameters
 
-    ASSERT_MSG( initialRadiusRatio < 0.5, "Initial radius ratio may not exceed 0.5" );
+    SOMError::requireCondition( initialRadiusRatio < 0.5, "Initial radius ratio may not exceed 0.5" );
 
     /// @todo  determine if there should be other constraints to alpha and radius ratio (negatives, ffs!)
 
     this->maxEpochs = epochCount;
 
     this->initialAlpha = initialAlpha;
-    alpha_tf = 0.1;
-    alpha_Nf = 0.25;
+    alpha_tf = 0.10;   // This is a tuning factor...should not be hardcoded
+    alpha_Nf = 0.25;   // This is a tuning factor...should not be hardcoded
     alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * epochCount );
 
     initialRadius = initialRadiusRatio * grid.size().w;
-    radius_tf = 0.1;
-    radius_Nf = 0.25;
+    radius_tf = 0.25;   // This is a tuning factor...should not be hardcoded
+    radius_Nf = 0.50;   // This is a tuning factor...should not be hardcoded
     radius_gamma = -log( radius_Nf ) / ( radius_tf * epochCount );
 
     currentEpoch = -1;
@@ -43,9 +52,9 @@ void SOM::initializeTraining( int epochCount, double initalAlpha, double initial
 
     this->featureRep = featureRep;
 
-    PointPlus<int> pt;
-    for( pt.y = 0; pt.y < grid.size().h; pt.y++ )
-        for( pt.x = 0; pt.x < grid.size().w; pt.x++ )
+    QPoint pt;
+    for( pt.setY( 0 ); pt.y() < grid.size().height(); pt.setY( pt.y() + 1 ) )
+        for( pt.setX( 0 ); pt.x() < grid.size().width(); pt.setX( pt.x() + 1 ) )
             grid[pt] = featureRep->generateFeature( pt );
 }
 
@@ -134,7 +143,7 @@ void SOM::closestFeatureIndex( FeaturePtr feature )
 
 
 
-PointPlus<int> SOM::closestFeatureCoords( FeaturePtr feature )
+QPoint SOM::closestFeatureCoords( FeaturePtr feature )
 {
     return grid.coords( closestFeatureIndex( feature ) );
 }
@@ -144,15 +153,17 @@ PointPlus<int> SOM::closestFeatureCoords( FeaturePtr feature )
 void SOM::train( FeaturePtr feature )
 {
     // Find the feature in the SOM that is the closest to the input feature
-    PointPlus<int> c = closestFeatureCoords( feature );
+    QPoint closest = closestFeatureCoords( feature );
 
-    vector<int> neighbors = grid.neighborhood( weights.size(), c );
+    QVector<int> neighbors = grid.neighborhood( weights.size(), closest );
 
     // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
     #pragma omp parallel for
-    for( unsigned i = 0; i < neighbors.size(); i++ )
+    for( int i=0; i<neighbors.size(); i++ )
     {
         int index = neighbors[i];
         grid[index]->adjust( feature, weights[ grid.distance( index ) ] );
     }
 }
+
+} // namespace hsom

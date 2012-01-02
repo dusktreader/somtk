@@ -9,7 +9,7 @@
 
 namespace hsom {
 
-class Histogram : public HexGrid
+class Histogram : public HexGrid<double>
 {
 
 public:

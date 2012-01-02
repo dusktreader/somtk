@@ -3,6 +3,7 @@
 
 #include "feature.h"
 #include "hexgrid.hpp"
+#include "somerror.h"
 
 /// A slope tuning parameter for an inverse exponential function
 #define A 0.1
@@ -12,6 +13,8 @@
 
 /// A constant describing the conversion factor between FWHM and sigma
 #define FWHM_FACTOR 2.3548200450309493
+
+namespace hsom {
 
 class SOM
 {
@@ -71,6 +74,8 @@ private:
     /// Precalculates the weights for updating a neighborhood
     void precalculateWeights();
 
+
+
 public:
 
     /// Creates an empty SOM
@@ -78,11 +83,14 @@ public:
 
     /// Constructs an SOM with a specific size
     SOM(
-        const SizePlus<int>& size
+        const QSize& size ///< The size of the grid underlying the SOm
          );
 
-    /// Destructs this SOm
+    /// Destructs this SOM
     virtual ~SOM();
+
+    /// Fetches the size of this SO
+    const QSize& size();
 
     /** Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature tyep
       */
@@ -113,11 +121,13 @@ public:
     /** Fetches the closest feature in the SOM to an input feature
       * @return The coordinates of the cell that holds the feature that most closesly resembles the input feature
       */
-    PointPlus<int> closestFeatureCoords(
+    QPoint closestFeatureCoords(
         FeaturePtr feature
         );
 };
 
 typedef QSharedPointer<SOM> SOMPtr;
+
+} // namespace hsom
 
 #endif // SOM_H

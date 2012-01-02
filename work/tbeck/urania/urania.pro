@@ -28,7 +28,7 @@ SOURCES += \
     som.cpp \
     suspect.cpp \
     traindialog.cpp \
-    ../tools/tools.cpp \
+    ../tools/tools.cpp
 
 HEADERS += feature.h \
     hexgrid.hpp \
@@ -46,6 +46,7 @@ HEADERS += feature.h \
     ../tools/tools.hpp \
     ../tools/cvtools.hpp \
     ../tools/cvtypesplus.hpp \
+    somerror.h
 
 FORMS += mainwindow.ui \
     traindialog.ui
