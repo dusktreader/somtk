@@ -149,7 +149,7 @@ public:
     }
 
     /// Fetches the size of the grid
-    const QSize& size()
+    QSize size()
     {
         return _size;
     }
@@ -195,7 +195,7 @@ public:
 
     /// Fetches the index for the slot at the specified coordinates
     int index(
-        const QPoint& point ///< The point in the grid for which to fetch the index
+        QPoint point ///< The point in the grid for which to fetch the index
         )
     {
         ASSERT_MSG( point.x() >= 0 && point.x() < _size.w, "x coordinate must be in the range [ 0 , w )" );
@@ -213,7 +213,7 @@ public:
     }
 
     /// Fetches the real coordinates of a given point in the grid ( should only be used for visualization )
-    QPointF realCoords( const QPoint& point )
+    QPointF realCoords( QPoint point )
     {
         ASSERT_MSG( point.x() >= 0 && point.x() < _size.width(),  "x coordinate must be in the range [ 0 , w )" );
         ASSERT_MSG( point.y() >= 0 && point.y() < _size.height(), "y coordinate must be in the range [ 0 , h )" );

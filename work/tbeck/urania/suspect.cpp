@@ -14,7 +14,9 @@ int Suspect::categoryCount()
     return _categoryCount;
 }
 
-Suspect::Suspect()
+Suspect::Suspect() :
+    _realCategory( -1 ),
+    _predCategory( -1 )
 {}
 
 Suspect::~Suspect()
@@ -39,6 +41,9 @@ HistogramPtr Suspect::histogram()
 
 void Suspect::setClassification( const QVector<double>& classification )
 {
+    SOMError::requireCondition( classification.size() == Suspect::categoryCount(),
+                                "Invalid classification vector.  Output count is incorrect" );
+
     _classification = classification;
     double maxCategory;
     for( unsigned i=0; i_<classification.size(); i++ )
@@ -51,25 +56,27 @@ void Suspect::setClassification( const QVector<double>& classification )
     }
 }
 
-void Suspect::setClassification( const QVector<double>& classification )
-{
-    SOMError::requireCondition( classification.size() == Suspect::categoryCount(),
-                                "Invalid classification vector.  Output count is incorrect" );
-    _classification = classification;
-}
-
 const QVector<double>& Suspect::classification() const
 {
     return _classification;
 }
 
+void Suspect::setRealCategory( int category )
+{
+    SOMError::requireCondition( category >= 0, "Attempted to set an invalid category");
+
+    _realCategory = category;
+}
+
 int Suspect::realCategory()
 {
+    SOMError::requireCondition( _realCategory >= 0, "Real category hasn't been set yet.  Cannot fetch it" );
     return _realCategory;
 }
 
 int Suspect::predCategory()
 {
+    SOMError::requireCondition( _predCategory >= 0, "Classification hasn't been set yet.  Cannot fetch prediction" );
     return _predCategory;
 }
 

@@ -5,7 +5,7 @@
 #include "opencv2/core/core.hpp"
 
 #include "hexgrid.hpp"
-#include "tools.hpp"
+#include "tools.h"
 
 namespace hsom {
 
@@ -19,7 +19,7 @@ public:
 
     /// Constructs the Histogram with specified size
     Histogram(
-        const QSize& size ///< The desired size of the histogram
+        QSize size ///< The desired size of the histogram
         );
 
     /// Destructs the Histogram
@@ -30,7 +30,7 @@ public:
 
     /// Increments a bin in the histogram
     void increment(
-        const QPoint& point ///< The coordinates of the bin to increment
+        QPoint point ///< The coordinates of the bin to increment
         );
 
     /// Increments a bin in the histogram
@@ -45,7 +45,7 @@ public:
 
     /// Gets the value of a bin at the given index
     double bin(
-        const QPoint& point ///< The coordiates of the bin from which to fetch the value
+        QPoint point ///< The coordiates of the bin from which to fetch the value
         );
 
     /// Normalizes the histogram's bins

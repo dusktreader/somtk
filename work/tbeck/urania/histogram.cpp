@@ -6,7 +6,7 @@ Histogram::Histogram() :
     HexGrid()
 {}
 
-Histogram::Histogram( const QSize& size ) :
+Histogram::Histogram( QSize size ) :
     HexGrid( size )
 {}
 
@@ -18,7 +18,7 @@ double Histogram::bin( int idx )
     return grid[idx];
 }
 
-double Histogram::bin( const QPoint& point )
+double Histogram::bin( QPoint point )
 {
     return grid[point];
 }
@@ -28,7 +28,7 @@ void Histogram::reset()
     setTo( 0.0 );
 }
 
-void Histogram::increment( const QPoint& point )
+void Histogram::increment( QPoint point )
 {
     grid[point]++;
 }

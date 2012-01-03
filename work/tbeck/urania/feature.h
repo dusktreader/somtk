@@ -2,7 +2,7 @@
 
 #include "opencv2/core/core.hpp"
 
-#include "tools.hpp"
+#include "randmaster.h"
 
 #include <QVector>
 #include <QSharedPointer>

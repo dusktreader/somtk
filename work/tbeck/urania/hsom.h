@@ -27,14 +27,18 @@ private:
 
     /// Extracts a list of features from a list of suspects
     QVector<FeaturePtr> extractFeatures(
-            QVector<SuspectPtr>& suspects /// A list of suspects from which to extract features
+            QVector<SuspectPtr> suspects /// A list of suspects from which to extract features
             );
 
     /// Normalizes a list of features using a Sigmoid function to map elements between 0.0 and 1.0
-    void calculateFeatureNormalization( QVector<FeaturePtr>& features, double epsilon=0.0625, int sigmaStep=2, unsigned maxFeatures=100000 );
+    void calculateFeatureNormalization(
+            QVector<FeaturePtr> features, /// A list of features from which to calculate a sigmoid normalization
+            double epsilon=0.0625,        /// The epsilon value to use for the sigmoid squashing
+            int sigmaStep=2               /// The number of standard deviations for which to calibrate the simoid curve
+            );
 
     /// Normalizes a list of features using the computed normalization function parameters
-    void normalizeFeatures( QVector<FeaturePtr>& features );
+    void normalizeFeatures( QVector<FeaturePtr> features );
 
     /// Normalizes a single feature using the computed normalization function parameters
     void normalizeFeature( FeaturePtr feature );
@@ -57,9 +61,9 @@ private:
 
     /// Trains the ANN component of the HSOM
     void trainANN(
-            const QVector<SuspectPtr>& suspects, ///< The list of suspects with which to train the ANN
-            int annIterations,                   ///< The number of iterations to use in training the ANN
-            double annEps                        ///< The minimum adjustment size to use in training the ANN
+            QVector<SuspectPtr> suspects, ///< The list of suspects with which to train the ANN
+            int annIterations,            ///< The number of iterations to use in training the ANN
+            double annEps                 ///< The minimum adjustment size to use in training the ANN
         );
 
     /// Statistical metrics used for the normalization function

@@ -2,7 +2,7 @@
 
 namespace hsom {
 
-ImageSuspect::ImageSuspect( const cv::Mat& image, const QSize& scanningWindowSize, double scanningWindowStep ) :
+ImageSuspect::ImageSuspect( const cv::Mat& image, QSize scanningWindowSize, double scanningWindowStep ) :
         Suspect()
 {
     this->image = image.clone();
@@ -10,7 +10,11 @@ ImageSuspect::ImageSuspect( const cv::Mat& image, const QSize& scanningWindowSiz
     this->scanningWindowStep = scanningWindowStep;
 }
 
+
+
 ImageSuspect::~ImageSuspect(){}
+
+
 
 void ImageSuspect::generateFeatures()
 {
@@ -25,7 +29,7 @@ void ImageSuspect::generateFeatures()
         while( scanningWindow.right() < imageBounds.width() )
         {
             cv::Mat subImage = image( cv::Rect( scanningWindow.left(),  scanningWindow.top(),
-                                                scanningWindow.width(), scanningWindow.height() );
+                                                scanningWindow.width(), scanningWindow.height() ) );
 
             /// @todo:  Add a test to see if the sub image is 'empty'  and throw it out if it is
 

@@ -9,7 +9,6 @@ HuFeature::HuFeature() :
 HuFeature::HuFeature( const cv::Mat& img ) :
         Feature( QVector<double>( 7, 0.0 ) )
 {
-    double tdata[7];
     cv::HuMoments( cv::moments( img ), this->data() );
 
     // The sign of the seventh hu moment should be eliminated

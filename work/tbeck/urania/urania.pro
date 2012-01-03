@@ -6,8 +6,51 @@ TEMPLATE = app
 
 CONFIG += qt
 
-INCLUDEPATH += /usr/local/include ../tools
-LIBS += -L /usr/local/lib -lopencv_core -lopencv_highgui -lopencv_ml
+unix {
+    message( "settin up build environment for unix" )
+
+    INCLUDEPATH += \
+        /usr/local/include
+
+    LIBS += \
+        -lopencv_core \
+        -lopencv_ml \
+        -lopencv_highgui
+
+    CONFIG(debug) {
+        LIBS += -efence
+    }
+    CONFIG(release) {
+        LIBS += -fopenmp
+    }
+}
+
+macx {
+    message( "settin up build environment for mac" )
+    error( "urania is not prepared to build for the mac platform" )
+}
+
+win32 {
+    message( "settin up build environment for windows" )
+
+    INCLUDEPATH += \
+        C:\Users\d3x874\Documents\source\dusky-tools \
+        C:/OpenCV/include \
+
+
+    LIBS += \
+        -lopencv_core230
+        -lopencv_ml230
+        -lopencv_highgui230
+
+
+    CONFIG(debug) {
+        LIBS += -efence
+    }
+    CONFIG(release) {
+        LIBS += -fopenmp
+    }
+}
 
 QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
 QMAKE_LFLAGS_RELEASE += -fopenmp
@@ -28,7 +71,7 @@ SOURCES += \
     som.cpp \
     suspect.cpp \
     traindialog.cpp \
-    ../tools/tools.cpp
+    #tools.cpp
 
 HEADERS += feature.h \
     hexgrid.hpp \
@@ -43,10 +86,10 @@ HEADERS += feature.h \
     imagesuspect.h \
     traindialog.h \
     som.h \
-    ../tools/tools.hpp \
-    ../tools/cvtools.hpp \
-    ../tools/cvtypesplus.hpp \
-    somerror.h
+    somerror.h \
+    #tools.hpp \
+    #cvtools.hpp \
+    #cvtypesplus.hpp \
 
 FORMS += mainwindow.ui \
     traindialog.ui
