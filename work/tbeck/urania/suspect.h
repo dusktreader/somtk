@@ -10,7 +10,7 @@
 
 namespace hsom {
 
-/** This abstract base class provides the basic functionality for a HSOM suspect */
+///** This abstract base class provides the basic functionality for a HSOM suspect
 class Suspect
 {
 

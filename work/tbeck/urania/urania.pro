@@ -34,14 +34,14 @@ win32 {
     message( "settin up build environment for windows" )
 
     INCLUDEPATH += \
-        C:\Users\d3x874\Documents\source\dusky-tools \
+        C:/Users/d3x874/Documents/source/dusky-tools \
         C:/OpenCV/include \
 
 
     LIBS += \
-        -lopencv_core230
-        -lopencv_ml230
-        -lopencv_highgui230
+        -lopencv_core230    \
+        -lopencv_ml230      \
+        -lopencv_highgui230 \
 
 
     CONFIG(debug) {
