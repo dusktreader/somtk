@@ -15,6 +15,8 @@ HSOM::HSOM( SOMPtr som, QObject* parent ) :
     _ann( NULL )
 {}
 
+
+
 HSOM::~HSOM()
 {
     clear();
@@ -139,75 +141,6 @@ void HSOM::generateHistogram( SuspectPtr suspect )
 
 
 
-void HSOM::trainANN( QVector<SuspectPtr> suspects, int annIters, double annEps )
-{
-    int inputSize = _som->size();
-
-    // Fetch the number of categories into which the suspects may be classified.  This is the output size of the ANN
-    int outputSize = Suspect::categoryCount();
-    SOMError::requireCondition( outputSize > 0, "Invalid output size" );
-
-    /* Make an input matrix for training the back-end MLPANN.
-     * This is a matrix composed of vectors the length of the SOM's area ( width x height )
-     */
-    cv::Mat_<double>  input( suspects.size(), inputSize, 0.0 );
-
-    /* Make an output matrix for trainig the back-end MLPANN.
-     * This is a matrix composed of vectors the length of the number of classification categories.
-     */
-    cv::Mat_<double> output( suspects.size(), outputSize, 0.0 );
-
-    for( int i=0; i<suspects.size(); i++ )
-    {
-        SuspectPtr suspect = trainingSuspects[i];
-        HistogramPtr histogram = suspect->histogram();
-
-        // Set the input for the training input matrix row to the histogram of the suspect
-        for( int j=0; j<inputSize; j++ )
-            input( i, j ) = histogram[j];
-
-        // Set the output value for the real category of the suspect to 1.  All other values will already be 0
-        output( i, suspect->realCategory() ) = 1.0;
-    }
-
-    cv::TermCriteria terminationCriteria;
-    terminationCriteria.type = 0;
-    if( annIters != 0 )
-        terminationCriteria.type += cv::TermCriteria::MAX_ITER;
-    if( annEps != 0.0 )
-        terminationCriteria.type += cv::TermCriteria::EPS;
-
-    cv::ANN_MLP_TrainParams trainingParams( terminationCriteria, CvANN_MLP_TrainParams::RPROP, annIters, annEps );
-
-    int normFlag = 0;
-
-    int tmp[4];
-
-    // The input layer has one node for each element in the input histograms
-    tmp[0] = inputSize;
-
-    // The first hidden layer is half the size of the input layer
-    tmp[1] = inputSize/2;
-
-    // The second input layer is one quarter the size of the input layer
-    tmp[2] = inputSize/4;
-
-    // The output layer has one node for each category
-    tmp[3] = outputSize;
-
-    CvMat ls = cvMat( 4, 1, CV_32S, tmp );
-
-    // If there is already an MPLANN attached to this HSOM, delete it to start over
-    if( _ann != NULL )
-        delete _ann;
-
-    // Create a new MLPANN for the HSOM
-    _ann = new CvANN_MLP( &ls, CvANN_MLP::SIGMOID_SYM );
-
-    _ann->train( input, output, cv::Mat(), cv::Mat(), trainingParams, normFlag );
-}
-
-
 void HSOM::train( QVector<SuspectPtr>& suspects,
                   int epochCount, double initialAlpha, double initialRadiusRatio, int annIterations, double annEps )
 {
@@ -218,7 +151,7 @@ void HSOM::train( QVector<SuspectPtr>& suspects,
         normalizeFeatures( features );
         trainSOM( features, epochCount, initialAlpha, initialRadiusRatio );
         generateHistograms( suspects );
-        trainANN( suspects, annIterations, annEps );
+        classifier->train( suspects );
     }
     catch( SOMError err )
     {
@@ -233,25 +166,13 @@ void HSOM::train( QVector<SuspectPtr>& suspects,
 
 void HSOM::classify( SuspectPtr suspect )
 {
-    cv::Mat_<double>  input( 1, _som->size(), 0.0 );
-    cv::Mat_<double> output( 1, Suspect::categoryCount(), 0.0 );
 
     QVector<FeaturePtr> features = suspect->features();
     normalizeFeatures( features );
 
     generateHistogram( suspect );
-    HistogramPtr histogram = suspect->histogram();
 
-    for( int i=0; i<histogram->size(); i++ )
-        input[i] = histogram[i];
-
-    _ann->predict( input, output );
-
-    QVector<double> classification;
-    for( int i=0; i<Suspect::categoryCount(); i++ )
-        classification.push_back( output[i] );
-
-    suspect->setClassification( classification );
+    classifier->classify( suspect );
 }
 
 

@@ -125,7 +125,7 @@ public:
 
     /// Classifies a single suspect
     void classify(
-        SuspectPtr suspect, ///< The suspect to classify
+        SuspectPtr suspect ///< The suspect to classify
         );
 };
 

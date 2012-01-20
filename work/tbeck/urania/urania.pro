@@ -4,7 +4,7 @@
 TARGET = urania
 TEMPLATE = app
 
-CONFIG += qt
+CONFIG += qt xml
 
 unix {
     message( "settin up build environment for unix" )
@@ -34,7 +34,6 @@ win32 {
     message( "settin up build environment for windows" )
 
     INCLUDEPATH += \
-        C:/Users/d3x874/Documents/source/dusky-tools \
         C:/OpenCV/include \
 
 
@@ -57,7 +56,13 @@ QMAKE_LFLAGS_RELEASE += -fopenmp
 QMAKE_CXXFLAGS_DEBUG += -g
 
 
+
+INCLUDEPATH += \
+    $$PWD/tools/ \
+
 SOURCES += \
+    tools/persist.cpp \
+    tools/localassert.cpp \
     colorhsom.cpp \
     feature.cpp \
     histogram.cpp \
@@ -71,9 +76,13 @@ SOURCES += \
     som.cpp \
     suspect.cpp \
     traindialog.cpp \
-    #tools.cpp
+    classifier.cpp \
+    annclassifier.cpp
 
-HEADERS += feature.h \
+HEADERS += \
+    tools/persist.h \
+    tools/localassert.h \
+    feature.h \
     hexgrid.hpp \
     histogram.h \
     hsom.h \
@@ -87,9 +96,8 @@ HEADERS += feature.h \
     traindialog.h \
     som.h \
     somerror.h \
-    #tools.hpp \
-    #cvtools.hpp \
-    #cvtypesplus.hpp \
+    classifier.h \
+    annclassifier.h
 
 FORMS += mainwindow.ui \
     traindialog.ui
