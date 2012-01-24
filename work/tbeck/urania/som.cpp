@@ -27,17 +27,30 @@ const QSize& SOM::size()
 
 
 
-void SOM::initializeTraining( int epochCount, double initialAlpha, double initialRadiusRatio, FeaturePtr featureRep )
+void SOM::initializeTraining( QMap<QString, QVariant> somParameters, FeaturePtr featureRep )
 {
-    /// @todo  Make radius and alpha tuning values parameters
+    bool ok = true;
 
-    SOMError::requireCondition( initialRadiusRatio < 0.5, "Initial radius ratio may not exceed 0.5" );
+    // Describes the number of epochs of training the SOM will need
+    ASSERT_MSG( somParameters.contains( "maxEpochs" ), "SOM parameters doesn't contain epoch count" );
+    maxEpochs = somParameters["maxEpochs"].toInt( &ok );
+    ASSERT_MSG( ok, "Couldn't convert maximum epoch count to an int" );
+
+    // Describes the inital training weight for the SOM
+    ASSERT_MSG( somParameters.contains( "initialAlpha" ), "SOM parameters doesn't contain initial alpha" );
+    initialAlpha = somParameters["initialAlpha"].toDouble( &ok );
+    ASSERT_MSG( ok, "Couldn't convvert initial alpha to a double" );
+
+    // Describes the inital radius of the training neighborhood for the SOM
+    ASSERT_MSG( somParameters.contains( "initialRadiusRatio" ), "SOM parameters doesn't contain initial radius ratio" );
+    double initialRadiusRatio = somParameters["initialRadiusRatio"].toDouble( &ok );
+    ASSERT_MSG( ok, "Couldn't convvert initial radius ratio to a double" );
+    ASSERT_MSG( initialRadiusRatio < 0.5, "Initial radius ratio may not exceed 0.5" );
+    ASSERT_MSG( initialRadiusRatio > 0.0, "Initial radius ratio must be greater than 0" );
+
 
     /// @todo  determine if there should be other constraints to alpha and radius ratio (negatives, ffs!)
 
-    this->maxEpochs = epochCount;
-
-    this->initialAlpha = initialAlpha;
     alpha_tf = 0.10;   // This is a tuning factor...should not be hardcoded
     alpha_Nf = 0.25;   // This is a tuning factor...should not be hardcoded
     alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * epochCount );
@@ -150,7 +163,7 @@ QPoint SOM::closestFeatureCoords( FeaturePtr feature )
 
 
 
-void SOM::train( FeaturePtr feature )
+void SOM::update( FeaturePtr feature )
 {
     // Find the feature in the SOM that is the closest to the input feature
     QPoint closest = closestFeatureCoords( feature );
@@ -164,6 +177,26 @@ void SOM::train( FeaturePtr feature )
         int index = neighbors[i];
         grid[index]->adjust( feature, weights[ grid.distance( index ) ] );
     }
+}
+
+
+
+void SOM::train( QVector<FeaturePtr> features, QMap<QString, QVariant> somParameters )
+{
+    initializeTraining( somParameters, features.first() );
+
+    do
+    {
+        // Shuffle the list of features to remove bias
+        random_shuffle( features.begin(), features.end() );
+
+        // Update the SOM with each feature from the globalFeatures list.
+        // @todo: consider random sampling for the training if the number of features is high
+        foreach( FeaturePtr feature, features )
+            update( feature );
+
+    } while( nextEpoch() != false );
+
 }
 
 } // namespace hsom

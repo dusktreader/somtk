@@ -22,20 +22,24 @@ private:
     /// Indicates whether or not this classifier has been trained yet
     bool _isTrained;
 
-    /// Describes the parameters used to tune the training of this classifier
-    QMap<QString, QVariant> _trainingParameters;
-
 
 
 protected:
 
+    /// Describes the parameters used to tune the training of this classifier
+    QMap<QString, QVariant> _trainingParameters;
+
     // The Classifier API
 
-    /// Interfaces with the PersistXML API to ensure correct loading order for a classifier
-    virtual void readClassifierData( QDomElement& element ) = 0;
+    /** @brief  Interfaces with the PersistXML API to ensure correct loading order for a classifier
+     *  @note   This is optional.  If not implemented by a derived class, this function does nothing
+     */
+    virtual void readClassifierData( QDomElement& element );
 
-    /// Interfaces with the PersistXML API to ensure correct saving order for a classifier
-    virtual void writeClassifierData( QDomElement& element ) = 0;
+    /** @brief  Interfaces with the PersistXML API to ensure correct saving order for a classifier
+     *  @note   This is optional.  If not implemented by a derived class, this function does nothing
+     */
+    virtual void writeClassifierData( QDomElement& element );
 
     /// Performs specific training algorithm for a classifier
     virtual void trainClassifier(
@@ -60,6 +64,7 @@ public:
 
     // The Classifier API
 
+    /// Classifies a single suspect
     virtual void classify(
             SuspectPtr suspect ///< The suspect to be classified
             ) = 0;

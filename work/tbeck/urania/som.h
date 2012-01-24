@@ -1,6 +1,13 @@
 #ifndef SOM_H
 #define SOM_H
 
+#include <QSize>
+#include <QVector>
+#include <QMap>
+#include <QVariant>
+
+#include <algorithm>
+
 #include "feature.h"
 #include "hexgrid.hpp"
 #include "somerror.h"
@@ -92,33 +99,33 @@ public:
     /// Fetches the size of this SO
     const QSize& size();
 
-    /** Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature tyep
-      */
+    /// Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature type
     void initializeTraining(
-        int epochCount,           ///< Describes the number of epochs of training the SOM will need
-        double initialAlpha,      ///< Describes the inital training weight for the SOM
-        double initalRadiusRatio, ///< Describes the inital radius of the training neighborhood for the SOM
-        FeaturePtr featureRep     ///< Provides an example feature for the SOM to train with
+        QMap<QString, QVariant> somParameters,  ///< The parameters to be used for training this SOM
+        FeaturePtr featureRep                   ///< Provides an example feature for the SOM to train with
         );
 
-    /** Advances the SOM to the next epoch
+    /** @brief  Advances the SOM to the next epoch
       * @return A boolean flag indicating training status.  A false value indicates that all epochs have been finished
       */
     bool nextEpoch();
 
-    /** Trains the SOM with a single feature */
-    void train(
+    /// Trains the SOM with a single feature
+    void update(
         FeaturePtr feature ///< The feature with which to update the SOM
         );
 
-    /** Fetches the closest feature in the SOM to an input feature
-      * @return The index of the cell that holds the feature that most closely resembles the input feature
-      */
+    void train(
+        QVector<FeaturePtr> features,         ///< The features with which to train the SOM
+        QMap<QString, QVariant> somParameters ///< The tuning parameters to use for the training
+        );
+
+    /// Fetches the index of the cell that holds the closest feature in the SOM to an input feature
     int closestFeatureIndex(
         FeaturePtr feature ///< The input feature to compare against feature in the SOM
         );
 
-    /** Fetches the closest feature in the SOM to an input feature
+    /** @brief  Fetches the closest feature in the SOM to an input feature
       * @return The coordinates of the cell that holds the feature that most closesly resembles the input feature
       */
     QPoint closestFeatureCoords(

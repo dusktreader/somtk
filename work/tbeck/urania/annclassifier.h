@@ -20,6 +20,8 @@ private:
      */
     QString fileName;
 
+
+
 protected:
 
     // The Classifier API

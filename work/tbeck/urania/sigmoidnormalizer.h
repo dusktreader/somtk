@@ -1,0 +1,56 @@
+#pragma once
+
+#include <QSharedPointer>
+
+#include "normalizer.h"
+
+namespace hsom {
+
+class SigmoidNormalizer : public Normalizer
+{
+    Q_OBJECT
+
+private:
+
+    // Statistical metrics used for the normalization function
+
+    /// The mean of the feature inputs
+    QVector<double> normMean;
+
+    /// The standard deviation of the feature inputs
+    QVector<double> normStdv;
+
+    /// The alpha tuning parameter??? of the feature inputs
+    QVector<double> normAlpha;
+
+
+
+    /// The epsilon value to use for the sigmoid squashing
+    double epsilon;
+
+    /// The number of standard deviations fro which to calibrate the sigmoid curve
+    int sigmaStep;
+
+
+
+protected:
+
+
+    // The Normalizer API
+    virtual void calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters );
+    virtual void readNormalizerData( QDomElement& element );
+    virtual void writeNormalizerData( QDomElement& element );
+
+
+
+public:
+
+    SigmoidNormalizer();
+
+    // The Normalizer API
+    virtual void normalize( FeaturePtr feature );
+};
+
+typedef QSharedPointer<SigmoidNormalizer> SigmoidNormalizerPtr;
+
+} // namespace hsom

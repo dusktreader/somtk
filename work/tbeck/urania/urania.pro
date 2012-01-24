@@ -77,7 +77,9 @@ SOURCES += \
     suspect.cpp \
     traindialog.cpp \
     classifier.cpp \
-    annclassifier.cpp
+    annclassifier.cpp \
+    normalizer.cpp \
+    sigmoidnormalizer.cpp
 
 HEADERS += \
     tools/persist.h \
@@ -97,7 +99,9 @@ HEADERS += \
     som.h \
     somerror.h \
     classifier.h \
-    annclassifier.h
+    annclassifier.h \
+    normalizer.h \
+    sigmoidnormalizer.h
 
 FORMS += mainwindow.ui \
     traindialog.ui

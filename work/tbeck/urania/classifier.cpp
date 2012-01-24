@@ -1,7 +1,19 @@
 #include "classifier.h"
 
+namespace hsom {
+
 Classifier::Classifier() :
     _isTrained( false )
+{}
+
+
+
+void Classifier::readClassifierData( QDomElement& element )
+{}
+
+
+
+void Classifier::writeClassifierData( QDomElement& element )
 {}
 
 
@@ -32,3 +44,5 @@ void Classifier::writeData( QDomElement& element )
 
     writeClassifierData( element );
 }
+
+} // namespace hsom
