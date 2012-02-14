@@ -199,4 +199,35 @@ void SOM::train( QVector<FeaturePtr> features, QMap<QString, QVariant> somParame
 
 }
 
+
+
+// The PersistXML API
+void SOM::readData( QDomElement& element )
+{
+    bool ok = true;
+
+    int gridWidth = element.attribute( "GridWidth" ).toInt( &ok );
+    ASSERT_MSG( ok, "Coudln't extract grid width" );
+
+    int gridHeight = element.attribute( "GridHeight" ).toInt( &ok );
+    ASSERT_MSG( ok, "Coudln't extract grid height" );
+
+    grid = HexGrid<FeaturePtr>( QSize( gridWidth, gridHeight ), readPersistVector<FeaturePtr>( element, "GridValues" );
+    grid = HexGrid<FeaturePtr>()
+
+    for( int i=0; i<grid.l(); i++ )
+    {
+        grid.operator []()
+    }
+
+
+}
+
+void SOM::writeData( QDomElement& element )
+{
+    /// @todo  Implement some sort of protection to make sure that this doesn't occur during training
+
+}
+
+
 } // namespace hsom

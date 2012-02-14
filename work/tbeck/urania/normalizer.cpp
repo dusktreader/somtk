@@ -30,7 +30,7 @@ void Normalizer::calculate( QVector<FeaturePtr> features, QMap<QString, QVariant
 void Normalizer::readData( QDomElement& element )
 {
     _isCalculated = element.attribute( "isCalculated" ) == "true";
-    _calculationParameters = readPersistanceMap( element, "calculationParameters" );
+    _calculationParameters = readVariantMap( element, "calculationParameters" );
 
     readClassifierData( element );
 }
@@ -40,7 +40,7 @@ void Normalizer::readData( QDomElement& element )
 void Normalizer::writeData( QDomElement& element )
 {
     element.setAttribute( "isCalculated", _isCalculated ? "true" : "false" );
-    writePersistanceMap( element, "calculationParameters", _calculationParameters );
+    writeVariantMap( element, "calculationParameters", _calculationParameters );
 
     writeClassifierData( element );
 }

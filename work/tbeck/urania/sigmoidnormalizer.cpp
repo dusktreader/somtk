@@ -64,7 +64,7 @@ void SigmoidNormalizer::readNormalizerData( QDomElement& element )
 
     QVector<QVariant> persistVector;
 
-    persistVector = PersistXML::readPersistanceVector( element, "mean" );
+    persistVector = PersistXML::readVariantVector( element, "mean" );
     normMean = QVector<double>( persistVector.size() );
     for( int i=0; i<persistVector.size(); i++ )
     {
@@ -72,7 +72,7 @@ void SigmoidNormalizer::readNormalizerData( QDomElement& element )
         ASSERT_MSG( ok, "Couldn't convert vector item" );
     }
 
-    persistVector = PersistXML::readPersistanceVector( element, "stdv" );
+    persistVector = PersistXML::readVariantVector( element, "stdv" );
     stdvMean = QVector<double>( persistVector.size() );
     for( int i=0; i<persistVector.size(); i++ )
     {
@@ -80,7 +80,7 @@ void SigmoidNormalizer::readNormalizerData( QDomElement& element )
         ASSERT_MSG( ok, "Couldn't convert vector item" );
     }
 
-    persistVector = PersistXML::readPersistanceVector( element, "alpha" );
+    persistVector = PersistXML::readVariantVector( element, "alpha" );
     normAlpha = QVector<double>( persistVector.size() );
     for( int i=0; i<persistVector.size(); i++ )
     {
@@ -99,17 +99,17 @@ void SigmoidNormalizer::writeNormalizerData( QDomElement& element )
     persistVector = QVector<QVariant>( normMean.size() );
     for( int i=0; i<normMean.size(); i++ )
         persistVector[i] = normMean[i];
-    PersistXML::writePersistanceVector( element, "mean", persistVector );
+    PersistXML::writeVariantVector( element, "mean", persistVector );
 
     persistVector = QVector<QVariant>( normStdv.size() );
     for( int i=0; i<normStdv.size(); i++ )
         persistVector[i] = normStdv[i];
-    PersistXML::writePersistanceVector( element, "stdv", persistVector );
+    PersistXML::writeVariantVector( element, "stdv", persistVector );
 
     persistVector = QVector<QVariant>( normAlpha.size() );
     for( int i=0; i<normAlpha.size(); i++ )
         persistVector[i] = normAlpha[i];
-    PersistXML::writePersistanceVector( element, "alpha", persistVector );
+    PersistXML::writeVariantVector( element, "alpha", persistVector );
 
 }
 

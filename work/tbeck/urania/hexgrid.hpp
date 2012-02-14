@@ -5,9 +5,7 @@
 #include <QPoint>
 #include <QPointF>
 
-#include "tools.hpp"
-
-#include "feature.h"
+#include "persist.h"
 
 /// Defines the vertical distance between cells in the grid
 #define HG_B 0.86602540378443837
@@ -26,10 +24,10 @@ protected:
     QSize _size;
 
     /// A set of items for the slots of the grid
-    QVector<T> items;
+    QVector<T> _items;
 
     /// A set of distances for the slots of the grid in a given neighborhood
-    QVector<int> distances;
+    QVector<int> _distances;
 
 public:
 
@@ -38,32 +36,52 @@ public:
 
     /// Constructs the hex grid with a specified size
     HexGrid(
-        const QSize& size ///< The size of the new grid
+        QSize size ///< The size of the new grid
         )
     {
         setSize( size );
     }
 
+    /// Constructs the hex grid with the specified size and fills it with the supplied values
+    HexGrid(
+            QSize size,      ///< The size of the new grid
+            QVector<T> items ///< The items with which to populate the grid
+            )
+    {
+        checkSize( size );
+        ASSERT_MSG( size.width() * size.height() == items.size(), "Size doesn't fit all items.  Size missmatch" );
+
+        _size = size;
+        _items = items;
+        _distances = QVector<int>( _items.size() );
+    }
+
     /// Destructs the HexGrid
     virtual ~HexGrid(){}
 
-    /// Sets the size of the grid
-    void setSize( const QSize& size )
+    /// Checks the supplied size to ensure that it is valid for the HexGrid
+    void checkSize( QSize size )
     {
         ASSERT_MSG( size.width() > 0,       "Grid width must be greater than 0"                 );
         ASSERT_MSG( size.height() > 0,      "Grid height must be greater than 0"                );
         ASSERT_MSG( size.height() % 2 == 0, "Grids must have even height ( for edge wrapping )" );
+    }
+
+    /// Sets the size of the grid
+    void setSize( QSize size )
+    {
+        checkSize( size );
 
         _size = size;
-        items  = QVector<T>( size.width() * size.height() );
-        distances = QVector<int>( items.size() );
+        _items  = QVector<T>( size.width() * size.height() );
+        _distances = QVector<int>( _items.size() );
     }
 
     /// Clears the hex grid
     virtual void clear()
     {
-        items.clear();
-        distances.clear();
+        _items.clear();
+        _distances.clear();
         _size.setWidth( 0 );
         _size.setHeight( 0 );
     }
@@ -71,7 +89,7 @@ public:
     /// Sets all of the slots in the grid to the specified item
     void setTo( const T& item )
     {
-        items.fill( item );
+        _items.fill( item );
     }
 
     /// Resets the size of the grid and re-initializes it
@@ -84,13 +102,13 @@ public:
     /// Fetches the distance calculated for the given index
     int distance( int idx )
     {
-        return distances[idx];
+        return _distances[idx];
     }
 
     /// Fetches the distance calculated for the given point
     int distance( QPoint& point )
     {
-        return distances[ index(point) ];
+        return _distances[ index(point) ];
     }
 
     /// Fetches indices for all slots within a radius of the slot at x, y
@@ -132,10 +150,10 @@ public:
                 int dx = abs( origin.x() - point.x() );
                 dx = std::min( dx, _size().width() - dx );
 
-                distances[i] = dy - std::max( dx - dy / 2, 0 );
+                _distances[i] = dy - std::max( dx - dy / 2, 0 );
 
                 // If the distance is within the radius, add this index to the local neighbors
-                if( distances[i] < r )
+                if( _distances[i] < r )
                     localNeighbors.append( i );
             }
 
@@ -157,7 +175,7 @@ public:
     /// Fetches the linear size of the grid
     unsigned l()
     {
-        return items.size();
+        return _items.size();
     }
 
     /// Fetches the item at a specific point in the grid
@@ -182,7 +200,7 @@ public:
         const QPoint& point ///< The location in the grid from which to fetch an item
         )
     {
-        return items[ index( point ) ];
+        return _items[ index( point ) ];
     }
 
     /// Fetches the item at a specific index in the grid
@@ -190,7 +208,7 @@ public:
         int idx ///< The index in the grid from which to fetch an item
         )
     {
-        return items[ idx ];
+        return _items[ idx ];
     }
 
     /// Fetches the index for the slot at the specified coordinates

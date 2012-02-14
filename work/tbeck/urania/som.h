@@ -12,23 +12,24 @@
 #include "hexgrid.hpp"
 #include "somerror.h"
 
+#include "persist.h"
+
 /// A slope tuning parameter for an inverse exponential function
 #define A 0.1
 
 /// Adjustment parameter for the initial width of the neighborhood function
 #define B 0.20
 
-/// A constant describing the conversion factor between FWHM and sigma
-#define FWHM_FACTOR 2.3548200450309493
-
 namespace hsom {
 
-class SOM
+class SOM : public PersistXML
 {
+    Q_OBJECT
 
 private:
 
     /// The hexagonal grid of features that represents the internal state of the SOMs
+    QSharedPointer< HexGrid<
     HexGrid<FeaturePtr> grid;
 
     /// The number of training epochs to use
@@ -80,6 +81,20 @@ private:
 
     /// Precalculates the weights for updating a neighborhood
     void precalculateWeights();
+
+
+
+protected:
+
+    /** @brief  Implements the PersistXML readData API
+     *  @see persist.h
+     */
+    virtual void readData( QDomElement& element );
+
+    /** @brief  Implements the PersistXML writeData API
+     *  @see persist.h
+     */
+    virtual void writeData( QDomElement& element );
 
 
 

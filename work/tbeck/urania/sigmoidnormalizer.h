@@ -4,6 +4,9 @@
 
 #include "normalizer.h"
 
+/// A constant describing the conversion factor between FWHM and sigma
+#define FWHM_FACTOR 2.3548200450309493
+
 namespace hsom {
 
 class SigmoidNormalizer : public Normalizer

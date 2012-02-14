@@ -30,7 +30,7 @@ void Classifier::train( QVector<SuspectPtr> suspects, QMap<QString, QVariant> tr
 void Classifier::readData( QDomElement& element )
 {
     _isTrained = element.attribute( "isTrained" ) == "true";
-    _trainingParameters = readPersistanceMap( element, "trainingParameters" );
+    _trainingParameters = readVariantMap( element, "trainingParameters" );
 
     readClassifierData( element );
 }
@@ -40,7 +40,7 @@ void Classifier::readData( QDomElement& element )
 void Classifier::writeData( QDomElement& element )
 {
     element.setAttribute( "isTrained", _isTrained ? "true" : "false" );
-    writePersistanceMap( element, "trainingParameters", _trainingParameters );
+    writeVariantMap( element, "trainingParameters", _trainingParameters );
 
     writeClassifierData( element );
 }
