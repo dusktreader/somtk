@@ -5,9 +5,6 @@
 
 #include <algorithm>
 
-#include "opencv2/core/core.hpp"
-#include "opencv2/ml/ml.hpp"
-
 #include "normalizer.h"
 #include "som.h"
 #include "suspect.h"
@@ -16,8 +13,10 @@
 
 namespace hsom {
 
-/// The SOM class provides an abstract base class for Self-Organizing Maps
-class HSOM : public QThread
+/** @brief  The SOM class provides an abstract base class for Self-Organizing Maps
+  * @todo   Implement this as a thread so that training can run in the background
+  */
+class HSOM
 {
 private:
 
@@ -31,7 +30,7 @@ private:
     ClassifierPtr classifier;
 
     /// Extracts a list of features from a list of suspects
-    QVector<FeaturePtr> extractFeatures(
+    QVector<Feature> extractFeatures(
             QVector<SuspectPtr> suspects /// A list of suspects from which to extract features
             );
 

@@ -40,9 +40,7 @@ protected:
 
 
     // The Normalizer API
-    virtual void calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters );
-    virtual void readNormalizerData( QDomElement& element );
-    virtual void writeNormalizerData( QDomElement& element );
+    virtual void calculateNormalizer( QVector<Feature> features, QMap<QString, QVariant> normalizerParameters );
 
 
 
@@ -51,7 +49,8 @@ public:
     SigmoidNormalizer();
 
     // The Normalizer API
-    virtual void normalize( FeaturePtr feature );
+    virtual void normalize( Feature& feature );
+    virtual void set( Feature& feature );
 };
 
 typedef QSharedPointer<SigmoidNormalizer> SigmoidNormalizerPtr;

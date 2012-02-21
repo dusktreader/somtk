@@ -6,6 +6,8 @@ HuFeature::HuFeature() :
         Feature( QVector<double>( 7, 0.0 ) )
 {}
 
+
+
 HuFeature::HuFeature( const cv::Mat& img ) :
         Feature( QVector<double>( 7, 0.0 ) )
 {
@@ -15,7 +17,15 @@ HuFeature::HuFeature( const cv::Mat& img ) :
     *this[6] = abs( *this[6] );
 }
 
+
+
 HuFeature::~HuFeature(){}
 
+
+
+FeaturePtr HuFeature::manufacture()
+{
+    return FeaturePtr( new HuFeature() );
+}
 
 } // namespace hsom

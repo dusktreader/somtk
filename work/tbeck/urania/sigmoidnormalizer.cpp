@@ -7,7 +7,7 @@ SigmoidNormalizer::SigmoidNormalizer() :
 {}
 
 
-void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters )
+void SigmoidNormalizer::calculateNormalizer( QVector<Feature> features, QMap<QString, QVariant> normalizerParameters )
 {
     bool ok = true;
 
@@ -22,19 +22,19 @@ void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features, QMap<
     ASSERT_MSG( ok, "Couldn't convert sigma step" );
     ASSERT_MSG( sigmaStep > 0, "Sigma step must be greater than 0" );
 
-    unsigned featureSize = features.first()->size();
+    unsigned featureSize = features.first().size();
 
     normMean  = QVector<double>( featureSize, 0.0 );
     normStdv  = QVector<double>( featureSize, 0.0 );
     normAlpha = QVector<double>( featureSize, 0.0 );
 
-    foreach( FeaturePtr feature, features )
+    foreach( Feature feature, features )
     {
         for( int i = 0; i < featureSize; i++ )
         {
-            double t = feature->data()[i] - normMean[i];
+            double t = feature[i] - normMean[i];
             normMean[i] += t / featCt;
-            normStdv[i] += t * ( feature->data()[i] - normMean[i] );
+            normStdv[i] += t * ( feature[i] - normMean[i] );
         }
     }
 
@@ -47,70 +47,17 @@ void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features, QMap<
 
 
 
-void SigmoidNormalizer::normalize( FeaturePtr feature )
+void SigmoidNormalizer::normalize( Feature& feature )
 {
-    for( int i = 0; i < feature->size(); i++ )
-    {
-        double& t = feature->data()[i];
-        t = 1 / ( 1 + exp( -normAlpha[i] * ( t - normMean[i] ) ) );
-    }
+    for( int i = 0; i < feature.size(); i++ )
+        feature[i] = 1 / ( 1 + exp( -normAlpha[i] * ( t - normMean[i] ) ) );
 }
 
 
 
-void SigmoidNormalizer::readNormalizerData( QDomElement& element )
+void SigmoidNormalizer::set( Feature& feature )
 {
-    bool ok = true;
-
-    QVector<QVariant> persistVector;
-
-    persistVector = PersistXML::readVariantVector( element, "mean" );
-    normMean = QVector<double>( persistVector.size() );
-    for( int i=0; i<persistVector.size(); i++ )
-    {
-        normMean[i] = persistVector[i].toDouble( &ok );
-        ASSERT_MSG( ok, "Couldn't convert vector item" );
-    }
-
-    persistVector = PersistXML::readVariantVector( element, "stdv" );
-    stdvMean = QVector<double>( persistVector.size() );
-    for( int i=0; i<persistVector.size(); i++ )
-    {
-        stdvMean[i] = persistVector[i].toDouble( &ok );
-        ASSERT_MSG( ok, "Couldn't convert vector item" );
-    }
-
-    persistVector = PersistXML::readVariantVector( element, "alpha" );
-    normAlpha = QVector<double>( persistVector.size() );
-    for( int i=0; i<persistVector.size(); i++ )
-    {
-        normAlpha[i] = persistVector[i].toDouble( &ok );
-        ASSERT_MSG( ok, "Couldn't convert vector item" );
-    }
+    for( int i = 0; i < feature.size(); i++ )
+        feature[i] = randomizer.randg( normMean[i], normStdv[i] );
 }
-
-
-
-void SigmoidNormalizer::writeNormalizerData( QDomElement& element )
-{
-
-    QVector<QVariant> persistVector;
-
-    persistVector = QVector<QVariant>( normMean.size() );
-    for( int i=0; i<normMean.size(); i++ )
-        persistVector[i] = normMean[i];
-    PersistXML::writeVariantVector( element, "mean", persistVector );
-
-    persistVector = QVector<QVariant>( normStdv.size() );
-    for( int i=0; i<normStdv.size(); i++ )
-        persistVector[i] = normStdv[i];
-    PersistXML::writeVariantVector( element, "stdv", persistVector );
-
-    persistVector = QVector<QVariant>( normAlpha.size() );
-    for( int i=0; i<normAlpha.size(); i++ )
-        persistVector[i] = normAlpha[i];
-    PersistXML::writeVariantVector( element, "alpha", persistVector );
-
-}
-
 } // namespace hsom

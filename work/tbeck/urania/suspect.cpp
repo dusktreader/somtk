@@ -22,7 +22,7 @@ Suspect::Suspect() :
 Suspect::~Suspect()
 {}
 
-QVector<FeaturePtr> Suspect::features()
+QVector<Feature> Suspect::features()
 {
     if( _features.empty() )
         generateFeatures();

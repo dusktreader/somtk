@@ -26,11 +26,11 @@ void HSOM::clear()
 
 
 
-QVector<FeaturePtr> HSOM::extractFeatures( QVector<SuspectPtr> suspects )
+QVector<Feature> HSOM::extractFeatures( QVector<SuspectPtr> suspects )
 {
-    QVector<FeaturePtr> features;
+    QVector<Feature> features;
     foreach( SuspectPtr suspect, suspects )
-        foreach( FeaturePtr feature, suspect->features() )
+        foreach( Feature feature, suspect->features() )
             features.append( feature );
     return features;
 }
@@ -47,7 +47,7 @@ void HSOM::generateHistograms( QVector<SuspectPtr>& suspects )
 
 void HSOM::generateHistogram( SuspectPtr suspect )
 {
-    foreach( FeaturePtr feature, suspect->features() )
+    foreach( Feature feature, suspect->features() )
     {
         // Find the feature that is closest to the input feature
         QPoint pt = som->closestFeatureCoords( feature );
@@ -66,11 +66,11 @@ void HSOM::train( QVector<SuspectPtr>& suspects,
 {
     try
     {
-        QVector<FeaturePtr> features = extractFeatures( suspects );
+        QVector<Feature> features = extractFeatures( suspects );
         normalizer->calculateNormalizer( features, normalizerParameters );
-        foreach( FeaturePtr feature, features )
+        foreach( Feature feature, features )
             normalizer->normalize( feature );
-        som->train( features, somParameters );
+        som->train( features, normalizer, somParameters );
         generateHistograms( suspects );
         classifier->train( suspects, classifierParameters );
     }
@@ -87,8 +87,7 @@ void HSOM::train( QVector<SuspectPtr>& suspects,
 
 void HSOM::classify( SuspectPtr suspect )
 {
-
-    QVector<FeaturePtr> features = suspect->features();
+    QVector<Feature> features = suspect->features();
     normalizeFeatures( features );
 
     generateHistogram( suspect );

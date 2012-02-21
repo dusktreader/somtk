@@ -9,10 +9,10 @@
 #include <algorithm>
 
 #include "feature.h"
+#include "suspect.h"
 #include "hexgrid.hpp"
 #include "somerror.h"
-
-#include "persist.h"
+#include "normalizer.h"
 
 /// A slope tuning parameter for an inverse exponential function
 #define A 0.1
@@ -22,15 +22,13 @@
 
 namespace hsom {
 
-class SOM : public PersistXML
+class SOM
 {
-    Q_OBJECT
 
 private:
 
     /// The hexagonal grid of features that represents the internal state of the SOMs
-    QSharedPointer< HexGrid<
-    HexGrid<FeaturePtr> grid;
+    HexGrid<Feature> grid;
 
     /// The number of training epochs to use
     int maxEpochs;
@@ -76,48 +74,29 @@ private:
     /// A vector of pre-calculated weights for updating a neighborhood
     QVector<double> weights;
 
-    /// A feature representing the type of features that this SOM will recognize
-    FeaturePtr featureRep;
-
     /// Precalculates the weights for updating a neighborhood
     void precalculateWeights();
 
 
 
-protected:
-
-    /** @brief  Implements the PersistXML readData API
-     *  @see persist.h
-     */
-    virtual void readData( QDomElement& element );
-
-    /** @brief  Implements the PersistXML writeData API
-     *  @see persist.h
-     */
-    virtual void writeData( QDomElement& element );
-
-
-
 public:
-
-    /// Creates an empty SOM
-    SOM();
 
     /// Constructs an SOM with a specific size
     SOM(
-        const QSize& size ///< The size of the grid underlying the SOm
+        QSize size ///< The size of the hexagonal grid that this SOM will use
          );
 
     /// Destructs this SOM
     virtual ~SOM();
 
-    /// Fetches the size of this SO
-    const QSize& size();
+    /// Fetches the size of this SOM
+    QSize size();
 
     /// Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature type
     void initializeTraining(
-        QMap<QString, QVariant> somParameters,  ///< The parameters to be used for training this SOM
-        FeaturePtr featureRep                   ///< Provides an example feature for the SOM to train with
+        QMap<QString, QVariant> somParameters, ///< The parameters to be used for training this SOM
+        NormalizerPtr normalizer,              ///< A normalizer to adjust new features in the grid
+        int featureSize                        ///< The length of the features with which to train
         );
 
     /** @brief  Advances the SOM to the next epoch
@@ -127,25 +106,29 @@ public:
 
     /// Trains the SOM with a single feature
     void update(
-        FeaturePtr feature ///< The feature with which to update the SOM
+        Feature feature ///< The feature with which to update the SOM
         );
 
     void train(
-        QVector<FeaturePtr> features,         ///< The features with which to train the SOM
+        QVector<Feature> features,            ///< The features with which to train the SOM
+        NormalizerPtr normalizer,             ///< A normalizer used to adjust new features in the grid
         QMap<QString, QVariant> somParameters ///< The tuning parameters to use for the training
         );
 
     /// Fetches the index of the cell that holds the closest feature in the SOM to an input feature
     int closestFeatureIndex(
-        FeaturePtr feature ///< The input feature to compare against feature in the SOM
+        Feature feature ///< The input feature to compare against feature in the SOM
         );
 
     /** @brief  Fetches the closest feature in the SOM to an input feature
       * @return The coordinates of the cell that holds the feature that most closesly resembles the input feature
       */
     QPoint closestFeatureCoords(
-        FeaturePtr feature
+        Feature feature
         );
+
+    /// Dumps the features from this SOM out to a regular vector
+    QVector<Feature> dumpFeatures();
 };
 
 typedef QSharedPointer<SOM> SOMPtr;

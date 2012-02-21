@@ -61,41 +61,26 @@ INCLUDEPATH += \
     $$PWD/tools/ \
 
 SOURCES += \
-    tools/persist.cpp \
     tools/localassert.cpp \
-    colorhsom.cpp \
     feature.cpp \
     histogram.cpp \
     hsom.cpp \
-    hufeature.cpp \
-    imagehsom.cpp \
     imagesuspect.cpp \
-    mainwindow.cpp \
-    qimagehsom.cpp \
-    qmain.cpp \
     som.cpp \
     suspect.cpp \
-    traindialog.cpp \
     classifier.cpp \
     annclassifier.cpp \
     normalizer.cpp \
     sigmoidnormalizer.cpp
 
 HEADERS += \
-    tools/persist.h \
     tools/localassert.h \
     feature.h \
     hexgrid.hpp \
     histogram.h \
     hsom.h \
-    hufeature.h \
-    imagehsom.h \
-    colorhsom.h \
-    mainwindow.h \
-    qimagehsom.h \
     suspect.h \
     imagesuspect.h \
-    traindialog.h \
     som.h \
     somerror.h \
     classifier.h \

@@ -178,6 +178,12 @@ public:
         return _items.size();
     }
 
+    /// Fetches the vector of items from this grid
+    QVector<T> items()
+    {
+        return _items;
+    }
+
     /// Fetches the item at a specific point in the grid
     T& operator[](
         const QPoint& point ///< The location in the grid from which to fetch an item

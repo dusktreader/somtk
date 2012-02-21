@@ -28,6 +28,7 @@ private:
     double scanningWindowStep;
 
 
+
 public:
 
     /// Creates a new ImageSuspect

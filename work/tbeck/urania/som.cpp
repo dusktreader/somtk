@@ -2,13 +2,9 @@
 
 namespace hsom {
 
-SOM::SOM(){}
-
-
-
-SOM::SOM( const QSize& size )
+SOM::SOM( QSize size )
 {
-    grid = HexGrid<FeaturePtr>( size );
+    grid = HexGrid<Feature>( size );
 }
 
 
@@ -20,14 +16,14 @@ SOM::~SOM()
 
 
 
-const QSize& SOM::size()
+QSize SOM::size()
 {
     return grid.size();
 }
 
 
 
-void SOM::initializeTraining( QMap<QString, QVariant> somParameters, FeaturePtr featureRep )
+void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerPtr normalizer, int featureSize )
 {
     bool ok = true;
 
@@ -63,12 +59,16 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, FeaturePtr 
     currentEpoch = -1;
     nextEpoch();
 
-    this->featureRep = featureRep;
-
     QPoint pt;
     for( pt.setY( 0 ); pt.y() < grid.size().height(); pt.setY( pt.y() + 1 ) )
+    {
         for( pt.setX( 0 ); pt.x() < grid.size().width(); pt.setX( pt.x() + 1 ) )
-            grid[pt] = featureRep->generateFeature( pt );
+        {
+            Feature newFeature( featureSize );
+            normalizer->set( newFeature );
+            grid[pt] = newFeature;
+        }
+    }
 }
 
 
@@ -114,7 +114,7 @@ void SOM::precalculateWeights()
 
 
 
-void SOM::closestFeatureIndex( FeaturePtr feature )
+void SOM::closestFeatureIndex( Feature feature )
 {
     double globalMinimumDistance = DBL_MAX;
     int    globalMinimumIndex    = -1;
@@ -129,7 +129,7 @@ void SOM::closestFeatureIndex( FeaturePtr feature )
         for( int i = 0; i < grid.l(); i++ )
         {
             // Calculate the distance between the input feature and the map feature at index i
-            double distance = feature->distance( grid[i] );
+            double distance = feature.distance( grid[i] );
 
             if( distance  < localMinimumDistance )
             {
@@ -156,14 +156,14 @@ void SOM::closestFeatureIndex( FeaturePtr feature )
 
 
 
-QPoint SOM::closestFeatureCoords( FeaturePtr feature )
+QPoint SOM::closestFeatureCoords( Feature feature )
 {
     return grid.coords( closestFeatureIndex( feature ) );
 }
 
 
 
-void SOM::update( FeaturePtr feature )
+void SOM::update( Feature feature )
 {
     // Find the feature in the SOM that is the closest to the input feature
     QPoint closest = closestFeatureCoords( feature );
@@ -181,9 +181,9 @@ void SOM::update( FeaturePtr feature )
 
 
 
-void SOM::train( QVector<FeaturePtr> features, QMap<QString, QVariant> somParameters )
+void SOM::train( QVector<Feature> features, NormalizerPtr normalizer, QMap<QString, QVariant> somParameters )
 {
-    initializeTraining( somParameters, features.first() );
+    initializeTraining( somParameters, normalizer, features.front().size() );
 
     do
     {
@@ -192,42 +192,16 @@ void SOM::train( QVector<FeaturePtr> features, QMap<QString, QVariant> somParame
 
         // Update the SOM with each feature from the globalFeatures list.
         // @todo: consider random sampling for the training if the number of features is high
-        foreach( FeaturePtr feature, features )
+        foreach( Feature& feature, features )
             update( feature );
 
     } while( nextEpoch() != false );
 
 }
 
-
-
-// The PersistXML API
-void SOM::readData( QDomElement& element )
+QVector<Feature> SOM::dumpFeatures()
 {
-    bool ok = true;
-
-    int gridWidth = element.attribute( "GridWidth" ).toInt( &ok );
-    ASSERT_MSG( ok, "Coudln't extract grid width" );
-
-    int gridHeight = element.attribute( "GridHeight" ).toInt( &ok );
-    ASSERT_MSG( ok, "Coudln't extract grid height" );
-
-    grid = HexGrid<FeaturePtr>( QSize( gridWidth, gridHeight ), readPersistVector<FeaturePtr>( element, "GridValues" );
-    grid = HexGrid<FeaturePtr>()
-
-    for( int i=0; i<grid.l(); i++ )
-    {
-        grid.operator []()
-    }
-
-
+    return grid.items();
 }
-
-void SOM::writeData( QDomElement& element )
-{
-    /// @todo  Implement some sort of protection to make sure that this doesn't occur during training
-
-}
-
 
 } // namespace hsom

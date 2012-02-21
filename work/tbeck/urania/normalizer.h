@@ -5,20 +5,20 @@
 #include <QVariant>
 #include <QSharedPointer>
 
-#include "persist.h"
 #include "feature.h"
 
 namespace hsom {
 
-class Normalizer : public PersistXML
+class Normalizer
 {
-    Q_OBJECT
 
 private:
 
     /// Indicates whether or not this normalizer has been computed
     bool _isCalculated;
 
+    /// Provides random functionality if needed by derived instances
+    static RandMaster randomizer;
 
 
 protected:
@@ -29,12 +29,6 @@ protected:
 
 
     // The Normalizer API
-
-    /// Interfaces with the PersistXML API to ensure correct loading order for a normalizer
-    virtual void readNormalizerData( QDomElement& element );
-
-    /// Interfaces with the PersistXML API to ensure correct saving order for a normalizer
-    virtual void writeNormalizerData( QDomElement& element );
 
     virtual void calculateNormalizer(
             QVector<FeaturePtr> features,               ///< A sample of features for which to compute the normalization
@@ -62,14 +56,10 @@ public:
     virtual void clear() = 0;
 
     /// Normalizes a single feature
-    virtual void normalize( FeaturePtr feature ) = 0;
+    virtual void normalize( Feature& feature ) = 0;
 
-
-
-    // The PersistXML API.
-
-    virtual void readData( QDomElement& element );
-    virtual void writeData( QDomElement& element );
+    /// Sets a features values based upon calculated normalization
+    virtual void set( Feature& feature ) = 0;
 
 };
 

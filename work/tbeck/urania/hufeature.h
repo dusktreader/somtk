@@ -29,6 +29,8 @@ public:
     /// Destructs a Hu Feature
     virtual ~HuFeature();
 
+    /// Produces an exact copy of this feature
+    virtual QSharedPointer<Feature> manufacture();
 
     // Initializes this hu feature
     // For now, the default normalization is used

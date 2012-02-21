@@ -33,8 +33,10 @@ void ImageSuspect::generateFeatures()
 
             /// @todo:  Add a test to see if the sub image is 'empty'  and throw it out if it is
 
-            HuFeaturePtr feature( new HuFeature( subImage ) );
-            _features.append( feature );
+            Feature newFeature( 7 );
+            cv::HuMoments( cv::moments( subImage ), newFeature->data() );
+            newFeature[6] = fabs( newFeature[6] );
+            _features.append( newFeature );
 
             scanningWindow.moveLeft( scanningWindow.left() + dx );
         }
