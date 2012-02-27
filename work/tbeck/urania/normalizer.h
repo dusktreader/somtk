@@ -33,7 +33,7 @@ protected:
     virtual void calculateNormalizer(
             QVector<FeaturePtr> features,               ///< A sample of features for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
-            );
+            ) = 0;
 
 
 
@@ -43,7 +43,7 @@ public:
     Normalizer();
 
     /// Computes the normalization statisticts to be used for future normalizations
-    virtual void calculate(
+    void calculate(
             QVector<FeaturePtr> features,               ///< A sample of features for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
             );

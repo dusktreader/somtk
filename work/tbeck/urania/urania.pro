@@ -71,7 +71,8 @@ SOURCES += \
     classifier.cpp \
     annclassifier.cpp \
     normalizer.cpp \
-    sigmoidnormalizer.cpp
+    sigmoidnormalizer.cpp \
+    minmaxnormalizer.cpp
 
 HEADERS += \
     tools/localassert.h \
@@ -86,7 +87,8 @@ HEADERS += \
     classifier.h \
     annclassifier.h \
     normalizer.h \
-    sigmoidnormalizer.h
+    sigmoidnormalizer.h \
+    minmaxnormalizer.h
 
 FORMS += mainwindow.ui \
     traindialog.ui

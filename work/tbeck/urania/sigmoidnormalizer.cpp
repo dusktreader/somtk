@@ -60,4 +60,5 @@ void SigmoidNormalizer::set( Feature& feature )
     for( int i = 0; i < feature.size(); i++ )
         feature[i] = randomizer.randg( normMean[i], normStdv[i] );
 }
+
 } // namespace hsom
