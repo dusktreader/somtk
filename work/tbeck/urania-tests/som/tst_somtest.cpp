@@ -24,6 +24,7 @@ void SomTest::testCase1()
     hsom::SOM colorSOM( QSize( 16, 16 ) );
 
 
+
     QVERIFY2(true, "Failure");
 }
 
