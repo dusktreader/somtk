@@ -2,6 +2,10 @@
 
 #include <QVector>
 
+#include <cmath>
+#include <fstream>
+#include <ios>
+
 namespace hsom {
 
 /// The feature class provides an abstract base class for SOM features

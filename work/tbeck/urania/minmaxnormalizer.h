@@ -40,7 +40,7 @@ public:
 
     virtual void clear();
     virtual void normalize( Feature& feature );
-    virtual void set( Feature& feature );
+    virtual void setFeature( Feature& feature );
 };
 
 } // namespace hsom

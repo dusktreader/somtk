@@ -1,12 +1,11 @@
-#ifndef SOMERROR_H
-#define SOMERROR_H
+#pragma once
 
 #include <QString>
 #include <exception>
 
 namespace hsom {
 
-class SOMError : public exception
+class SOMError : public std::exception
 {
 
 private:

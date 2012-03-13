@@ -35,7 +35,9 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
     // Describes the inital training weight for the SOM
     ASSERT_MSG( somParameters.contains( "initialAlpha" ), "SOM parameters doesn't contain initial alpha" );
     initialAlpha = somParameters["initialAlpha"].toDouble( &ok );
-    ASSERT_MSG( ok, "Couldn't convvert initial alpha to a double" );
+    /// @todo  Add range check to alpha (hint on values)
+    /// @todo  Perhaps use default values if the parameters aren't specified
+    ASSERT_MSG( ok, "Couldn't convert initial alpha to a double" );
 
     // Describes the inital radius of the training neighborhood for the SOM
     ASSERT_MSG( somParameters.contains( "initialRadiusRatio" ), "SOM parameters doesn't contain initial radius ratio" );
@@ -49,12 +51,12 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
 
     alpha_tf = 0.10;   // This is a tuning factor...should not be hardcoded
     alpha_Nf = 0.25;   // This is a tuning factor...should not be hardcoded
-    alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * epochCount );
+    alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * maxEpochs );
 
-    initialRadius = initialRadiusRatio * grid.size().w;
+    initialRadius = initialRadiusRatio * grid.size().width();
     radius_tf = 0.25;   // This is a tuning factor...should not be hardcoded
     radius_Nf = 0.50;   // This is a tuning factor...should not be hardcoded
-    radius_gamma = -log( radius_Nf ) / ( radius_tf * epochCount );
+    radius_gamma = -log( radius_Nf ) / ( radius_tf * maxEpochs );
 
     currentEpoch = -1;
     nextEpoch();
@@ -65,7 +67,7 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
         for( pt.setX( 0 ); pt.x() < grid.size().width(); pt.setX( pt.x() + 1 ) )
         {
             Feature newFeature( featureSize );
-            normalizer->set( newFeature );
+            normalizer->setFeature( newFeature );
             grid[pt] = newFeature;
         }
     }
@@ -101,20 +103,20 @@ void SOM::precalculateWeights()
      */
     double sigma = currentRadius / FWHM_FACTOR;
 
-    double twoSigmaSquared = 2 * pow( sigma, 2 );
+    double twoSigmaSquared = 2 * pow( sigma, 2.0 );
 
-    weights = vector<double>( (int)radius + 1 );
+    weights = QVector<double>( (int)currentRadius + 1 );
 
     /* Calculate the gaussian weighting function.
      * The function is dependent on alpha, sigma, and the current distance from the center of the neighborhood
      */
-    for( unsigned i = 0; i < weights.size(); i++ )
-        weights[i] = alpha * exp( -pow( i, 2.0 ) / twoSigmaSquared );
+    for( int i = 0; i < weights.size(); i++ )
+        weights[i] = currentAlpha * exp( -pow( i, 2.0 ) / twoSigmaSquared );
 }
 
 
 
-void SOM::closestFeatureIndex( Feature feature )
+int SOM::closestFeatureIndex( Feature feature )
 {
     double globalMinimumDistance = DBL_MAX;
     int    globalMinimumIndex    = -1;
@@ -175,7 +177,7 @@ void SOM::update( Feature feature )
     for( int i=0; i<neighbors.size(); i++ )
     {
         int index = neighbors[i];
-        grid[index]->adjust( feature, weights[ grid.distance( index ) ] );
+        grid[index].adjust( feature, weights[ grid.distance( index ) ] );
     }
 }
 
@@ -188,11 +190,11 @@ void SOM::train( QVector<Feature> features, NormalizerPtr normalizer, QMap<QStri
     do
     {
         // Shuffle the list of features to remove bias
-        random_shuffle( features.begin(), features.end() );
+        std::random_shuffle( features.begin(), features.end() );
 
         // Update the SOM with each feature from the globalFeatures list.
         // @todo: consider random sampling for the training if the number of features is high
-        foreach( Feature& feature, features )
+        foreach( Feature feature, features )
             update( feature );
 
     } while( nextEpoch() != false );

@@ -11,7 +11,6 @@ namespace hsom {
 
 class SigmoidNormalizer : public Normalizer
 {
-    Q_OBJECT
 
 private:
 
@@ -50,7 +49,7 @@ public:
 
     // The Normalizer API
     virtual void normalize( Feature& feature );
-    virtual void set( Feature& feature );
+    virtual void setFeature( Feature& feature );
 };
 
 typedef QSharedPointer<SigmoidNormalizer> SigmoidNormalizerPtr;

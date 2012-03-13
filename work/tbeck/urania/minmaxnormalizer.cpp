@@ -52,7 +52,7 @@ void MinMaxNormalizer::normalize( Feature& feature )
 
 
 
-void MinMaxNormalizer::set( Feature& feature )
+void MinMaxNormalizer::setFeature( Feature& feature )
 {
     for( int i = 0; i < feature.size(); i++ )
         feature[i] = randomizer.randd( loLimit, hiLimit );

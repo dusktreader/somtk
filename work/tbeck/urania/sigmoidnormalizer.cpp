@@ -55,7 +55,7 @@ void SigmoidNormalizer::normalize( Feature& feature )
 
 
 
-void SigmoidNormalizer::set( Feature& feature )
+void SigmoidNormalizer::setFeature( Feature& feature )
 {
     for( int i = 0; i < feature.size(); i++ )
         feature[i] = randomizer.randg( normMean[i], normStdv[i] );

@@ -6,7 +6,7 @@
 
 QT       += testlib
 
-QT       -= gui
+QT       += gui
 
 TARGET = tst_somtest
 CONFIG   += console
@@ -18,10 +18,22 @@ URANIA_ROOT = $$PWD/../..
 INCLUDEPATH += $$URANIA_ROOT
 
 HEADERS += \
-    som.h  \
-    feature.h \
-    suspect.h \
+    $$URANIA_ROOT/som.h  \
+    $$URANIA_ROOT/feature.h \
+    $$URANIA_ROOT/normalizer.h \
+    $$URANIA_ROOT/tools/utilities.hpp \
+    $$URANIA_ROOT/tools/localassert.h \
+    $$URANIA_ROOT/tools/randmaster.h \
+    nullnormalizer.h
 
+SOURCES += \
+    $$URANIA_ROOT/som.cpp  \
+    $$URANIA_ROOT/feature.cpp \
+    $$URANIA_ROOT/normalizer.cpp \
+    $$URANIA_ROOT/tools/utilities.cpp \
+    $$URANIA_ROOT/tools/localassert.cpp \
+    $$URANIA_ROOT/tools/randmaster.cpp \
+    nullnormalizer.cpp \
+    tst_somtest.cpp
 
-SOURCES += tst_somtest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

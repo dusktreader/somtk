@@ -1,5 +1,4 @@
-#ifndef SOM_H
-#define SOM_H
+#pragma once
 
 #include <QSize>
 #include <QVector>
@@ -7,9 +6,14 @@
 #include <QVariant>
 
 #include <algorithm>
+#include <cmath>
+#include <cfloat>
+#include <climits>
+
+#include "tools/localassert.h"
+#include "tools/convert.hpp"
 
 #include "feature.h"
-#include "suspect.h"
 #include "hexgrid.hpp"
 #include "somerror.h"
 #include "normalizer.h"
@@ -19,6 +23,9 @@
 
 /// Adjustment parameter for the initial width of the neighborhood function
 #define B 0.20
+
+/// A constant describing the conversion factor between FWHM and sigma
+#define FWHM_FACTOR 2.3548200450309493
 
 namespace hsom {
 
@@ -64,7 +71,6 @@ private:
 
     /// @todo  doc
     double radius_gamma;
-
 
     /// The current epoch in the training
     int currentEpoch;
@@ -134,5 +140,3 @@ public:
 typedef QSharedPointer<SOM> SOMPtr;
 
 } // namespace hsom
-
-#endif // SOM_H
