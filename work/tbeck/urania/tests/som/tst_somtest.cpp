@@ -78,7 +78,7 @@ void SomTest::visualTest()
 {
     NormalizerPtr normalizer( new NullNormalizer() );
 
-    QSize size( 10, 10 );
+    QSize size( 24, 24 );
 
     SOMPtr som( new SOM( size ) );
     RandMaster rnd;
@@ -104,9 +104,9 @@ void SomTest::visualTest()
     */
 
     QMap<QString, QVariant> somParameters;
-    somParameters["maxEpochs"] = 100;
-    somParameters["initialAlpha"] = 3.0;
-    somParameters["initialRadiusRatio"] = 0.4;
+    somParameters["maxEpochs"] = 40;
+    somParameters["initialAlpha"] = 0.1;
+    somParameters["initialRadiusRatio"] = 0.4999;
 
     som->train(inputFeatures, normalizer, somParameters );
 

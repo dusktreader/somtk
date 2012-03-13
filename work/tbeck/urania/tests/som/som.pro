@@ -37,3 +37,7 @@ SOURCES += \
     tst_somtest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+#QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
+#QMAKE_LFLAGS_RELEASE += -fopenmp
+#QMAKE_CXXFLAGS_DEBUG += -g
