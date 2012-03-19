@@ -34,7 +34,8 @@ SOURCES += \
     $$URANIA_ROOT/tools/localassert.cpp \
     $$URANIA_ROOT/tools/randmaster.cpp \
     nullnormalizer.cpp \
-    tst_somtest.cpp
+    tst_somtest.cpp \
+    tst_gridtest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
