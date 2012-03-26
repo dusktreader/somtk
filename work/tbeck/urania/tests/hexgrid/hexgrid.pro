@@ -8,7 +8,7 @@ QT       += testlib
 
 QT       += gui
 
-TARGET = tst_somtest
+TARGET = tst_test
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -18,24 +18,16 @@ URANIA_ROOT = $$PWD/../..
 INCLUDEPATH += $$URANIA_ROOT
 
 HEADERS +=                                       \
-    $$URANIA_ROOT/som.h                          \
     $$URANIA_ROOT/hexgrid.hpp                    \
     $$URANIA_ROOT/feature.h                      \
-    $$URANIA_ROOT/normalizers/normalizer.h       \
-    $$URANIA_ROOT/normalizers/nullnormalizer.h   \
     $$URANIA_ROOT/tools/utilities.hpp            \
     $$URANIA_ROOT/tools/localassert.h            \
     $$URANIA_ROOT/tools/randmaster.h             \
 
 SOURCES +=                                       \
-    $$URANIA_ROOT/som.cpp                        \
-    $$URANIA_ROOT/feature.cpp                    \
-    $$URANIA_ROOT/normalizers/normalizer.cpp     \
-    $$URANIA_ROOT/normalizers/nullnormalizer.cpp \
     $$URANIA_ROOT/tools/utilities.cpp            \
     $$URANIA_ROOT/tools/localassert.cpp          \
     $$URANIA_ROOT/tools/randmaster.cpp           \
-    tst_somtest.cpp                             \
     tst_hexgridtest.cpp                          \
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

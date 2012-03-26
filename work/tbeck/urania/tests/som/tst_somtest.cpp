@@ -3,7 +3,7 @@
 #include <QImage>
 #include <QPainter>
 
-#include "nullnormalizer.h"
+#include "normalizers/nullnormalizer.h"
 #include "som.h"
 #include "tools/randmaster.h"
 
@@ -12,14 +12,14 @@ using namespace hsom;
 class SomTest : public QObject
 {
     Q_OBJECT
-    
+
 private:
 
     QImage visualizeColorGrid( HexGrid<Feature> grid );
 
 public:
     SomTest();
-    
+
 private Q_SLOTS:
     void visualTest();
 };
