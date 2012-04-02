@@ -85,7 +85,7 @@ void SomTest::visualTest()
 
 
     QVector<Feature> inputFeatures;
-    for( int i=0; i<100; i++ )
+    for( int i=0; i<1000; i++ )
     {
         Feature f( 3 );
         double r = rnd.randd();
@@ -97,23 +97,23 @@ void SomTest::visualTest()
         inputFeatures.append( f );
     }
 
-    /*
-    HexGrid<Feature> grid( size, features );
-    QImage initialGrid = visualizeColorGrid( grid );
-    initialGrid.save( "initialGrid.png" );
-    */
-
     QMap<QString, QVariant> somParameters;
     somParameters["maxEpochs"] = 40;
-    somParameters["initialAlpha"] = 0.1;
+    somParameters["initialAlpha"] = 0.8;
     somParameters["initialRadiusRatio"] = 0.4999;
 
-    som->train(inputFeatures, normalizer, somParameters );
+    som->initializeTraining( somParameters, normalizer, inputFeatures.front().size() );
+    QVector<Feature> untrainedFeatures = som->dumpFeatures();
+    HexGrid<Feature> initialGrid( size, untrainedFeatures );
+    QImage initialGridImage = visualizeColorGrid( initialGrid );
+    initialGridImage.save( "initialGrid.png" );
+
+    som->train( inputFeatures, normalizer, somParameters, true );
 
     QVector<Feature>trainedFeatures = som->dumpFeatures();
-    HexGrid<Feature> grid( size, trainedFeatures );
-    QImage finalGrid = visualizeColorGrid( grid );
-    finalGrid.save( "finalGrid.png" );
+    HexGrid<Feature> finalGrid( size, trainedFeatures );
+    QImage finalGridImage = visualizeColorGrid( finalGrid );
+    finalGridImage.save( "finalGrid.png" );
 
     QVERIFY2(true, "Failure");
 }

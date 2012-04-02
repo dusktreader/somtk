@@ -55,40 +55,39 @@ QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
 QMAKE_LFLAGS_RELEASE += -fopenmp
 QMAKE_CXXFLAGS_DEBUG += -g
 
-
-
-INCLUDEPATH += \
-    $$PWD/tools/ \
+#TODO:  Add .pri files for subdirectories.  Use WAS approach
 
 SOURCES += \
-    tools/localassert.cpp \
+    hsom.cpp \
+    som.cpp \
     feature.cpp \
     histogram.cpp \
-    hsom.cpp \
-    imagesuspect.cpp \
-    som.cpp \
-    suspect.cpp \
-    classifier.cpp \
-    annclassifier.cpp \
-    normalizer.cpp \
-    sigmoidnormalizer.cpp \
-    minmaxnormalizer.cpp
+    classifiers/classifier.cpp \
+    classifiers/annclassifier.cpp \
+    normalizers/normalizer.cpp \
+    normalizers/sigmoidnormalizer.cpp \
+    normalizers/minmaxnormalizer.cpp \
+    normalizers/nullnormalizer.cpp\
+    suspects/imagesuspect.cpp \
+    suspects/suspect.cpp \
+    tools/localassert.cpp \
 
 HEADERS += \
-    tools/localassert.h \
+    hsom.h \
+    som.h \
     feature.h \
     hexgrid.hpp \
     histogram.h \
-    hsom.h \
-    suspect.h \
-    imagesuspect.h \
-    som.h \
-    somerror.h \
-    classifier.h \
-    annclassifier.h \
-    normalizer.h \
-    sigmoidnormalizer.h \
-    minmaxnormalizer.h
+    classifiers/classifier.h \
+    errors/somerror.h \
+    classifiers/annclassifier.h \
+    normalizers/normalizer.h \
+    normalizers/sigmoidnormalizer.h \
+    normalizers/minmaxnormalizer.h \
+    normalizers/nullnormalizer.h \
+    suspects/suspect.h \
+    suspects/imagesuspect.h \
+    tools/localassert.h \
 
 FORMS += mainwindow.ui \
     traindialog.ui

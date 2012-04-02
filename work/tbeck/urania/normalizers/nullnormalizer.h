@@ -11,13 +11,13 @@ class NullNormalizer : public Normalizer
 
 protected:
 
-    virtual void calculateNormalizer( QVector<Feature> features, QMap<QString, QVariant> nomalizerParameters );
+    virtual void calculateNormalizer(QVector<Feature>, QMap<QString, QVariant>);
 
 public:
 
     NullNormalizer();
 
-    virtual void normalize( Feature &feature );
+    virtual void normalize(Feature &);
     virtual void setFeature( Feature &feature );
     virtual void clear();
 };

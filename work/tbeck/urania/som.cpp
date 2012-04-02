@@ -105,7 +105,7 @@ void SOM::precalculateWeights()
 
     double twoSigmaSquared = 2 * pow( sigma, 2.0 );
 
-    weights = QVector<double>( (int)currentRadius + 1 );
+    weights = QVector<double>( (int)currentRadius + 1, 0.0 );
 
     /* Calculate the gaussian weighting function.
      * The function is dependent on alpha, sigma, and the current distance from the center of the neighborhood
@@ -183,14 +183,17 @@ void SOM::update( Feature feature )
 
 
 
-void SOM::train( QVector<Feature> features, NormalizerPtr normalizer, QMap<QString, QVariant> somParameters )
+void SOM::train( QVector<Feature> features, NormalizerPtr normalizer, QMap<QString, QVariant> somParameters, bool skipInit_debugOnly )
 {
-    initializeTraining( somParameters, normalizer, features.front().size() );
+    if( skipInit_debugOnly == false )
+        initializeTraining( somParameters, normalizer, features.front().size() );
 
     do
     {
-        // Shuffle the list of features to remove bias
+       // Shuffle the list of features to remove bias
         std::random_shuffle( features.begin(), features.end() );
+
+        ;
 
         // Update the SOM with each feature from the globalFeatures list.
         // @todo: consider random sampling for the training if the number of features is high

@@ -35,11 +35,10 @@ SOURCES +=                                       \
     $$URANIA_ROOT/tools/utilities.cpp            \
     $$URANIA_ROOT/tools/localassert.cpp          \
     $$URANIA_ROOT/tools/randmaster.cpp           \
-    tst_somtest.cpp                             \
-    tst_hexgridtest.cpp                          \
+    tst_somtest.cpp                              \
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
-QMAKE_LFLAGS_RELEASE += -fopenmp
+#QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
+#QMAKE_LFLAGS_RELEASE += -fopenmp
 QMAKE_CXXFLAGS_DEBUG += -g

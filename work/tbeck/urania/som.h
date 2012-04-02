@@ -15,8 +15,8 @@
 
 #include "feature.h"
 #include "hexgrid.hpp"
-#include "somerror.h"
-#include "normalizer.h"
+#include "errors/somerror.h"
+#include "normalizers/normalizer.h"
 
 /// A slope tuning parameter for an inverse exponential function
 #define A 0.1
@@ -41,7 +41,7 @@ private:
     int maxEpochs;
 
     /// The initial training weight
-    int initialAlpha;
+    double initialAlpha;
 
     /// The current training weight
     double currentAlpha;
@@ -116,9 +116,10 @@ public:
         );
 
     void train(
-        QVector<Feature> features,            ///< The features with which to train the SOM
-        NormalizerPtr normalizer,             ///< A normalizer used to adjust new features in the grid
-        QMap<QString, QVariant> somParameters ///< The tuning parameters to use for the training
+        QVector<Feature> features,             ///< The features with which to train the SOM
+        NormalizerPtr normalizer,              ///< A normalizer used to adjust new features in the grid
+        QMap<QString, QVariant> somParameters, ///< The tuning parameters to use for the training
+        bool skipInit_debugOnly = false        ///< Only to be used for debugging
         );
 
     /// Fetches the index of the cell that holds the closest feature in the SOM to an input feature

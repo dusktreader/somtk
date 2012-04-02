@@ -5,12 +5,13 @@
 #include <QPoint>
 #include <QPointF>
 
-#include "somerror.h"
+#include "errors/somerror.h"
+
+
+namespace hsom {
 
 /// Defines the vertical distance between cells in the grid
 #define HG_B 0.86602540378443837
-
-namespace hsom {
 
 /** The HexGrid class provides the basis for the spatial organization of the Self Organizing Map.  It provides a
   * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
@@ -146,17 +147,64 @@ public:
             #pragma omp for private( localNeighbors )
             for( int i = 0; i < this->l(); i++ )
             {
+                /* For each element in the loop, we will determine the direction and distance
+                 * that we must step to get from the point represented by the index to the origin of
+                 * the neighborhood
+                 */
+
                 // Fetch the coordinate of the current index
                 QPoint point = coords( i );
 
+
+
                 // Calculate the distance ( on the hex grid ) to the origin point
-                int dy = abs( origin.y() - point.y() );
-                dy = std::min( dy, _size.height() - dy );
+                int dist_y = abs( origin.y() - point.y() );
 
-                int dx = abs( origin.x() - point.x() );
-                dx = std::min( dx, _size.width() - dx );
+                // Calculate the distance if we were to move over the nearest y boudary
+                int wrap_dist_y = _size.height() - dist_y;
 
-                _distances[i] = dy - std::max( dx - dy / 2, 0 );
+                // If it is closer to wrap over the y boundary move that way
+                if( wrap_dist_y < dist_y )
+                    dist_y = wrap_dist_y;
+
+
+
+                // Calculate the change in x to get from the point to the origin
+                int delta_x = origin.x() - point.x();
+
+                // Calculate the distance between the origin and the point
+                int dist_x = abs( delta_x );
+
+                // Indicates if the point lies on an even row
+                bool even_row   = !( point.y() % 2 );
+
+                // Indicates that the origin is to the right of the point
+                bool move_right = delta_x >= 0;
+
+                // Determine if the current movement gets an extra x for y movement
+                int extra_x = move_right ^ even_row;
+
+                // Calculate the distance if we were to move over the nearest x boundary
+                int wrap_dist_x = _size.width() - dist_x;
+
+                /* If it is closer to move over the x boundary, move that directon
+                 * If it is exactly the same distance, wrap only if the current direction
+                 * does not get an extra x for y movement
+                 */
+                if( ( wrap_dist_x  < dist_x ) || ( wrap_dist_x == dist_x && !extra_x ) )
+                {
+                    dist_x  = wrap_dist_x;
+                    extra_x = !extra_x;
+                }
+
+                // Account for the number of free x steps that can be gained by moving in  y
+                int free_x = ( dist_y + extra_x ) / 2;
+
+                // Update the x distance by accounting for free x steps
+                dist_x = std::max( dist_x - free_x, 0 );
+
+                // Calculate the distance between the points
+                _distances[i] = dist_y + dist_x;
 
                 // If the distance is within the radius, add this index to the local neighbors
                 if( _distances[i] < r )

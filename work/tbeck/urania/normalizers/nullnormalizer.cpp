@@ -6,10 +6,10 @@ NullNormalizer::NullNormalizer() :
     Normalizer()
 {}
 
-void NullNormalizer::calculateNormalizer( QVector<Feature> features, QMap<QString, QVariant> normalizerParameters )
+void NullNormalizer::calculateNormalizer( QVector<Feature>, QMap<QString, QVariant> )
 {}
 
-void NullNormalizer::normalize( Feature& feature )
+void NullNormalizer::normalize( Feature& )
 {}
 
 void NullNormalizer::setFeature( Feature& feature )
