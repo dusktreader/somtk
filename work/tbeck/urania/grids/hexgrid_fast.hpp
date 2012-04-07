@@ -15,17 +15,17 @@ namespace hsom {
   * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
   */
 template <class T>
-class HexGrid : public Grid<T>
+class HexGridFast : public Grid<T>
 {
 
 public:
 
 
     /// Constructs a hex grid with no size information
-    HexGrid(){}
+    HexGridFast(){}
 
     /// Constructs the hex grid with a specified size
-    HexGrid(
+    HexGridFast(
             QVector<int> size ///< The size of the new grid
             )
     {
@@ -33,7 +33,7 @@ public:
     }
 
     /// Constructs the hex grid with a specified size
-    HexGrid(
+    HexGridFast(
             int s ///< The length of one side of the grid
             )
     {
@@ -43,7 +43,7 @@ public:
     }
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    HexGrid(
+    HexGridFast(
             QVector<int> size, ///< The size of the new grid
             QVector<T> items   ///< The items with which to populate the grid
             )
@@ -52,7 +52,7 @@ public:
     }
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    HexGrid(
+    HexGridFast(
             int s,           ///< The length of one side of the grid
             QVector<T> items ///< The items with which to populate the grid
             )
@@ -63,7 +63,7 @@ public:
     }
 
     /// Destructs the HexGrid
-    virtual ~HexGrid(){}
+    virtual ~HexGridFast(){}
 
 
 

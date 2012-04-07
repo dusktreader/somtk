@@ -16,7 +16,7 @@ class SomTest : public QObject
 
 private:
 
-    QImage visualizeColorGrid( HexGrid<Feature> grid );
+    QImage visualizeColorGrid( HexGridFast<Feature> grid );
 
 public:
     SomTest();
@@ -42,8 +42,8 @@ void SomTest::visualTest()
     NormalizerPtr normalizer( new NullNormalizer() );
 
     QVector<int> size;
-    size << 24 << 24;
-    HexGrid<Feature> grid( size );
+    size << 24;
+    HexGridFast<Feature> grid( size );
     SOMPtr som( new SOM( grid ) );
     RandMaster rnd;
 
@@ -68,13 +68,13 @@ void SomTest::visualTest()
 
     som->initializeTraining( somParameters, normalizer, inputFeatures.front().size() );
     QVector<Feature> untrainedFeatures = som->dumpFeatures();
-    HexGrid<Feature> initialGrid( size, untrainedFeatures );
+    HexGridFast<Feature> initialGrid( size, untrainedFeatures );
     initialGrid.visualize( 10, &render ).save( "initialGrid.png" );
 
     som->train( inputFeatures, normalizer, somParameters, true );
 
     QVector<Feature>trainedFeatures = som->dumpFeatures();
-    HexGrid<Feature> finalGrid( size, trainedFeatures );
+    HexGridFast<Feature> finalGrid( size, trainedFeatures );
     finalGrid.visualize( 10, &render ).save( "finalGrid.png" );
 
     QVERIFY2(true, "Failure");
