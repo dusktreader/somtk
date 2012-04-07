@@ -5,6 +5,7 @@
 
 #include "normalizers/nullnormalizer.h"
 #include "som.h"
+#include "grids/hexgrid_fast.hpp"
 #include "tools/randmaster.h"
 
 using namespace hsom;
@@ -28,59 +29,22 @@ SomTest::SomTest()
 {
 }
 
-QImage SomTest::visualizeColorGrid( HexGrid<Feature> grid )
+QColor render( Feature feature )
 {
-    double radius = 10.0;
-    double scale  = 20.0;
-    QImage viz = QImage( QSize(scale * grid.size().width()  + radius,
-                               scale * grid.size().height() + radius ),
-                         QImage::Format_RGB888 );
-
-    viz.fill( Qt::black );
-    QPainter vizPainter;
-    vizPainter.begin( &viz );
-
-    for( int i=0; i<grid.size().height(); i++ )
-    {
-        for( int j=0; j<grid.size().width(); j++ )
-        {
-            QPoint coords = QPoint(j, i);
-            QPointF realCoords = grid.realCoords( coords, scale );
-            realCoords.setX( realCoords.x() + radius );
-            realCoords.setY( realCoords.y() + radius );
-            Feature feature = grid[ coords ];
-            int r = (int)( feature[0] * 255 );
-            int g = (int)( feature[1] * 255 );
-            int b = (int)( feature[2] * 255 );
-            QColor color( r, g, b );
-
-            /*
-            printVar( i, "i" );
-            printVar( j, "j" );
-            printVar( feature[0], "feature[0]" );
-            printVar( feature[1], "feature[1]" );
-            printVar( feature[2], "feature[2]" );
-            printVar( r, "r" );
-            printVar( g, "g" );
-            printVar( b, "b" );
-            */
-
-            vizPainter.setPen( QPen( QColor( 255, 255, 255 ) ) );
-            vizPainter.setBrush( QBrush( color ) );
-            vizPainter.drawEllipse( realCoords, radius, radius );
-        }
-    }
-    vizPainter.end();
-    return viz;
+    int r = (int)( feature[0] * 255 );
+    int g = (int)( feature[1] * 255 );
+    int b = (int)( feature[2] * 255 );
+    return QColor( r, g, b );
 }
 
 void SomTest::visualTest()
 {
     NormalizerPtr normalizer( new NullNormalizer() );
 
-    QSize size( 24, 24 );
-
-    SOMPtr som( new SOM( size ) );
+    QVector<int> size;
+    size << 24 << 24;
+    HexGrid<Feature> grid( size );
+    SOMPtr som( new SOM( grid ) );
     RandMaster rnd;
 
 
@@ -105,15 +69,13 @@ void SomTest::visualTest()
     som->initializeTraining( somParameters, normalizer, inputFeatures.front().size() );
     QVector<Feature> untrainedFeatures = som->dumpFeatures();
     HexGrid<Feature> initialGrid( size, untrainedFeatures );
-    QImage initialGridImage = visualizeColorGrid( initialGrid );
-    initialGridImage.save( "initialGrid.png" );
+    initialGrid.visualize( 10, &render ).save( "initialGrid.png" );
 
     som->train( inputFeatures, normalizer, somParameters, true );
 
     QVector<Feature>trainedFeatures = som->dumpFeatures();
     HexGrid<Feature> finalGrid( size, trainedFeatures );
-    QImage finalGridImage = visualizeColorGrid( finalGrid );
-    finalGridImage.save( "finalGrid.png" );
+    finalGrid.visualize( 10, &render ).save( "finalGrid.png" );
 
     QVERIFY2(true, "Failure");
 }

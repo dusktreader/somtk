@@ -4,8 +4,7 @@
 
 #include "opencv2/core/core.hpp"
 
-#include "hexgrid.hpp"
-#include "tools.h"
+#include "grids/hexgrid.hpp"
 
 namespace hsom {
 

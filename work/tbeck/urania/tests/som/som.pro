@@ -19,13 +19,15 @@ INCLUDEPATH += $$URANIA_ROOT
 
 HEADERS +=                                       \
     $$URANIA_ROOT/som.h                          \
-    $$URANIA_ROOT/hexgrid.hpp                    \
+    $$URANIA_ROOT/grids/grid.hpp                 \
+    $$URANIA_ROOT/grids/hexgrid.hpp              \
     $$URANIA_ROOT/feature.h                      \
     $$URANIA_ROOT/normalizers/normalizer.h       \
     $$URANIA_ROOT/normalizers/nullnormalizer.h   \
     $$URANIA_ROOT/tools/utilities.hpp            \
     $$URANIA_ROOT/tools/localassert.h            \
-    $$URANIA_ROOT/tools/randmaster.h             \
+    $$URANIA_ROOT/tools/randmaster.h \
+    ../../grids/hexgrid_fast.hpp
 
 SOURCES +=                                       \
     $$URANIA_ROOT/som.cpp                        \

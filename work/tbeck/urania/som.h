@@ -14,7 +14,7 @@
 #include "tools/convert.hpp"
 
 #include "feature.h"
-#include "hexgrid.hpp"
+#include "grids/grid.hpp"
 #include "errors/somerror.h"
 #include "normalizers/normalizer.h"
 
@@ -34,8 +34,8 @@ class SOM
 
 private:
 
-    /// The hexagonal grid of features that represents the internal state of the SOMs
-    HexGrid<Feature> grid;
+    /// The grid of features that represents the internal state of the SOMs
+    Grid<Feature>& grid;
 
     /// The number of training epochs to use
     int maxEpochs;
@@ -89,14 +89,11 @@ public:
 
     /// Constructs an SOM with a specific size
     SOM(
-        QSize size ///< The size of the hexagonal grid that this SOM will use
+        Grid<Feature>& grid ///< The grid of features that the SOM will use internally
          );
 
     /// Destructs this SOM
     virtual ~SOM();
-
-    /// Fetches the size of this SOM
-    QSize size();
 
     /// Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature type
     void initializeTraining(
@@ -123,15 +120,8 @@ public:
         );
 
     /// Fetches the index of the cell that holds the closest feature in the SOM to an input feature
-    int closestFeatureIndex(
+    int closestFeature(
         Feature feature ///< The input feature to compare against feature in the SOM
-        );
-
-    /** @brief  Fetches the closest feature in the SOM to an input feature
-      * @return The coordinates of the cell that holds the feature that most closesly resembles the input feature
-      */
-    QPoint closestFeatureCoords(
-        Feature feature
         );
 
     /// Dumps the features from this SOM out to a regular vector

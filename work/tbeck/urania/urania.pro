@@ -76,7 +76,8 @@ HEADERS += \
     hsom.h \
     som.h \
     feature.h \
-    hexgrid.hpp \
+    grids/grid.hpp \
+    grids/hexgrid.hpp \
     histogram.h \
     classifiers/classifier.h \
     errors/somerror.h \

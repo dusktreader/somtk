@@ -2,26 +2,10 @@
 
 namespace hsom {
 
-SOM::SOM( QSize size )
-{
-    grid = HexGrid<Feature>( size );
-}
+SOM::SOM( Grid<Feature>& grid ) : grid( grid )
+{}
 
-
-
-SOM::~SOM()
-{
-    grid.clear();
-}
-
-
-
-QSize SOM::size()
-{
-    return grid.size();
-}
-
-
+SOM::~SOM(){}
 
 void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerPtr normalizer, int featureSize )
 {
@@ -53,7 +37,7 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
     alpha_Nf = 0.25;   // This is a tuning factor...should not be hardcoded
     alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * maxEpochs );
 
-    initialRadius = initialRadiusRatio * grid.size().width();
+    initialRadius = initialRadiusRatio * grid.diagonal();
     radius_tf = 0.25;   // This is a tuning factor...should not be hardcoded
     radius_Nf = 0.50;   // This is a tuning factor...should not be hardcoded
     radius_gamma = -log( radius_Nf ) / ( radius_tf * maxEpochs );
@@ -61,15 +45,11 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
     currentEpoch = -1;
     nextEpoch();
 
-    QPoint pt;
-    for( pt.setY( 0 ); pt.y() < grid.size().height(); pt.setY( pt.y() + 1 ) )
+    for( int i=0; i<grid.capacity(); i++ )
     {
-        for( pt.setX( 0 ); pt.x() < grid.size().width(); pt.setX( pt.x() + 1 ) )
-        {
-            Feature newFeature( featureSize );
-            normalizer->setFeature( newFeature );
-            grid[pt] = newFeature;
-        }
+        Feature newFeature( featureSize );
+        normalizer->setFeature( newFeature );
+        grid[i] = newFeature;
     }
 }
 
@@ -116,7 +96,7 @@ void SOM::precalculateWeights()
 
 
 
-int SOM::closestFeatureIndex( Feature feature )
+int SOM::closestFeature( Feature feature )
 {
     double globalMinimumDistance = DBL_MAX;
     int    globalMinimumIndex    = -1;
@@ -128,7 +108,7 @@ int SOM::closestFeatureIndex( Feature feature )
     #pragma omp parallel firstprivate( localMinimumDistance, localMinimumIndex )
     {
         #pragma omp for
-        for( int i = 0; i < grid.l(); i++ )
+        for( int i = 0; i < grid.capacity(); i++ )
         {
             // Calculate the distance between the input feature and the map feature at index i
             double distance = feature.distance( grid[i] );
@@ -157,27 +137,18 @@ int SOM::closestFeatureIndex( Feature feature )
 }
 
 
-
-QPoint SOM::closestFeatureCoords( Feature feature )
-{
-    return grid.coords( closestFeatureIndex( feature ) );
-}
-
-
-
 void SOM::update( Feature feature )
 {
-    // Find the feature in the SOM that is the closest to the input feature
-    QPoint closest = closestFeatureCoords( feature );
-
-    QVector<int> neighbors = grid.neighborhood( weights.size(), closest );
+    // Find the neighborhood in the SOM that of the feature that is the closest to the input feature
+    QVector< QPair<int, int> > neighbors = grid.neighborhood( weights.size(), closestFeature( feature ));
 
     // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
     #pragma omp parallel for
     for( int i=0; i<neighbors.size(); i++ )
     {
-        int index = neighbors[i];
-        grid[index].adjust( feature, weights[ grid.distance( index ) ] );
+        int index     = neighbors[i].first;
+        int distance  = neighbors[i].second;
+        grid[index].adjust( feature, weights[ distance ] );
     }
 }
 
