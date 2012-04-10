@@ -156,7 +156,7 @@ public:
     virtual QVector<double> realBounds()
     {
         QVector<double> bounds;
-        bounds << this->w() << this->h() * HG_B;
+        bounds << this->w() + 0.5 << this->h() * HG_B;
         return bounds;
     }
 
