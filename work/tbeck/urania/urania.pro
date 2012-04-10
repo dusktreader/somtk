@@ -57,38 +57,39 @@ QMAKE_CXXFLAGS_DEBUG += -g
 
 #TODO:  Add .pri files for subdirectories.  Use WAS approach
 
-SOURCES += \
-    hsom.cpp \
-    som.cpp \
-    feature.cpp \
-    histogram.cpp \
-    classifiers/classifier.cpp \
-    classifiers/annclassifier.cpp \
-    normalizers/normalizer.cpp \
+SOURCES +=                            \
+    hsom.cpp                          \
+    som.cpp                           \
+    feature.cpp                       \
+    histogram.cpp                     \
+    classifiers/classifier.cpp        \
+    classifiers/annclassifier.cpp     \
+    normalizers/normalizer.cpp        \
     normalizers/sigmoidnormalizer.cpp \
-    normalizers/minmaxnormalizer.cpp \
-    normalizers/nullnormalizer.cpp\
-    suspects/imagesuspect.cpp \
-    suspects/suspect.cpp \
-    tools/localassert.cpp \
+    normalizers/minmaxnormalizer.cpp  \
+    normalizers/nullnormalizer.cpp    \
+    suspects/imagesuspect.cpp         \
+    suspects/suspect.cpp              \
+    tools/localassert.cpp             \
 
-HEADERS += \
-    hsom.h \
-    som.h \
-    feature.h \
-    grids/grid.hpp \
-    grids/hexgrid.hpp \
-    histogram.h \
-    classifiers/classifier.h \
-    errors/somerror.h \
-    classifiers/annclassifier.h \
-    normalizers/normalizer.h \
-    normalizers/sigmoidnormalizer.h \
-    normalizers/minmaxnormalizer.h \
-    normalizers/nullnormalizer.h \
-    suspects/suspect.h \
-    suspects/imagesuspect.h \
-    tools/localassert.h \
+HEADERS +=                            \
+    hsom.h                            \
+    som.h                             \
+    feature.h                         \
+    grids/grid.hpp                    \
+    grids/hexgrid.hpp                 \
+    grids/fasthexgrid.hpp             \
+    histogram.h                       \
+    classifiers/classifier.h          \
+    errors/somerror.h                 \
+    classifiers/annclassifier.h       \
+    normalizers/normalizer.h          \
+    normalizers/sigmoidnormalizer.h   \
+    normalizers/minmaxnormalizer.h    \
+    normalizers/nullnormalizer.h      \
+    suspects/suspect.h                \
+    suspects/imagesuspect.h           \
+    tools/localassert.h
 
-FORMS += mainwindow.ui \
+FORMS += mainwindow.ui              \
     traindialog.ui

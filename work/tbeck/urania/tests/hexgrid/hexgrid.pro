@@ -24,6 +24,7 @@ HEADERS +=                                       \
     $$URANIA_ROOT/tools/utilities.hpp            \
     $$URANIA_ROOT/tools/localassert.h            \
     $$URANIA_ROOT/tools/randmaster.h             \
+    $$URANIA_ROOT/errors/somerror.h              \
 
 SOURCES +=                                       \
     $$URANIA_ROOT/tools/utilities.cpp            \

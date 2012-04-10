@@ -147,6 +147,69 @@ public:
                                     .arg( idx ).arg( capacity() ) );
     }
 
+    /// Fetches indices for all slots within a radius of the specified slot
+    QVector< QPair<int, int> > neighborhood(
+        int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
+        int idx ///< The origin index for the neighborhood ( center cell )
+        )
+    {
+
+        // The neighbors vector will contain the indices of all cells in the neighborhood
+        QVector< QPair<int, int> > globalNeighbors;
+
+        // The local neighbors vector will contain all cells within the neighborhood discovered by each omp thread
+        QVector< QPair<int, int> > localNeighbors;
+
+        #pragma omp parallel
+        {
+            #pragma omp for private( localNeighbors )
+            for( int i = 0; i < this->capacity(); i++ )
+            {
+                int distance = this->distance( idx, i );
+
+                if( distance < r )
+                    localNeighbors.append( QPair<int, int>( i, distance ) );
+            }
+
+            // Each thread adds it's local neighbor list to the global neighbor list
+            #pragma omp critical
+            {
+                globalNeighbors += localNeighbors;
+            }
+        }
+        return globalNeighbors;
+    }
+
+    /// Visualizes a hex grid given a function pointer to visualize its contents
+    QImage visualize( double cellRadius, QColor (*render)( T ) )
+    {
+        QVector<double> bounds = realBounds();
+        double W = bounds[0];
+        double H = bounds[1];
+
+        QSize imageSize = QSize( W * cellRadius * 2,
+                                 H * cellRadius * 2 );
+        QImage viz = QImage( imageSize,
+                             QImage::Format_RGB888 );
+
+        viz.fill( Qt::black );
+        QPainter vizPainter;
+        vizPainter.begin( &viz );
+
+        for( int idx=0; idx < this->capacity(); idx++ )
+        {
+            QVector<double> realCoords = this->realCoords( idx );
+            double x = realCoords[0] * 2 * cellRadius + cellRadius;
+            double y = realCoords[1] * 2 * cellRadius + cellRadius;
+            QColor color = render( this->item( idx ) );
+            vizPainter.setPen( QPen( QColor( 255, 255, 255 ) ) );
+            vizPainter.setBrush( QBrush( color ) );
+            vizPainter.drawEllipse( QPointF( x, y ), cellRadius, cellRadius );
+        }
+        vizPainter.end();
+        return viz;
+    }
+
 
 
     // Grid API
@@ -175,47 +238,14 @@ public:
     /// Fetches the length of the major diagonal running through the grid
     virtual int diagonal() = 0;
 
-    /// Fetches indices for all slots within a radius of the specified slot
-    virtual QVector< QPair<int, int> > neighborhood(
-        int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
-        int idx ///< The origin index for the neighborhood ( center cell )
-        ) = 0;
+    /// Fetches the distance between two cells in the grid
+    virtual int distance( int idx0, int idx1 ) = 0;
 
     /// Fetches the extents of the real coordinate mapping space ( should only be used for visualization )
     virtual QVector<double> realBounds() = 0;
 
     /// Fetches the real coordinates of a given index in the grid ( should only be used for visualization )
     virtual QVector<double> realCoords( int idx ) = 0;
-
-    /// Visualizes a hex grid given a function pointer to visualize its contents
-    virtual QImage visualize( double cellRadius, QColor (*render)( T ) )
-    {
-        QVector<double> bounds = realBounds();
-        double W = bounds[0];
-        double H = bounds[1];
-
-        QSize imageSize = QSize( W * cellRadius * 2,
-                                 H * cellRadius * 2 );
-        QImage viz = QImage( imageSize,
-                             QImage::Format_RGB888 );
-
-        viz.fill( Qt::black );
-        QPainter vizPainter;
-        vizPainter.begin( &viz );
-
-        for( int idx=0; idx < this->capacity(); idx++ )
-        {
-            QVector<double> realCoords = this->realCoords( idx );
-            double x = realCoords[0] * 2 * cellRadius + cellRadius;
-            double y = realCoords[1] * 2 * cellRadius + cellRadius;
-            QColor color = render( this->item( idx ) );
-            vizPainter.setPen( QPen( QColor( 255, 255, 255 ) ) );
-            vizPainter.setBrush( QBrush( color ) );
-            vizPainter.drawEllipse( QPointF( x, y ), cellRadius, cellRadius );
-        }
-        vizPainter.end();
-        return viz;
-    }
 };
 
 } // namespace hsom

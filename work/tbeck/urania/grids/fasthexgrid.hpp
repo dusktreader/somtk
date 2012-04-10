@@ -15,17 +15,17 @@ namespace hsom {
   * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
   */
 template <class T>
-class HexGridFast : public Grid<T>
+class FastHexGrid : public Grid<T>
 {
 
 public:
 
 
     /// Constructs a hex grid with no size information
-    HexGridFast(){}
+    FastHexGrid(){}
 
     /// Constructs the hex grid with a specified size
-    HexGridFast(
+    FastHexGrid(
             QVector<int> size ///< The size of the new grid
             )
     {
@@ -33,7 +33,7 @@ public:
     }
 
     /// Constructs the hex grid with a specified size
-    HexGridFast(
+    FastHexGrid(
             int s ///< The length of one side of the grid
             )
     {
@@ -43,7 +43,7 @@ public:
     }
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    HexGridFast(
+    FastHexGrid(
             QVector<int> size, ///< The size of the new grid
             QVector<T> items   ///< The items with which to populate the grid
             )
@@ -52,7 +52,7 @@ public:
     }
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    HexGridFast(
+    FastHexGrid(
             int s,           ///< The length of one side of the grid
             QVector<T> items ///< The items with which to populate the grid
             )
@@ -63,7 +63,7 @@ public:
     }
 
     /// Destructs the HexGrid
-    virtual ~HexGridFast(){}
+    virtual ~FastHexGrid(){}
 
 
 
@@ -76,9 +76,8 @@ public:
 
 
 
-    // Grid API
+    // Grid API - See grid.hpp for doumentation
 
-    /// Checks the supplied size to ensure that it is valid for the HexGrid
     virtual void checkSize( QVector<int> size )
     {
         SOMError::requireCondition( size.size() == 1,
@@ -112,7 +111,6 @@ public:
                                     .arg( this->s() ).arg( y ) );
     }
 
-    /// Fetches the index for the slot at the specified coordinates
     virtual int index(
             QVector<int> coords ///< The point in the grid for which to fetch the index
             )
@@ -123,7 +121,6 @@ public:
         return y * s() + x;
     }
 
-    /// Fetches the coordinates given an index
     virtual QVector<int> coords(
         int idx ///< The index in the grid for which to fetch the coordinates
         )
@@ -155,61 +152,31 @@ public:
         return realCoords;
     }
 
-    /// Fetches the length of the major diagonal running through the grid
     virtual int diagonal()
     {
         /// @todo  Come  up with a more precise computation of this
         return this->s();
     }
 
-    /// Fetches indices for all slots within a radius of the specified slot
-    virtual QVector< QPair<int, int> > neighborhood(
-        int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
-        int idx ///< The origin index for the neighborhood ( center cell )
-        )
+    virtual int distance( int idx0, int idx1 )
     {
+        QVector<int> coords0 = coords( idx0 );
+        int x0 = coords0[0];
+        int y0 = coords0[1];
 
-        // Fetch the coordinate of the origin index
-        QVector<int> origin_coords = coords( idx );
-        int origin_x = origin_coords[0];
-        int origin_y = origin_coords[1];
+        QVector<int> coords1 = coords( idx1 );
+        int x1 = coords1[0];
+        int y1 = coords1[1];
 
-        // The neighbors vector will contain the indices of all cells in the neighborhood
-        QVector< QPair<int, int> > globalNeighbors;
+        int dx = x1 - x0;
+        int dy = y1 - y0;
 
-        // The local neighbors vector will contain all cells within the neighborhood discovered by each omp thread
-        QVector< QPair<int, int> > localNeighbors;
+        int distance = std::max( std::max( abs(dx), abs(dy) ), abs( dy - dx ) );
 
-        #pragma omp parallel
-        {
-            #pragma omp for private( localNeighbors )
-            for( int i = 0; i < this->capacity(); i++ )
-            {
-                QVector<int> pointCoords = coords( i );
-                int point_x = pointCoords[0];
-                int point_y = pointCoords[1];
-
-                int dx_norm = point_x - origin_x;
-                int dx_wrap = dx_norm + ( dx_norm > 0 ? -this->s() : this->s() );
-
-                int dy_norm = point_y - origin_y;
-                int dy_wrap = dy_norm + ( dy_norm > 0 ? -this->s() : this->s() );
-
-                int dist = std::min( std::max( std::max( abs(dx_norm), abs(dy_norm) ), abs( dy_norm - dx_norm ) ),
-                                     std::max( std::max( abs(dx_wrap), abs(dy_wrap) ), abs( dy_wrap - dx_wrap ) ) );
-
-                if( dist < r )
-                    localNeighbors.append( QPair<int, int>( i, dist ) );
-            }
-
-            // Each thread adds it's local neighbor list to the global neighbor list
-            #pragma omp critical
-            {
-                globalNeighbors += localNeighbors;
-            }
-        }
-        return globalNeighbors;
+        return distance;
     }
+
+
 
 };
 

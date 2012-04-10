@@ -3,9 +3,10 @@
 #include <QImage>
 #include <QPainter>
 
-#include "normalizers/nullnormalizer.h"
 #include "som.h"
-#include "grids/hexgrid_fast.hpp"
+#include "normalizers/nullnormalizer.h"
+#include "grids/quadgrid.hpp"
+#include "grids/hexgrid.hpp"
 #include "tools/randmaster.h"
 
 using namespace hsom;
@@ -15,8 +16,6 @@ class SomTest : public QObject
     Q_OBJECT
 
 private:
-
-    QImage visualizeColorGrid( HexGridFast<Feature> grid );
 
 public:
     SomTest();
@@ -42,8 +41,8 @@ void SomTest::visualTest()
     NormalizerPtr normalizer( new NullNormalizer() );
 
     QVector<int> size;
-    size << 24;
-    HexGridFast<Feature> grid( size );
+    size << 24 << 24;
+    HexGrid<Feature> grid( size );
     SOMPtr som( new SOM( grid ) );
     RandMaster rnd;
 
@@ -67,15 +66,11 @@ void SomTest::visualTest()
     somParameters["initialRadiusRatio"] = 0.4999;
 
     som->initializeTraining( somParameters, normalizer, inputFeatures.front().size() );
-    QVector<Feature> untrainedFeatures = som->dumpFeatures();
-    HexGridFast<Feature> initialGrid( size, untrainedFeatures );
-    initialGrid.visualize( 10, &render ).save( "initialGrid.png" );
+    grid.visualize( 10, &render ).save( "initialGrid.png" );
 
     som->train( inputFeatures, normalizer, somParameters, true );
 
-    QVector<Feature>trainedFeatures = som->dumpFeatures();
-    HexGridFast<Feature> finalGrid( size, trainedFeatures );
-    finalGrid.visualize( 10, &render ).save( "finalGrid.png" );
+    grid.visualize( 10, &render ).save( "finalGrid.png" );
 
     QVERIFY2(true, "Failure");
 }

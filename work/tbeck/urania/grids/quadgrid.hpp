@@ -1,8 +1,6 @@
 #pragma once
 
 #include <QVector>
-#include <QSize>
-#include <QPoint>
 #include <QPointF>
 
 #include "grids/grid.hpp"
@@ -18,17 +16,17 @@ namespace hsom {
   * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
   */
 template <class T>
-class HexGrid : public Grid<T>
+class QuadGrid : public Grid<T>
 {
 
 public:
 
 
     /// Constructs a hex grid with no size information
-    HexGrid(){}
+    QuadGrid(){}
 
     /// Constructs the hex grid with a specified size
-    HexGrid(
+    QuadGrid(
             QVector<int> size ///< The size of the new grid
             )
     {
@@ -36,7 +34,7 @@ public:
     }
 
     /// Constructs the hex grid with a specified size
-    HexGrid(
+    QuadGrid(
             int w, ///< The width of the hex grid
             int h  ///< The height of the hex grid
             )
@@ -47,7 +45,7 @@ public:
     }
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    HexGrid(
+    QuadGrid(
             QVector<int> size, ///< The size of the new grid
             QVector<T> items   ///< The items with which to populate the grid
             )
@@ -56,7 +54,7 @@ public:
     }
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    HexGrid(
+    QuadGrid(
             int w,             ///< The width of the hex grid
             int h,             ///< The height of the hex grid
             QVector<T> items   ///< The items with which to populate the grid
@@ -68,7 +66,7 @@ public:
     }
 
     /// Destructs the HexGrid
-    virtual ~HexGrid(){}
+    virtual ~QuadGrid(){}
 
 
 
@@ -102,8 +100,6 @@ public:
                                     "Grid width must be greater than 0" );
         SOMError::requireCondition( h > 0,
                                     "Grid height must be greater than 0" );
-        SOMError::requireCondition( h % 2 == 0,
-                                    "Hex Grid must have even height ( for edge wrapping )" );
     }
 
     virtual int capacityFromSize( QVector<int> size )
@@ -156,7 +152,7 @@ public:
     virtual QVector<double> realBounds()
     {
         QVector<double> bounds;
-        bounds << this->w() << this->h() * HG_B;
+        bounds << this->w() << this->h();
         return bounds;
     }
 
@@ -166,8 +162,8 @@ public:
         int x = coords[0];
         int y = coords[1];
         QVector<double> realCoords( 2 );
-        realCoords[0] = ( x + ( y % 2 ) * 0.5 );
-        realCoords[1] = ( y * HG_B);
+        realCoords[0] = ( x );
+        realCoords[1] = ( y );
         return realCoords;
     }
 
@@ -175,7 +171,7 @@ public:
     virtual int diagonal()
     {
         /// @todo  Come  up with a more precise computation of this
-        return h() + w() - h() / 2;
+        return h() + w();
     }
 
     /// Fetches indices for all slots within a radius of the specified slot
@@ -199,39 +195,15 @@ public:
         if( wrap_dist_y < dist_y )
             dist_y = wrap_dist_y;
 
-        // Calculate the change in x to get from the point to the origin
-        int delta_x = x0 - x1;
+        // Calculate the distance ( on the hex grid ) to the origin point
+        int dist_x = abs( x0 - x1 );
 
-        // Calculate the distance between the origin and the point
-        int dist_x = abs( delta_x );
-
-        // Indicates if the point lies on an even row
-        bool even_row   = !( y1 % 2 );
-
-        // Indicates that the origin is to the right of the point
-        bool move_right = delta_x >= 0;
-
-        // Determine if the current movement gets an extra x for y movement
-        int extra_x = move_right ^ even_row;
-
-        // Calculate the distance if we were to move over the nearest x boundary
+        // Calculate the distance if we were to move over the nearest y boudary
         int wrap_dist_x = this->_size[0] - dist_x;
 
-        /* If it is closer to move over the x boundary, move that directon
-         * If it is exactly the same distance, wrap only if the current direction
-         * does not get an extra x for y movement
-         */
-        if( ( wrap_dist_x  < dist_x ) || ( wrap_dist_x == dist_x && !extra_x ) )
-        {
-            dist_x  = wrap_dist_x;
-            extra_x = !extra_x;
-        }
-
-        // Account for the number of free x steps that can be gained by moving in  y
-        int free_x = ( dist_y + extra_x ) / 2;
-
-        // Update the x distance by accounting for free x steps
-        dist_x = std::max( dist_x - free_x, 0 );
+        // If it is closer to wrap over the y boundary move that way
+        if( wrap_dist_x < dist_x )
+            dist_x = wrap_dist_x;
 
         // Calculate the distance between the points
         int distance = dist_y + dist_x;
