@@ -1,0 +1,209 @@
+\hypertarget{classhsom_1_1_quad_grid}{\section{hsom\-:\-:\-Quad\-Grid$<$ \-T $>$ \-Class \-Template \-Reference}
+\label{classhsom_1_1_quad_grid}\index{hsom\-::\-Quad\-Grid$<$ T $>$@{hsom\-::\-Quad\-Grid$<$ T $>$}}
+}
+
+
+{\ttfamily \#include $<$quadgrid.\-hpp$>$}
+
+\-Inheritance diagram for hsom\-:\-:\-Quad\-Grid$<$ \-T $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classhsom_1_1_quad_grid}
+\end{center}
+\end{figure}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_quad_grid_a6b20b45657281184ac54ed0bda4ad088}{\hyperlink{classhsom_1_1_quad_grid_a6b20b45657281184ac54ed0bda4ad088}{\-Quad\-Grid} ()}\label{classhsom_1_1_quad_grid_a6b20b45657281184ac54ed0bda4ad088}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs a hex grid with no size information. \end{DoxyCompactList}\item 
+\hyperlink{classhsom_1_1_quad_grid_a0cec637e161240b9a7241ac83d0c6ff4}{\-Quad\-Grid} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})
+\begin{DoxyCompactList}\small\item\em \-Constructs the hex grid with a specified size. \end{DoxyCompactList}\item 
+\hyperlink{classhsom_1_1_quad_grid_a3aebaea9b496991fdd61026e74d013d4}{\-Quad\-Grid} (int w, int h)
+\begin{DoxyCompactList}\small\item\em \-Constructs the hex grid with a specified size. \end{DoxyCompactList}\item 
+\hyperlink{classhsom_1_1_quad_grid_abe9c6802339cc0fe89574c718b16cefc}{\-Quad\-Grid} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size}, \-Q\-Vector$<$ \-T $>$ \hyperlink{classhsom_1_1_grid_ae6b6ffb72e86c3904e8ac21253d85a24}{items})
+\begin{DoxyCompactList}\small\item\em \-Constructs the hex grid with the specified size and fills it with the supplied values. \end{DoxyCompactList}\item 
+\hyperlink{classhsom_1_1_quad_grid_ab9762ecd6652451e4243bfa55d762b45}{\-Quad\-Grid} (int w, int h, \-Q\-Vector$<$ \-T $>$ \hyperlink{classhsom_1_1_grid_ae6b6ffb72e86c3904e8ac21253d85a24}{items})
+\begin{DoxyCompactList}\small\item\em \-Constructs the hex grid with the specified size and fills it with the supplied values. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_quad_grid_abe87f9710cfe2e66b90243598928b1c0}{virtual \hyperlink{classhsom_1_1_quad_grid_abe87f9710cfe2e66b90243598928b1c0}{$\sim$\-Quad\-Grid} ()}\label{classhsom_1_1_quad_grid_abe87f9710cfe2e66b90243598928b1c0}
+
+\begin{DoxyCompactList}\small\item\em \-Destructs the \hyperlink{classhsom_1_1_hex_grid}{\-Hex\-Grid}. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_quad_grid_a0cdfb7f9c5ce4e36510279f1edf8133b}{int {\bfseries w} ()}\label{classhsom_1_1_quad_grid_a0cdfb7f9c5ce4e36510279f1edf8133b}
+
+\item 
+\hypertarget{classhsom_1_1_quad_grid_afe8556629d71bd960710ba566b245c9a}{int {\bfseries h} ()}\label{classhsom_1_1_quad_grid_afe8556629d71bd960710ba566b245c9a}
+
+\item 
+\hypertarget{classhsom_1_1_quad_grid_a249f85b1d84a4219ccdd1d42d6a283f3}{virtual void \hyperlink{classhsom_1_1_quad_grid_a249f85b1d84a4219ccdd1d42d6a283f3}{check\-Size} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})}\label{classhsom_1_1_quad_grid_a249f85b1d84a4219ccdd1d42d6a283f3}
+
+\begin{DoxyCompactList}\small\item\em \-Checks the supplied size to ensure that it is valid for the \hyperlink{classhsom_1_1_hex_grid}{\-Hex\-Grid}. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_quad_grid_a426dfe4e7a75f55c01d9e99865941633}{virtual int \hyperlink{classhsom_1_1_quad_grid_a426dfe4e7a75f55c01d9e99865941633}{capacity\-From\-Size} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})}\label{classhsom_1_1_quad_grid_a426dfe4e7a75f55c01d9e99865941633}
+
+\begin{DoxyCompactList}\small\item\em \-Gets the capacity of a grid based on the size of the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_quad_grid_a73f94c48b7544917753883ccd813c9e6}{virtual void \hyperlink{classhsom_1_1_quad_grid_a73f94c48b7544917753883ccd813c9e6}{check\-Coords} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_quad_grid_a8f91269433c403a6034efdec7e97104b}{coords})}\label{classhsom_1_1_quad_grid_a73f94c48b7544917753883ccd813c9e6}
+
+\begin{DoxyCompactList}\small\item\em \-Checks a given point to ensure it is a valid reference to an element in the grid. \end{DoxyCompactList}\item 
+virtual int \hyperlink{classhsom_1_1_quad_grid_a5623e24a82df043cec092e5cb61aed34}{index} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_quad_grid_a8f91269433c403a6034efdec7e97104b}{coords})
+\begin{DoxyCompactList}\small\item\em \-Fetches the index for the slot at the specified coordinates. \end{DoxyCompactList}\item 
+virtual \-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_quad_grid_a8f91269433c403a6034efdec7e97104b}{coords} (int idx)
+\begin{DoxyCompactList}\small\item\em \-Fetches the coordinates given an index. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_quad_grid_ae78eac9f185cb53602023827f6060773}{virtual \-Q\-Vector$<$ double $>$ \hyperlink{classhsom_1_1_quad_grid_ae78eac9f185cb53602023827f6060773}{real\-Bounds} ()}\label{classhsom_1_1_quad_grid_ae78eac9f185cb53602023827f6060773}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the extents of the real coordinate mapping space ( should only be used for visualization ) \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_quad_grid_aa5a1d2ccf49fe787a0bb433274f1c6fd}{virtual \-Q\-Vector$<$ double $>$ \hyperlink{classhsom_1_1_quad_grid_aa5a1d2ccf49fe787a0bb433274f1c6fd}{real\-Coords} (int idx)}\label{classhsom_1_1_quad_grid_aa5a1d2ccf49fe787a0bb433274f1c6fd}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the real coordinates of a given index in the grid ( should only be used for visualization ) \end{DoxyCompactList}\item 
+virtual int \hyperlink{classhsom_1_1_quad_grid_a8f5bc5583e2d254f3850dfa0542a5505}{diagonal} ()
+\begin{DoxyCompactList}\small\item\em \-Fetches the length of the major diagonal running through the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_quad_grid_a28fe768065b4559a5e9e0e7c9fcca1c8}{virtual int \hyperlink{classhsom_1_1_quad_grid_a28fe768065b4559a5e9e0e7c9fcca1c8}{distance} (int idx0, int idx1)}\label{classhsom_1_1_quad_grid_a28fe768065b4559a5e9e0e7c9fcca1c8}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches indices for all slots within a radius of the specified slot. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\subsubsection*{template$<$class T$>$class hsom\-::\-Quad\-Grid$<$ T $>$}
+
+\-The \hyperlink{classhsom_1_1_hex_grid}{\-Hex\-Grid} class provides the basis for the spatial organization of the \-Self \-Organizing \-Map. \-It provides a hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality. 
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classhsom_1_1_quad_grid_a0cec637e161240b9a7241ac83d0c6ff4}{\index{hsom\-::\-Quad\-Grid@{hsom\-::\-Quad\-Grid}!\-Quad\-Grid@{\-Quad\-Grid}}
+\index{\-Quad\-Grid@{\-Quad\-Grid}!hsom::QuadGrid@{hsom\-::\-Quad\-Grid}}
+\subsubsection[{\-Quad\-Grid}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf hsom\-::\-Quad\-Grid}$<$ \-T $>$\-::{\bf \-Quad\-Grid} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ int $>$}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_quad_grid_a0cec637e161240b9a7241ac83d0c6ff4}
+
+
+\-Constructs the hex grid with a specified size. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em size} & \-The size of the new grid \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_quad_grid_a3aebaea9b496991fdd61026e74d013d4}{\index{hsom\-::\-Quad\-Grid@{hsom\-::\-Quad\-Grid}!\-Quad\-Grid@{\-Quad\-Grid}}
+\index{\-Quad\-Grid@{\-Quad\-Grid}!hsom::QuadGrid@{hsom\-::\-Quad\-Grid}}
+\subsubsection[{\-Quad\-Grid}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf hsom\-::\-Quad\-Grid}$<$ \-T $>$\-::{\bf \-Quad\-Grid} (
+\begin{DoxyParamCaption}
+\item[{int}]{w, }
+\item[{int}]{h}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_quad_grid_a3aebaea9b496991fdd61026e74d013d4}
+
+
+\-Constructs the hex grid with a specified size. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em w} & \-The width of the hex grid \\
+\hline
+{\em h} & \-The height of the hex grid \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_quad_grid_abe9c6802339cc0fe89574c718b16cefc}{\index{hsom\-::\-Quad\-Grid@{hsom\-::\-Quad\-Grid}!\-Quad\-Grid@{\-Quad\-Grid}}
+\index{\-Quad\-Grid@{\-Quad\-Grid}!hsom::QuadGrid@{hsom\-::\-Quad\-Grid}}
+\subsubsection[{\-Quad\-Grid}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf hsom\-::\-Quad\-Grid}$<$ \-T $>$\-::{\bf \-Quad\-Grid} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ int $>$}]{size, }
+\item[{\-Q\-Vector$<$ \-T $>$}]{items}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_quad_grid_abe9c6802339cc0fe89574c718b16cefc}
+
+
+\-Constructs the hex grid with the specified size and fills it with the supplied values. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em size} & \-The size of the new grid \\
+\hline
+{\em items} & \-The items with which to populate the grid \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_quad_grid_ab9762ecd6652451e4243bfa55d762b45}{\index{hsom\-::\-Quad\-Grid@{hsom\-::\-Quad\-Grid}!\-Quad\-Grid@{\-Quad\-Grid}}
+\index{\-Quad\-Grid@{\-Quad\-Grid}!hsom::QuadGrid@{hsom\-::\-Quad\-Grid}}
+\subsubsection[{\-Quad\-Grid}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf hsom\-::\-Quad\-Grid}$<$ \-T $>$\-::{\bf \-Quad\-Grid} (
+\begin{DoxyParamCaption}
+\item[{int}]{w, }
+\item[{int}]{h, }
+\item[{\-Q\-Vector$<$ \-T $>$}]{items}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_quad_grid_ab9762ecd6652451e4243bfa55d762b45}
+
+
+\-Constructs the hex grid with the specified size and fills it with the supplied values. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em w} & \-The width of the hex grid \\
+\hline
+{\em h} & \-The height of the hex grid \\
+\hline
+{\em items} & \-The items with which to populate the grid \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhsom_1_1_quad_grid_a8f91269433c403a6034efdec7e97104b}{\index{hsom\-::\-Quad\-Grid@{hsom\-::\-Quad\-Grid}!coords@{coords}}
+\index{coords@{coords}!hsom::QuadGrid@{hsom\-::\-Quad\-Grid}}
+\subsubsection[{coords}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ virtual \-Q\-Vector$<$int$>$ {\bf hsom\-::\-Quad\-Grid}$<$ \-T $>$\-::{\bf coords} (
+\begin{DoxyParamCaption}
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}\label{classhsom_1_1_quad_grid_a8f91269433c403a6034efdec7e97104b}
+
+
+\-Fetches the coordinates given an index. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em idx} & \-The index in the grid for which to fetch the coordinates \\
+\hline
+\end{DoxyParams}
+
+
+\-Implements \hyperlink{classhsom_1_1_grid_a4a68c15ff3ffcd052bff769e4d9e899b}{hsom\-::\-Grid$<$ T $>$}.
+
+\hypertarget{classhsom_1_1_quad_grid_a8f5bc5583e2d254f3850dfa0542a5505}{\index{hsom\-::\-Quad\-Grid@{hsom\-::\-Quad\-Grid}!diagonal@{diagonal}}
+\index{diagonal@{diagonal}!hsom::QuadGrid@{hsom\-::\-Quad\-Grid}}
+\subsubsection[{diagonal}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ virtual int {\bf hsom\-::\-Quad\-Grid}$<$ \-T $>$\-::{\bf diagonal} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}\label{classhsom_1_1_quad_grid_a8f5bc5583e2d254f3850dfa0542a5505}
+
+
+\-Fetches the length of the major diagonal running through the grid. 
+
+\begin{DoxyRefDesc}{\-Todo}
+\item[\hyperlink{todo__todo000009}{\-Todo}]\-Come up with a more precise computation of this \end{DoxyRefDesc}
+
+
+\-Implements \hyperlink{classhsom_1_1_grid_acc0364a698525d1239a7042eb01f79e6}{hsom\-::\-Grid$<$ T $>$}.
+
+\hypertarget{classhsom_1_1_quad_grid_a5623e24a82df043cec092e5cb61aed34}{\index{hsom\-::\-Quad\-Grid@{hsom\-::\-Quad\-Grid}!index@{index}}
+\index{index@{index}!hsom::QuadGrid@{hsom\-::\-Quad\-Grid}}
+\subsubsection[{index}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ virtual int {\bf hsom\-::\-Quad\-Grid}$<$ \-T $>$\-::{\bf index} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ int $>$}]{coords}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}\label{classhsom_1_1_quad_grid_a5623e24a82df043cec092e5cb61aed34}
+
+
+\-Fetches the index for the slot at the specified coordinates. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em coords} & \-The point in the grid for which to fetch the index \\
+\hline
+\end{DoxyParams}
+
+
+\-Implements \hyperlink{classhsom_1_1_grid_a1c3162ea843ab3f7e79136425e011a5d}{hsom\-::\-Grid$<$ T $>$}.
+
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/grids/quadgrid.\-hpp\end{DoxyCompactItemize}

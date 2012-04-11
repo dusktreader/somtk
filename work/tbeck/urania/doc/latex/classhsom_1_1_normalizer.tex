@@ -1,0 +1,106 @@
+\hypertarget{classhsom_1_1_normalizer}{\section{hsom\-:\-:\-Normalizer \-Class \-Reference}
+\label{classhsom_1_1_normalizer}\index{hsom\-::\-Normalizer@{hsom\-::\-Normalizer}}
+}
+
+
+{\ttfamily \#include $<$normalizer.\-h$>$}
+
+\-Inheritance diagram for hsom\-:\-:\-Normalizer\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classhsom_1_1_normalizer}
+\end{center}
+\end{figure}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_normalizer_a333d863efb0f68c743e85d6b0f2cda05}{\hyperlink{classhsom_1_1_normalizer_a333d863efb0f68c743e85d6b0f2cda05}{\-Normalizer} ()}\label{classhsom_1_1_normalizer_a333d863efb0f68c743e85d6b0f2cda05}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs a \hyperlink{classhsom_1_1_normalizer}{\-Normalizer}. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_normalizer_ad033162f2f4d207c170fd97e349dfb65}{calculate} (\-Q\-Vector$<$ \hyperlink{classhsom_1_1_feature}{\-Feature} $>$ features, \-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ nomalizer\-Parameters)
+\begin{DoxyCompactList}\small\item\em \-Computes the normalization statisticts to be used for future normalizations. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_normalizer_ada54af29a7b7527eb555d267ca82d849}{virtual void \hyperlink{classhsom_1_1_normalizer_ada54af29a7b7527eb555d267ca82d849}{clear} ()=0}\label{classhsom_1_1_normalizer_ada54af29a7b7527eb555d267ca82d849}
+
+\begin{DoxyCompactList}\small\item\em \-Clears the normalizer. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_normalizer_af00cb37e6079f3802b24389fb336debd}{virtual void \hyperlink{classhsom_1_1_normalizer_af00cb37e6079f3802b24389fb336debd}{normalize} (\hyperlink{classhsom_1_1_feature}{\-Feature} \&feature)=0}\label{classhsom_1_1_normalizer_af00cb37e6079f3802b24389fb336debd}
+
+\begin{DoxyCompactList}\small\item\em \-Normalizes a single feature. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_normalizer_afb0c21572e09b44a67c49c4f18d34837}{virtual void \hyperlink{classhsom_1_1_normalizer_afb0c21572e09b44a67c49c4f18d34837}{set\-Feature} (\hyperlink{classhsom_1_1_feature}{\-Feature} \&feature)=0}\label{classhsom_1_1_normalizer_afb0c21572e09b44a67c49c4f18d34837}
+
+\begin{DoxyCompactList}\small\item\em \-Sets a features values based upon calculated normalization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classhsom_1_1_normalizer_addd6ca248cc630ffa677788872b0ee13}{calculate\-Normalizer} (\-Q\-Vector$<$ \hyperlink{classhsom_1_1_feature}{\-Feature} $>$ features, \-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ nomalizer\-Parameters)=0
+\begin{DoxyCompactList}\small\item\em \-Computes the normalization statisticts to be used for future normalizations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_normalizer_a0f156a4d8557dd56026ba1a82eefed23}{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ \hyperlink{classhsom_1_1_normalizer_a0f156a4d8557dd56026ba1a82eefed23}{\-\_\-calculation\-Parameters}}\label{classhsom_1_1_normalizer_a0f156a4d8557dd56026ba1a82eefed23}
+
+\begin{DoxyCompactList}\small\item\em \-Describes the parameters used to tune the calculation of this normalizer. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_normalizer_a3c888c25a91e9e01755c284b1100bdb3}{\-Rand\-Master \hyperlink{classhsom_1_1_normalizer_a3c888c25a91e9e01755c284b1100bdb3}{randomizer}}\label{classhsom_1_1_normalizer_a3c888c25a91e9e01755c284b1100bdb3}
+
+\begin{DoxyCompactList}\small\item\em \-Provides random functionality if needed by derived instances. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\begin{DoxyRefDesc}{\-Todo}
+\item[\hyperlink{todo__todo000015}{\-Todo}]\-Document \-Classes and files \end{DoxyRefDesc}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhsom_1_1_normalizer_ad033162f2f4d207c170fd97e349dfb65}{\index{hsom\-::\-Normalizer@{hsom\-::\-Normalizer}!calculate@{calculate}}
+\index{calculate@{calculate}!hsom::Normalizer@{hsom\-::\-Normalizer}}
+\subsubsection[{calculate}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Normalizer\-::calculate} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ {\bf \-Feature} $>$}]{features, }
+\item[{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$}]{nomalizer\-Parameters}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_normalizer_ad033162f2f4d207c170fd97e349dfb65}
+
+
+\-Computes the normalization statisticts to be used for future normalizations. 
+
+\begin{DoxyNote}{\-Note}
+\-This function calls the virtual calculate\-Normalizer function. \-The calculate\-Normalizer function should never be called explicitly. 
+\end{DoxyNote}
+
+\begin{DoxyParams}{\-Parameters}
+{\em features} & \-A sample of features for which to compute the normalization \\
+\hline
+{\em nomalizer\-Parameters} & \-The tuning parameters used to compute the normalization \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_normalizer_addd6ca248cc630ffa677788872b0ee13}{\index{hsom\-::\-Normalizer@{hsom\-::\-Normalizer}!calculate\-Normalizer@{calculate\-Normalizer}}
+\index{calculate\-Normalizer@{calculate\-Normalizer}!hsom::Normalizer@{hsom\-::\-Normalizer}}
+\subsubsection[{calculate\-Normalizer}]{\setlength{\rightskip}{0pt plus 5cm}virtual void {\bf hsom\-::\-Normalizer\-::calculate\-Normalizer} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ {\bf \-Feature} $>$}]{features, }
+\item[{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$}]{nomalizer\-Parameters}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected, pure virtual\mbox{]}}}}\label{classhsom_1_1_normalizer_addd6ca248cc630ffa677788872b0ee13}
+
+
+\-Computes the normalization statisticts to be used for future normalizations. 
+
+\begin{DoxyNote}{\-Note}
+\-This function is called by \hyperlink{classhsom_1_1_normalizer_ad033162f2f4d207c170fd97e349dfb65}{calculate()} in this base class. \-It should never be called explicitly. 
+\end{DoxyNote}
+
+\begin{DoxyParams}{\-Parameters}
+{\em features} & \-A sample of features for which to compute the normalization \\
+\hline
+{\em nomalizer\-Parameters} & \-The tuning parameters used to compute the normalization \\
+\hline
+\end{DoxyParams}
+
+
+\-Implemented in \hyperlink{classhsom_1_1_sigmoid_normalizer_a96240b51c8c107cbb1183b6f61cd5a8a}{hsom\-::\-Sigmoid\-Normalizer}, and \hyperlink{classhsom_1_1_null_normalizer_afa74034fd30d11ee08535078adabb190}{hsom\-::\-Null\-Normalizer}.
+
+
+
+\-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/normalizers/normalizer.\-h\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/normalizers/normalizer.\-cpp\end{DoxyCompactItemize}

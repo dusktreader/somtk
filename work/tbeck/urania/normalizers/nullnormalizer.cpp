@@ -18,7 +18,4 @@ void NullNormalizer::setFeature( Feature& feature )
         feature[i] = randomizer.randd();
 }
 
-void NullNormalizer::clear()
-{}
-
 } // namespace hsom

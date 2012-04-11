@@ -1,0 +1,148 @@
+\hypertarget{classhsom_1_1_h_s_o_m}{\section{hsom\-:\-:\-H\-S\-O\-M \-Class \-Reference}
+\label{classhsom_1_1_h_s_o_m}\index{hsom\-::\-H\-S\-O\-M@{hsom\-::\-H\-S\-O\-M}}
+}
+
+
+\-The \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} class provides an abstract base class for \-Self-\/\-Organizing \-Maps.  
+
+
+
+
+{\ttfamily \#include $<$hsom.\-h$>$}
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classhsom_1_1_h_s_o_m_af03125b52782ed511021562aa9e44acf}{\-H\-S\-O\-M} (\-Q\-Object $\ast$parent=\-N\-U\-L\-L)
+\begin{DoxyCompactList}\small\item\em \-Constructs an empty \-Hybrid \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M}. \end{DoxyCompactList}\item 
+\hyperlink{classhsom_1_1_h_s_o_m_a96b649d5e6d6531a07e699c2ea807abb}{\-H\-S\-O\-M} (\-Normalizer\-Ptr normalizer, \-S\-O\-M\-Ptr som, \-Classifier\-Ptr classifier, \-Q\-Object $\ast$parent=\-N\-U\-L\-L)
+\begin{DoxyCompactList}\small\item\em \-Constructs the \-Hybrid-\/\-S\-O\-M and supplies a \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} and an \-A\-N\-N for it to use. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_h_s_o_m_a58038ba3d4bd255ec0dd15604d9a2a3e}{virtual \hyperlink{classhsom_1_1_h_s_o_m_a58038ba3d4bd255ec0dd15604d9a2a3e}{$\sim$\-H\-S\-O\-M} ()}\label{classhsom_1_1_h_s_o_m_a58038ba3d4bd255ec0dd15604d9a2a3e}
+
+\begin{DoxyCompactList}\small\item\em \-Destructs the \hyperlink{classhsom_1_1_h_s_o_m}{\-H\-S\-O\-M}. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_h_s_o_m_a4a7d4cd2e51394425dcce16667832130}{virtual void \hyperlink{classhsom_1_1_h_s_o_m_a4a7d4cd2e51394425dcce16667832130}{clear} ()}\label{classhsom_1_1_h_s_o_m_a4a7d4cd2e51394425dcce16667832130}
+
+\begin{DoxyCompactList}\small\item\em \-Clears the \hyperlink{classhsom_1_1_h_s_o_m}{\-H\-S\-O\-M}. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_h_s_o_m_a1c7d16d551f08ee274fe8a9ebe5debda}{train} (\-Q\-Vector$<$ \-Suspect\-Ptr $>$ \&training\-Suspects, \-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ normlizer\-Parameters, \-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ som\-Paramters, \-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ classifier\-Parameters)
+\begin{DoxyCompactList}\small\item\em \-Trains the \hyperlink{classhsom_1_1_h_s_o_m}{\-H\-S\-O\-M}. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_h_s_o_m_a5aca4d2c55beab117f090a6f2a43197c}{classify} (\-Q\-Vector$<$ \-Suspect\-Ptr $>$ \&suspects)
+\begin{DoxyCompactList}\small\item\em \-Classifies suspects. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_h_s_o_m_a9e5eebef993a09bb3e2702259fc1a140}{classify} (\-Suspect\-Ptr suspect)
+\begin{DoxyCompactList}\small\item\em \-Classifies a single suspect. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-The \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} class provides an abstract base class for \-Self-\/\-Organizing \-Maps. 
+
+\begin{DoxyRefDesc}{\-Todo}
+\item[\hyperlink{todo__todo000014}{\-Todo}]\-Implement this as a thread so that training can run in the background \end{DoxyRefDesc}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classhsom_1_1_h_s_o_m_af03125b52782ed511021562aa9e44acf}{\index{hsom\-::\-H\-S\-O\-M@{hsom\-::\-H\-S\-O\-M}!\-H\-S\-O\-M@{\-H\-S\-O\-M}}
+\index{\-H\-S\-O\-M@{\-H\-S\-O\-M}!hsom::HSOM@{hsom\-::\-H\-S\-O\-M}}
+\subsubsection[{\-H\-S\-O\-M}]{\setlength{\rightskip}{0pt plus 5cm}{\bf hsom\-::\-H\-S\-O\-M\-::\-H\-S\-O\-M} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Object $\ast$}]{parent = {\ttfamily \-N\-U\-L\-L}}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_h_s_o_m_af03125b52782ed511021562aa9e44acf}
+
+
+\-Constructs an empty \-Hybrid \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M}. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em parent} & \-The parent object for this \hyperlink{classhsom_1_1_h_s_o_m}{\-H\-S\-O\-M} ( inheriting from \-Q\-Thread ) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_h_s_o_m_a96b649d5e6d6531a07e699c2ea807abb}{\index{hsom\-::\-H\-S\-O\-M@{hsom\-::\-H\-S\-O\-M}!\-H\-S\-O\-M@{\-H\-S\-O\-M}}
+\index{\-H\-S\-O\-M@{\-H\-S\-O\-M}!hsom::HSOM@{hsom\-::\-H\-S\-O\-M}}
+\subsubsection[{\-H\-S\-O\-M}]{\setlength{\rightskip}{0pt plus 5cm}{\bf hsom\-::\-H\-S\-O\-M\-::\-H\-S\-O\-M} (
+\begin{DoxyParamCaption}
+\item[{\-Normalizer\-Ptr}]{normalizer, }
+\item[{\-S\-O\-M\-Ptr}]{som, }
+\item[{\-Classifier\-Ptr}]{classifier, }
+\item[{\-Q\-Object $\ast$}]{parent = {\ttfamily \-N\-U\-L\-L}}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_h_s_o_m_a96b649d5e6d6531a07e699c2ea807abb}
+
+
+\-Constructs the \-Hybrid-\/\-S\-O\-M and supplies a \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} and an \-A\-N\-N for it to use. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em normalizer} & \-The normalizer used to normalizer features for the \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} \\
+\hline
+{\em som} & \-The \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} that this \hyperlink{classhsom_1_1_h_s_o_m}{\-H\-S\-O\-M} will use to build histograms of suspects \\
+\hline
+{\em classifier} & \-The back-\/end classifier used to identify incoming suspect's category \\
+\hline
+{\em parent} & \-The parent object for this \hyperlink{classhsom_1_1_h_s_o_m}{\-H\-S\-O\-M} ( inheriting from \-Q\-Thread ) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhsom_1_1_h_s_o_m_a5aca4d2c55beab117f090a6f2a43197c}{\index{hsom\-::\-H\-S\-O\-M@{hsom\-::\-H\-S\-O\-M}!classify@{classify}}
+\index{classify@{classify}!hsom::HSOM@{hsom\-::\-H\-S\-O\-M}}
+\subsubsection[{classify}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-H\-S\-O\-M\-::classify} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ \-Suspect\-Ptr $>$ \&}]{suspects}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_h_s_o_m_a5aca4d2c55beab117f090a6f2a43197c}
+
+
+\-Classifies suspects. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em suspects} & \-The suspects to train with this \-H\-S\-Om \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_h_s_o_m_a9e5eebef993a09bb3e2702259fc1a140}{\index{hsom\-::\-H\-S\-O\-M@{hsom\-::\-H\-S\-O\-M}!classify@{classify}}
+\index{classify@{classify}!hsom::HSOM@{hsom\-::\-H\-S\-O\-M}}
+\subsubsection[{classify}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-H\-S\-O\-M\-::classify} (
+\begin{DoxyParamCaption}
+\item[{\-Suspect\-Ptr}]{suspect}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_h_s_o_m_a9e5eebef993a09bb3e2702259fc1a140}
+
+
+\-Classifies a single suspect. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em suspect} & \-The suspect to classify \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_h_s_o_m_a1c7d16d551f08ee274fe8a9ebe5debda}{\index{hsom\-::\-H\-S\-O\-M@{hsom\-::\-H\-S\-O\-M}!train@{train}}
+\index{train@{train}!hsom::HSOM@{hsom\-::\-H\-S\-O\-M}}
+\subsubsection[{train}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-H\-S\-O\-M\-::train} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ \-Suspect\-Ptr $>$ \&}]{training\-Suspects, }
+\item[{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$}]{normlizer\-Parameters, }
+\item[{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$}]{som\-Paramters, }
+\item[{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$}]{classifier\-Parameters}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_h_s_o_m_a1c7d16d551f08ee274fe8a9ebe5debda}
+
+
+\-Trains the \hyperlink{classhsom_1_1_h_s_o_m}{\-H\-S\-O\-M}. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em training\-Suspects} & \-The suspects to use for training \\
+\hline
+{\em normlizer\-Parameters} & \-The calculation parameters to be used for the normalizer \\
+\hline
+{\em som\-Paramters} & \-The training parameters to be used for the som \\
+\hline
+{\em classifier\-Parameters} & \-The training parameters to be used for the classifier \\
+\hline
+\end{DoxyParams}
+
+
+\-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/hsom.\-h\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/hsom.\-cpp\end{DoxyCompactItemize}

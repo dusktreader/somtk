@@ -1,0 +1,300 @@
+\hypertarget{classhsom_1_1_grid}{\section{hsom\-:\-:\-Grid$<$ \-T $>$ \-Class \-Template \-Reference}
+\label{classhsom_1_1_grid}\index{hsom\-::\-Grid$<$ T $>$@{hsom\-::\-Grid$<$ T $>$}}
+}
+\-Inheritance diagram for hsom\-:\-:\-Grid$<$ \-T $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.794872cm]{classhsom_1_1_grid}
+\end{center}
+\end{figure}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_grid_aba0fb79105155eff14ca1d083af1d406}{\hyperlink{classhsom_1_1_grid_aba0fb79105155eff14ca1d083af1d406}{\-Grid} ()}\label{classhsom_1_1_grid_aba0fb79105155eff14ca1d083af1d406}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs a hex grid with no size information. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a9d6958c2d779bba109a5db3bc668e32c}{virtual \hyperlink{classhsom_1_1_grid_a9d6958c2d779bba109a5db3bc668e32c}{$\sim$\-Grid} ()}\label{classhsom_1_1_grid_a9d6958c2d779bba109a5db3bc668e32c}
+
+\begin{DoxyCompactList}\small\item\em \-Destructs the \hyperlink{classhsom_1_1_grid}{\-Grid}. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_grid_a0b78153431550f6261a64085e8fd2f47}{init} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})
+\begin{DoxyCompactList}\small\item\em \-Initializes the hex grid with the specified size. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_grid_a4f786deb4f55e777998b3d7e0c0822e7}{init} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size}, \-Q\-Vector$<$ \-T $>$ \hyperlink{classhsom_1_1_grid_ae6b6ffb72e86c3904e8ac21253d85a24}{items})
+\begin{DoxyCompactList}\small\item\em \-Initializes the hex grid with the specified size and fills it with the supplied values. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_grid_ad9ca398c85fd00afc3de894e5bc52dfe}{set\-Items} (\-Q\-Vector$<$ \-T $>$ \hyperlink{classhsom_1_1_grid_ae6b6ffb72e86c3904e8ac21253d85a24}{items})
+\begin{DoxyCompactList}\small\item\em \-Sets the items to the supplied items. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a7f6bd884d4b407dee64985a37fe0bd92}{void \hyperlink{classhsom_1_1_grid_a7f6bd884d4b407dee64985a37fe0bd92}{clear} ()}\label{classhsom_1_1_grid_a7f6bd884d4b407dee64985a37fe0bd92}
+
+\begin{DoxyCompactList}\small\item\em \-Clears the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_ac9b2b7c938d29901e299711151900bbd}{void \hyperlink{classhsom_1_1_grid_ac9b2b7c938d29901e299711151900bbd}{set\-To} (const \-T \&\hyperlink{classhsom_1_1_grid_a991f2eb04dc799ef42c8b58868b9cb8f}{item})}\label{classhsom_1_1_grid_ac9b2b7c938d29901e299711151900bbd}
+
+\begin{DoxyCompactList}\small\item\em \-Sets all of the slots in the grid to the specified item. \end{DoxyCompactList}\item 
+\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a6bb6f9a0f22054d0d5d39109c3309efd}{neighborhood} (int r, \-Q\-Vector$<$ int $>$ point)
+\begin{DoxyCompactList}\small\item\em \-Fetches indices for all slots within a radius of the slot at the given point. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a7630a12f65349d893d54c9c8ef3b21e9}{virtual void \hyperlink{classhsom_1_1_grid_a7630a12f65349d893d54c9c8ef3b21e9}{set\-Size} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})}\label{classhsom_1_1_grid_a7630a12f65349d893d54c9c8ef3b21e9}
+
+\begin{DoxyCompactList}\small\item\em \-Sets the size of the hex grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size} ()}\label{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the size of the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_ae77f3109eaa4f66009f90d458bd28ed9}{int \hyperlink{classhsom_1_1_grid_ae77f3109eaa4f66009f90d458bd28ed9}{capacity} ()}\label{classhsom_1_1_grid_ae77f3109eaa4f66009f90d458bd28ed9}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the linear capacity of the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_ae6b6ffb72e86c3904e8ac21253d85a24}{\-Q\-Vector$<$ \-T $>$ \hyperlink{classhsom_1_1_grid_ae6b6ffb72e86c3904e8ac21253d85a24}{items} ()}\label{classhsom_1_1_grid_ae6b6ffb72e86c3904e8ac21253d85a24}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the vector of items from this grid. \end{DoxyCompactList}\item 
+\-T \& \hyperlink{classhsom_1_1_grid_ac4d7188e7b75823a03a53317656473fa}{operator\mbox{[}$\,$\mbox{]}} (int idx)
+\begin{DoxyCompactList}\small\item\em \-Fetches the item at a specific index in the grid. \end{DoxyCompactList}\item 
+virtual \-T \& \hyperlink{classhsom_1_1_grid_a991f2eb04dc799ef42c8b58868b9cb8f}{item} (int idx)
+\begin{DoxyCompactList}\small\item\em \-Fetches the item at a specific index in the grid. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_grid_ac61a8700e1e4a3662642d30800046ebb}{check\-Index} (int idx)
+\begin{DoxyCompactList}\small\item\em \-Ensures that a given index is valid for this grid. \end{DoxyCompactList}\item 
+\-Q\-Vector$<$ \-Q\-Pair$<$ int, int $>$ $>$ \hyperlink{classhsom_1_1_grid_ae957e549123565f3709ad25d9d8c559b}{neighborhood} (int r, int idx)
+\begin{DoxyCompactList}\small\item\em \-Fetches indices for all slots within a radius of the specified slot. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_ad45b81e9f494b7d41a8b8a1691be2c8c}{\-Q\-Image \hyperlink{classhsom_1_1_grid_ad45b81e9f494b7d41a8b8a1691be2c8c}{visualize} (double cell\-Radius, \-Q\-Color($\ast$render)(\-T))}\label{classhsom_1_1_grid_ad45b81e9f494b7d41a8b8a1691be2c8c}
+
+\begin{DoxyCompactList}\small\item\em \-Visualizes a hex grid given a function pointer to visualize its contents. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a785a4cfed83dd7a58fa8bc0b52e852d4}{virtual int \hyperlink{classhsom_1_1_grid_a785a4cfed83dd7a58fa8bc0b52e852d4}{capacity\-From\-Size} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})=0}\label{classhsom_1_1_grid_a785a4cfed83dd7a58fa8bc0b52e852d4}
+
+\begin{DoxyCompactList}\small\item\em \-Gets the capacity of a grid based on the size of the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a00939983a56d5a2aa8a66b8e1fa8a56d}{virtual void \hyperlink{classhsom_1_1_grid_a00939983a56d5a2aa8a66b8e1fa8a56d}{check\-Size} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})=0}\label{classhsom_1_1_grid_a00939983a56d5a2aa8a66b8e1fa8a56d}
+
+\begin{DoxyCompactList}\small\item\em \-Checks the supplied size to ensure that it is valid for the \hyperlink{classhsom_1_1_grid}{\-Grid}. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classhsom_1_1_grid_abf12e08a06d3ad123ac7fcb72c04aae6}{check\-Coords} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a4a68c15ff3ffcd052bff769e4d9e899b}{coords})=0
+\begin{DoxyCompactList}\small\item\em \-Checks a given point to ensure it is a valid reference to an element in the grid. \end{DoxyCompactList}\item 
+virtual int \hyperlink{classhsom_1_1_grid_a1c3162ea843ab3f7e79136425e011a5d}{index} (\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a4a68c15ff3ffcd052bff769e4d9e899b}{coords})=0
+\begin{DoxyCompactList}\small\item\em \-Fetches the index for the slot at the specified coordinates. \end{DoxyCompactList}\item 
+virtual \-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a4a68c15ff3ffcd052bff769e4d9e899b}{coords} (int idx)=0
+\begin{DoxyCompactList}\small\item\em \-Fetches the coordinates given an index. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_acc0364a698525d1239a7042eb01f79e6}{virtual int \hyperlink{classhsom_1_1_grid_acc0364a698525d1239a7042eb01f79e6}{diagonal} ()=0}\label{classhsom_1_1_grid_acc0364a698525d1239a7042eb01f79e6}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the length of the major diagonal running through the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a91c2fe63cf5fdc2a9f82b4a09a7e0722}{virtual int \hyperlink{classhsom_1_1_grid_a91c2fe63cf5fdc2a9f82b4a09a7e0722}{distance} (int idx0, int idx1)=0}\label{classhsom_1_1_grid_a91c2fe63cf5fdc2a9f82b4a09a7e0722}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the distance between two cells in the grid. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_aadbdeb2f305d8549998866397450732f}{virtual \-Q\-Vector$<$ double $>$ \hyperlink{classhsom_1_1_grid_aadbdeb2f305d8549998866397450732f}{real\-Bounds} ()=0}\label{classhsom_1_1_grid_aadbdeb2f305d8549998866397450732f}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the extents of the real coordinate mapping space ( should only be used for visualization ) \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_grid_a9a40aeb6a5aea850e576224281f63504}{virtual \-Q\-Vector$<$ double $>$ \hyperlink{classhsom_1_1_grid_a9a40aeb6a5aea850e576224281f63504}{real\-Coords} (int idx)=0}\label{classhsom_1_1_grid_a9a40aeb6a5aea850e576224281f63504}
+
+\begin{DoxyCompactList}\small\item\em \-Fetches the real coordinates of a given index in the grid ( should only be used for visualization ) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_grid_a1a96dd2d3bfc55ab6968a55bc457460f}{void \hyperlink{classhsom_1_1_grid_a1a96dd2d3bfc55ab6968a55bc457460f}{set\-Capacity} (int \hyperlink{classhsom_1_1_grid_ae77f3109eaa4f66009f90d458bd28ed9}{capacity})}\label{classhsom_1_1_grid_a1a96dd2d3bfc55ab6968a55bc457460f}
+
+\begin{DoxyCompactList}\small\item\em \-Sets the size of the grid. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_grid_a8d8e32e70c111bc5476d83f6f1837ed4}{\-Q\-Vector$<$ int $>$ \hyperlink{classhsom_1_1_grid_a8d8e32e70c111bc5476d83f6f1837ed4}{\-\_\-size}}\label{classhsom_1_1_grid_a8d8e32e70c111bc5476d83f6f1837ed4}
+
+\begin{DoxyCompactList}\small\item\em \-A vector describing the size of the grid. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{template$<$class \-T$>$ class hsom\-::\-Grid$<$ T $>$}
+
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhsom_1_1_grid_abf12e08a06d3ad123ac7fcb72c04aae6}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!check\-Coords@{check\-Coords}}
+\index{check\-Coords@{check\-Coords}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{check\-Coords}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ virtual void {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf check\-Coords} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ int $>$}]{coords}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}\label{classhsom_1_1_grid_abf12e08a06d3ad123ac7fcb72c04aae6}
+
+
+\-Checks a given point to ensure it is a valid reference to an element in the grid. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em coords} & \-The point in the grid for which to check for validity \\
+\hline
+\end{DoxyParams}
+
+
+\-Implemented in \hyperlink{classhsom_1_1_hex_grid_a9fb21460ce970fdd8d3075ead9db49a7}{hsom\-::\-Hex\-Grid$<$ T $>$}, \hyperlink{classhsom_1_1_hex_grid_a9fb21460ce970fdd8d3075ead9db49a7}{hsom\-::\-Hex\-Grid$<$ double $>$}, \hyperlink{classhsom_1_1_quad_grid_a73f94c48b7544917753883ccd813c9e6}{hsom\-::\-Quad\-Grid$<$ T $>$}, \hyperlink{classhsom_1_1_fast_hex_grid_a8617bee85643b77b31b54644f019ceb3}{hsom\-::\-Fast\-Hex\-Grid$<$ T $>$}, and \hyperlink{classhsom_1_1_fast_hex_grid_a8617bee85643b77b31b54644f019ceb3}{hsom\-::\-Fast\-Hex\-Grid$<$ T $>$}.
+
+\hypertarget{classhsom_1_1_grid_ac61a8700e1e4a3662642d30800046ebb}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!check\-Index@{check\-Index}}
+\index{check\-Index@{check\-Index}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{check\-Index}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ void {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf check\-Index} (
+\begin{DoxyParamCaption}
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_grid_ac61a8700e1e4a3662642d30800046ebb}
+
+
+\-Ensures that a given index is valid for this grid. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em idx} & \-The index to check for validity \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_grid_a4a68c15ff3ffcd052bff769e4d9e899b}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!coords@{coords}}
+\index{coords@{coords}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{coords}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ virtual \-Q\-Vector$<$int$>$ {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf coords} (
+\begin{DoxyParamCaption}
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}\label{classhsom_1_1_grid_a4a68c15ff3ffcd052bff769e4d9e899b}
+
+
+\-Fetches the coordinates given an index. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em idx} & \-The index in the grid for which to fetch the coordinates \\
+\hline
+\end{DoxyParams}
+
+
+\-Implemented in \hyperlink{classhsom_1_1_hex_grid_a2016e6d1a0e8b01a705a7d9040797329}{hsom\-::\-Hex\-Grid$<$ T $>$}, \hyperlink{classhsom_1_1_hex_grid_a2016e6d1a0e8b01a705a7d9040797329}{hsom\-::\-Hex\-Grid$<$ double $>$}, \hyperlink{classhsom_1_1_quad_grid_a8f91269433c403a6034efdec7e97104b}{hsom\-::\-Quad\-Grid$<$ T $>$}, \hyperlink{classhsom_1_1_fast_hex_grid_a5305b83a2932122381f5c78a162cd147}{hsom\-::\-Fast\-Hex\-Grid$<$ T $>$}, and \hyperlink{classhsom_1_1_fast_hex_grid_a5305b83a2932122381f5c78a162cd147}{hsom\-::\-Fast\-Hex\-Grid$<$ T $>$}.
+
+\hypertarget{classhsom_1_1_grid_a1c3162ea843ab3f7e79136425e011a5d}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!index@{index}}
+\index{index@{index}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{index}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ virtual int {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf index} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ int $>$}]{coords}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}\label{classhsom_1_1_grid_a1c3162ea843ab3f7e79136425e011a5d}
+
+
+\-Fetches the index for the slot at the specified coordinates. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em coords} & \-The point in the grid for which to fetch the index \\
+\hline
+\end{DoxyParams}
+
+
+\-Implemented in \hyperlink{classhsom_1_1_hex_grid_a2fdc90350afd51ac994726ca5f161698}{hsom\-::\-Hex\-Grid$<$ T $>$}, \hyperlink{classhsom_1_1_hex_grid_a2fdc90350afd51ac994726ca5f161698}{hsom\-::\-Hex\-Grid$<$ double $>$}, \hyperlink{classhsom_1_1_quad_grid_a5623e24a82df043cec092e5cb61aed34}{hsom\-::\-Quad\-Grid$<$ T $>$}, \hyperlink{classhsom_1_1_fast_hex_grid_a74ef97079e75235a07f9dc70bdbf238a}{hsom\-::\-Fast\-Hex\-Grid$<$ T $>$}, and \hyperlink{classhsom_1_1_fast_hex_grid_a74ef97079e75235a07f9dc70bdbf238a}{hsom\-::\-Fast\-Hex\-Grid$<$ T $>$}.
+
+\hypertarget{classhsom_1_1_grid_a0b78153431550f6261a64085e8fd2f47}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!init@{init}}
+\index{init@{init}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{init}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ void {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf init} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ int $>$}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_grid_a0b78153431550f6261a64085e8fd2f47}
+
+
+\-Initializes the hex grid with the specified size. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em size} & \-The size of grid to create \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_grid_a4f786deb4f55e777998b3d7e0c0822e7}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!init@{init}}
+\index{init@{init}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{init}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ void {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf init} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ int $>$}]{size, }
+\item[{\-Q\-Vector$<$ \-T $>$}]{items}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_grid_a4f786deb4f55e777998b3d7e0c0822e7}
+
+
+\-Initializes the hex grid with the specified size and fills it with the supplied values. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em size} & \-The size of grid to create \\
+\hline
+{\em items} & \-The items with which to populate the grid \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_grid_a991f2eb04dc799ef42c8b58868b9cb8f}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!item@{item}}
+\index{item@{item}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{item}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ virtual \-T\& {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf item} (
+\begin{DoxyParamCaption}
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}\label{classhsom_1_1_grid_a991f2eb04dc799ef42c8b58868b9cb8f}
+
+
+\-Fetches the item at a specific index in the grid. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em idx} & \-The index in the grid from which to fetch an item \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_grid_a6bb6f9a0f22054d0d5d39109c3309efd}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!neighborhood@{neighborhood}}
+\index{neighborhood@{neighborhood}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{neighborhood}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ \-Q\-Vector$<$int$>$ {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf neighborhood} (
+\begin{DoxyParamCaption}
+\item[{int}]{r, }
+\item[{\-Q\-Vector$<$ int $>$}]{point}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_grid_a6bb6f9a0f22054d0d5d39109c3309efd}
+
+
+\-Fetches indices for all slots within a radius of the slot at the given point. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em r} & \-The radius within which a cell must lie to be part of the neighborhood \\
+\hline
+{\em point} & \-The origin cell for the neighborhood ( center cell ) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_grid_ae957e549123565f3709ad25d9d8c559b}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!neighborhood@{neighborhood}}
+\index{neighborhood@{neighborhood}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{neighborhood}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ \-Q\-Vector$<$ \-Q\-Pair$<$int, int$>$ $>$ {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf neighborhood} (
+\begin{DoxyParamCaption}
+\item[{int}]{r, }
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_grid_ae957e549123565f3709ad25d9d8c559b}
+
+
+\-Fetches indices for all slots within a radius of the specified slot. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em r} & \-The radius within which a cell must lie to be a part of the neighborhood \\
+\hline
+{\em idx} & \-The origin index for the neighborhood ( center cell ) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_grid_ac4d7188e7b75823a03a53317656473fa}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
+\index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{operator[]}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ \-T\& {\bf hsom\-::\-Grid}$<$ \-T $>$\-::operator\mbox{[}$\,$\mbox{]} (
+\begin{DoxyParamCaption}
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_grid_ac4d7188e7b75823a03a53317656473fa}
+
+
+\-Fetches the item at a specific index in the grid. 
+
+\begin{DoxyRefDesc}{\-Todo}
+\item[\hyperlink{todo__todo000007}{\-Todo}]\-Add a bounds checking here and custom exceptions would be nice \end{DoxyRefDesc}
+
+\begin{DoxyParams}{\-Parameters}
+{\em idx} & \-The index in the grid from which to fetch an item \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_grid_ad9ca398c85fd00afc3de894e5bc52dfe}{\index{hsom\-::\-Grid@{hsom\-::\-Grid}!set\-Items@{set\-Items}}
+\index{set\-Items@{set\-Items}!hsom::Grid@{hsom\-::\-Grid}}
+\subsubsection[{set\-Items}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class \-T$>$ void {\bf hsom\-::\-Grid}$<$ \-T $>$\-::{\bf set\-Items} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ \-T $>$}]{items}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}\label{classhsom_1_1_grid_ad9ca398c85fd00afc3de894e5bc52dfe}
+
+
+\-Sets the items to the supplied items. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em items} & \-The items with which to populate the grid \\
+\hline
+\end{DoxyParams}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/grids/grid.\-hpp\end{DoxyCompactItemize}

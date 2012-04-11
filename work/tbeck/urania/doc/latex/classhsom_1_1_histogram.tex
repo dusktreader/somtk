@@ -1,0 +1,136 @@
+\hypertarget{classhsom_1_1_histogram}{\section{hsom\-:\-:\-Histogram \-Class \-Reference}
+\label{classhsom_1_1_histogram}\index{hsom\-::\-Histogram@{hsom\-::\-Histogram}}
+}
+\-Inheritance diagram for hsom\-:\-:\-Histogram\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classhsom_1_1_histogram}
+\end{center}
+\end{figure}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_histogram_a41eb5ce79d812d39fc9d650f3b9874f7}{\hyperlink{classhsom_1_1_histogram_a41eb5ce79d812d39fc9d650f3b9874f7}{\-Histogram} ()}\label{classhsom_1_1_histogram_a41eb5ce79d812d39fc9d650f3b9874f7}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs a \hyperlink{classhsom_1_1_histogram}{\-Histogram} with default values. \end{DoxyCompactList}\item 
+\hyperlink{classhsom_1_1_histogram_aff49055a52107bd97767d2eae313272a}{\-Histogram} (\-Q\-Size \hyperlink{classhsom_1_1_grid_a3e846473299eb2c7c259659eb61a6234}{size})
+\begin{DoxyCompactList}\small\item\em \-Constructs the \hyperlink{classhsom_1_1_histogram}{\-Histogram} with specified size. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_histogram_a0b7e057690970983d770ac299076792a}{virtual \hyperlink{classhsom_1_1_histogram_a0b7e057690970983d770ac299076792a}{$\sim$\-Histogram} ()}\label{classhsom_1_1_histogram_a0b7e057690970983d770ac299076792a}
+
+\begin{DoxyCompactList}\small\item\em \-Destructs the \hyperlink{classhsom_1_1_histogram}{\-Histogram}. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_histogram_ac40e46b1cfcc0761c97ec81909c2186d}{void \hyperlink{classhsom_1_1_histogram_ac40e46b1cfcc0761c97ec81909c2186d}{reset} ()}\label{classhsom_1_1_histogram_ac40e46b1cfcc0761c97ec81909c2186d}
+
+\begin{DoxyCompactList}\small\item\em \-Resets this \hyperlink{classhsom_1_1_histogram}{\-Histogram}'s bins to 0. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_histogram_a776befe4699ed118a5950eeb411bee1e}{increment} (\-Q\-Point point)
+\begin{DoxyCompactList}\small\item\em \-Increments a bin in the histogram. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_histogram_a58d2fd912c9e08284cc412422a93dcb8}{increment} (int idx)
+\begin{DoxyCompactList}\small\item\em \-Increments a bin in the histogram. \end{DoxyCompactList}\item 
+double \hyperlink{classhsom_1_1_histogram_abb26049b94e85453ff0fa1be76b08eab}{bin} (int idx)
+\begin{DoxyCompactList}\small\item\em \-Gets the value of a bin at the given index. \end{DoxyCompactList}\item 
+double \hyperlink{classhsom_1_1_histogram_a639ac3ca28a029ca8fc97d9734150bb8}{bin} (\-Q\-Point point)
+\begin{DoxyCompactList}\small\item\em \-Gets the value of a bin at the given index. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_histogram_a8f4a1e9947fa29a974e550c0b97f7496}{normalize} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classhsom_1_1_histogram_aff49055a52107bd97767d2eae313272a}{\index{hsom\-::\-Histogram@{hsom\-::\-Histogram}!\-Histogram@{\-Histogram}}
+\index{\-Histogram@{\-Histogram}!hsom::Histogram@{hsom\-::\-Histogram}}
+\subsubsection[{\-Histogram}]{\setlength{\rightskip}{0pt plus 5cm}{\bf hsom\-::\-Histogram\-::\-Histogram} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Size}]{size}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_histogram_aff49055a52107bd97767d2eae313272a}
+
+
+\-Constructs the \hyperlink{classhsom_1_1_histogram}{\-Histogram} with specified size. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em size} & \-The desired size of the histogram \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhsom_1_1_histogram_abb26049b94e85453ff0fa1be76b08eab}{\index{hsom\-::\-Histogram@{hsom\-::\-Histogram}!bin@{bin}}
+\index{bin@{bin}!hsom::Histogram@{hsom\-::\-Histogram}}
+\subsubsection[{bin}]{\setlength{\rightskip}{0pt plus 5cm}double {\bf hsom\-::\-Histogram\-::bin} (
+\begin{DoxyParamCaption}
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_histogram_abb26049b94e85453ff0fa1be76b08eab}
+
+
+\-Gets the value of a bin at the given index. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em idx} & \-The index of the bin from wich to fetch the value \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_histogram_a639ac3ca28a029ca8fc97d9734150bb8}{\index{hsom\-::\-Histogram@{hsom\-::\-Histogram}!bin@{bin}}
+\index{bin@{bin}!hsom::Histogram@{hsom\-::\-Histogram}}
+\subsubsection[{bin}]{\setlength{\rightskip}{0pt plus 5cm}double {\bf hsom\-::\-Histogram\-::bin} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Point}]{point}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_histogram_a639ac3ca28a029ca8fc97d9734150bb8}
+
+
+\-Gets the value of a bin at the given index. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em point} & \-The coordiates of the bin from which to fetch the value \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_histogram_a776befe4699ed118a5950eeb411bee1e}{\index{hsom\-::\-Histogram@{hsom\-::\-Histogram}!increment@{increment}}
+\index{increment@{increment}!hsom::Histogram@{hsom\-::\-Histogram}}
+\subsubsection[{increment}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Histogram\-::increment} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Point}]{point}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_histogram_a776befe4699ed118a5950eeb411bee1e}
+
+
+\-Increments a bin in the histogram. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em point} & \-The coordinates of the bin to increment \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_histogram_a58d2fd912c9e08284cc412422a93dcb8}{\index{hsom\-::\-Histogram@{hsom\-::\-Histogram}!increment@{increment}}
+\index{increment@{increment}!hsom::Histogram@{hsom\-::\-Histogram}}
+\subsubsection[{increment}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Histogram\-::increment} (
+\begin{DoxyParamCaption}
+\item[{int}]{idx}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_histogram_a58d2fd912c9e08284cc412422a93dcb8}
+
+
+\-Increments a bin in the histogram. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em idx} & \-The index of the bin to increment \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_histogram_a8f4a1e9947fa29a974e550c0b97f7496}{\index{hsom\-::\-Histogram@{hsom\-::\-Histogram}!normalize@{normalize}}
+\index{normalize@{normalize}!hsom::Histogram@{hsom\-::\-Histogram}}
+\subsubsection[{normalize}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Histogram\-::normalize} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_histogram_a8f4a1e9947fa29a974e550c0b97f7496}
+\-Normalizes the histogram's bins \begin{DoxyRefDesc}{\-Todo}
+\item[\hyperlink{todo__todo000012}{\-Todo}]\-Add a parameter to choose normalization method \end{DoxyRefDesc}
+\begin{DoxyRefDesc}{\-Todo}
+\item[\hyperlink{todo__todo000011}{\-Todo}]investigate other normalizations. \end{DoxyRefDesc}
+
+
+\-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/histogram.\-h\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/histogram.\-cpp\end{DoxyCompactItemize}

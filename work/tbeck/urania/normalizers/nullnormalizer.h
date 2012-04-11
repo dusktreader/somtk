@@ -6,20 +6,30 @@
 
 namespace hsom {
 
+/// @see normalizer.h for full documentation of the Normalizer API
 class NullNormalizer : public Normalizer
 {
 
 protected:
 
+    /// @see normalizer.h for full documentation
     virtual void calculateNormalizer(QVector<Feature>, QMap<QString, QVariant>);
+
+
 
 public:
 
     NullNormalizer();
 
-    virtual void normalize(Feature &);
+
+
+    // The Normalizer API
+
+    /// @see normalizer.h for full documentation
+    virtual void normalize( Feature& );
+
+    /// @see normalizer.h for full documentation
     virtual void setFeature( Feature &feature );
-    virtual void clear();
 };
 
 typedef QSharedPointer<NullNormalizer> NullNormalizerPtr;

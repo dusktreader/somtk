@@ -9,6 +9,7 @@
 
 namespace hsom {
 
+/// @see normalizer.h for full documentation of the Normalizer API
 class SigmoidNormalizer : public Normalizer
 {
 
@@ -37,8 +38,7 @@ private:
 
 protected:
 
-
-    // The Normalizer API
+    /// @see normalizer.h for full documentation
     virtual void calculateNormalizer( QVector<Feature> features, QMap<QString, QVariant> normalizerParameters );
 
 
@@ -48,7 +48,11 @@ public:
     SigmoidNormalizer();
 
     // The Normalizer API
+
+    /// @see normalizer.h for full documentation
     virtual void normalize( Feature& feature );
+
+    /// @see normalizer.h for full documentation
     virtual void setFeature( Feature& feature );
 };
 

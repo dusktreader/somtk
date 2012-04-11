@@ -9,6 +9,7 @@
 
 namespace hsom {
 
+/// @see normalizer.h for full documentation of the Normalizer API
 class MinMaxNormalizer : public Normalizer
 {
 
@@ -30,6 +31,7 @@ private:
 
 protected:
 
+    /// @see normalizer.h for full documentation
     virtual void calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> nomalizerParameters );
 
 
@@ -38,8 +40,14 @@ public:
 
     MinMaxNormalizer();
 
-    virtual void clear();
+
+
+    // The Normalizer API
+
+    /// @see normalizer.h for full documentation
     virtual void normalize( Feature& feature );
+
+    /// @see normalizer.h for full documentation
     virtual void setFeature( Feature& feature );
 };
 

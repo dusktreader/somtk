@@ -1,0 +1,77 @@
+\hypertarget{classhsom_1_1_feature}{\section{hsom\-:\-:\-Feature \-Class \-Reference}
+\label{classhsom_1_1_feature}\index{hsom\-::\-Feature@{hsom\-::\-Feature}}
+}
+
+
+\-The feature class provides an abstract base class for \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} features.  
+
+
+
+
+{\ttfamily \#include $<$feature.\-h$>$}
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_feature_a0796b38e45a905c0e4ddebea0707659d}{\hyperlink{classhsom_1_1_feature_a0796b38e45a905c0e4ddebea0707659d}{\-Feature} ()}\label{classhsom_1_1_feature_a0796b38e45a905c0e4ddebea0707659d}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs an empty \hyperlink{classhsom_1_1_feature}{\-Feature}. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_feature_a11b0bacfcbcc239314d831f674922d4c}{\hyperlink{classhsom_1_1_feature_a11b0bacfcbcc239314d831f674922d4c}{\-Feature} (int size)}\label{classhsom_1_1_feature_a11b0bacfcbcc239314d831f674922d4c}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs a feature of a given size. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_feature_a2b913a37bf2e351ab4157bbcfaac356d}{\hyperlink{classhsom_1_1_feature_a2b913a37bf2e351ab4157bbcfaac356d}{\-Feature} (\-Q\-Vector$<$ double $>$ other)}\label{classhsom_1_1_feature_a2b913a37bf2e351ab4157bbcfaac356d}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs the \hyperlink{classhsom_1_1_feature}{\-Feature} from a data vector. \end{DoxyCompactList}\item 
+double \hyperlink{classhsom_1_1_feature_afef971a3f4a596af3b7f6bfa8dd77341}{distance} (\hyperlink{classhsom_1_1_feature}{\-Feature} other) const 
+\begin{DoxyCompactList}\small\item\em \-Calculates the \-Euclidean distance between this and another feature. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_feature_a0c14b0dad4bb7e5f1d62795a79e9895d}{adjust} (\hyperlink{classhsom_1_1_feature}{\-Feature} other, double scale\-Factor)
+\begin{DoxyCompactList}\small\item\em \-Adjusts the value of this \hyperlink{classhsom_1_1_feature}{\-Feature} to make it more like an input feature. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-The feature class provides an abstract base class for \hyperlink{classhsom_1_1_s_o_m}{\-S\-O\-M} features. 
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhsom_1_1_feature_a0c14b0dad4bb7e5f1d62795a79e9895d}{\index{hsom\-::\-Feature@{hsom\-::\-Feature}!adjust@{adjust}}
+\index{adjust@{adjust}!hsom::Feature@{hsom\-::\-Feature}}
+\subsubsection[{adjust}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Feature\-::adjust} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-Feature}}]{other, }
+\item[{double}]{scale\-Factor}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_feature_a0c14b0dad4bb7e5f1d62795a79e9895d}
+
+
+\-Adjusts the value of this \hyperlink{classhsom_1_1_feature}{\-Feature} to make it more like an input feature. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em other} & \-The other \hyperlink{classhsom_1_1_feature}{\-Feature} to compare against \\
+\hline
+{\em scale\-Factor} & \-The scaling factor by which to augment the adjustment \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_feature_afef971a3f4a596af3b7f6bfa8dd77341}{\index{hsom\-::\-Feature@{hsom\-::\-Feature}!distance@{distance}}
+\index{distance@{distance}!hsom::Feature@{hsom\-::\-Feature}}
+\subsubsection[{distance}]{\setlength{\rightskip}{0pt plus 5cm}double {\bf hsom\-::\-Feature\-::distance} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-Feature}}]{other}
+\end{DoxyParamCaption}
+) const}}\label{classhsom_1_1_feature_afef971a3f4a596af3b7f6bfa8dd77341}
+
+
+\-Calculates the \-Euclidean distance between this and another feature. 
+
+\begin{DoxyRefDesc}{\-Todo}
+\item[\hyperlink{todo__todo000005}{\-Todo}]\-: make sure that the two features are the same size! \end{DoxyRefDesc}
+
+\begin{DoxyParams}{\-Parameters}
+{\em other} & \-The other feature to compare against \\
+\hline
+\end{DoxyParams}
+
+
+\-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/feature.\-h\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/feature.\-cpp\end{DoxyCompactItemize}

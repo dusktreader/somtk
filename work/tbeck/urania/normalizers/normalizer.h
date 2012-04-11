@@ -10,6 +10,7 @@
 
 namespace hsom {
 
+/// @todo  Document Classes and files
 class Normalizer
 {
 
@@ -32,6 +33,9 @@ protected:
 
     // The Normalizer API
 
+    /** @brief Computes the normalization statisticts to be used for future normalizations
+      * @note  This function is called by calculate() in this base class.  It should never be called explicitly.
+      */
     virtual void calculateNormalizer(
             QVector<Feature> features,                  ///< A sample of features for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
@@ -44,7 +48,10 @@ public:
     /// Constructs a Normalizer
     Normalizer();
 
-    /// Computes the normalization statisticts to be used for future normalizations
+    /** @brief Computes the normalization statisticts to be used for future normalizations
+      * @note  This function calls the virtual calculateNormalizer function.  The calculateNormalizer function should
+      *         never be called explicitly.
+      */
     void calculate(
             QVector<Feature> features,                  ///< A sample of features for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization

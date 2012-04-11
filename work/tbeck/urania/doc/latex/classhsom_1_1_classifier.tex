@@ -1,0 +1,147 @@
+\hypertarget{classhsom_1_1_classifier}{\section{hsom\-:\-:\-Classifier \-Class \-Reference}
+\label{classhsom_1_1_classifier}\index{hsom\-::\-Classifier@{hsom\-::\-Classifier}}
+}
+\-Inheritance diagram for hsom\-:\-:\-Classifier\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classhsom_1_1_classifier}
+\end{center}
+\end{figure}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_classifier_a10514744eb67348a8dd8f71ec2c1631e}{\hyperlink{classhsom_1_1_classifier_a10514744eb67348a8dd8f71ec2c1631e}{\-Classifier} ()}\label{classhsom_1_1_classifier_a10514744eb67348a8dd8f71ec2c1631e}
+
+\begin{DoxyCompactList}\small\item\em \-Constructs a classifier base instance. \end{DoxyCompactList}\item 
+void \hyperlink{classhsom_1_1_classifier_a86175b0c10c80d7e0ea84e608ec49d19}{train} (\-Q\-Vector$<$ \-Suspect\-Ptr $>$ suspects, \-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ training\-Parameters)
+\begin{DoxyCompactList}\small\item\em \-Trains the classifier using a collection of known suspects. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classhsom_1_1_classifier_afe72e6af42ffe1bc2921b3ade481d800}{classify} (\-Suspect\-Ptr suspect)=0
+\begin{DoxyCompactList}\small\item\em \-Classifies a single suspect. \end{DoxyCompactList}\item 
+\hypertarget{classhsom_1_1_classifier_ad7a6005aea99220ef0391b1155310337}{virtual void {\bfseries read\-Data} (\-Q\-Dom\-Element \&element)}\label{classhsom_1_1_classifier_ad7a6005aea99220ef0391b1155310337}
+
+\item 
+\hypertarget{classhsom_1_1_classifier_a526942872ee1edea3ac51e37f0f45231}{virtual void {\bfseries write\-Data} (\-Q\-Dom\-Element \&element)}\label{classhsom_1_1_classifier_a526942872ee1edea3ac51e37f0f45231}
+
+\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classhsom_1_1_classifier_a7005afab0da6cfd49119ba21e31f0d35}{read\-Classifier\-Data} (\-Q\-Dom\-Element \&element)
+\begin{DoxyCompactList}\small\item\em \-Interfaces with the \-Persist\-X\-M\-L \-A\-P\-I to ensure correct loading order for a classifier. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classhsom_1_1_classifier_a44fd60ca14d06f5f3889e3d49573cd75}{write\-Classifier\-Data} (\-Q\-Dom\-Element \&element)
+\begin{DoxyCompactList}\small\item\em \-Interfaces with the \-Persist\-X\-M\-L \-A\-P\-I to ensure correct saving order for a classifier. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classhsom_1_1_classifier_a1f622d490d89f851c8641b0401648acb}{train\-Classifier} (\-Q\-Vector$<$ \-Suspect\-Ptr $>$ suspects, \-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ training\-Parameters)=0
+\begin{DoxyCompactList}\small\item\em \-Performs specific training algorithm for a classifier. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhsom_1_1_classifier_a57f42894e3369a20b4fd0f3dd8f3d8a5}{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$ \hyperlink{classhsom_1_1_classifier_a57f42894e3369a20b4fd0f3dd8f3d8a5}{\-\_\-training\-Parameters}}\label{classhsom_1_1_classifier_a57f42894e3369a20b4fd0f3dd8f3d8a5}
+
+\begin{DoxyCompactList}\small\item\em \-Describes the parameters used to tune the training of this classifier. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhsom_1_1_classifier_afe72e6af42ffe1bc2921b3ade481d800}{\index{hsom\-::\-Classifier@{hsom\-::\-Classifier}!classify@{classify}}
+\index{classify@{classify}!hsom::Classifier@{hsom\-::\-Classifier}}
+\subsubsection[{classify}]{\setlength{\rightskip}{0pt plus 5cm}virtual void {\bf hsom\-::\-Classifier\-::classify} (
+\begin{DoxyParamCaption}
+\item[{\-Suspect\-Ptr}]{suspect}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}\label{classhsom_1_1_classifier_afe72e6af42ffe1bc2921b3ade481d800}
+
+
+\-Classifies a single suspect. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em suspect} & \-The suspect to be classified \\
+\hline
+\end{DoxyParams}
+
+
+\-Implemented in \hyperlink{classhsom_1_1_a_n_n_classifier_a2777506e21fc1fcb2900ede529aaefac}{hsom\-::\-A\-N\-N\-Classifier}.
+
+\hypertarget{classhsom_1_1_classifier_a7005afab0da6cfd49119ba21e31f0d35}{\index{hsom\-::\-Classifier@{hsom\-::\-Classifier}!read\-Classifier\-Data@{read\-Classifier\-Data}}
+\index{read\-Classifier\-Data@{read\-Classifier\-Data}!hsom::Classifier@{hsom\-::\-Classifier}}
+\subsubsection[{read\-Classifier\-Data}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Classifier\-::read\-Classifier\-Data} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Dom\-Element \&}]{element}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected, virtual\mbox{]}}}}\label{classhsom_1_1_classifier_a7005afab0da6cfd49119ba21e31f0d35}
+
+
+\-Interfaces with the \-Persist\-X\-M\-L \-A\-P\-I to ensure correct loading order for a classifier. 
+
+\begin{DoxyNote}{\-Note}
+\-This is optional. \-If not implemented by a derived class, this function does nothing 
+\end{DoxyNote}
+
+
+\-Reimplemented in \hyperlink{classhsom_1_1_a_n_n_classifier_a615dc19a6aa3f45ee00926e2707386e0}{hsom\-::\-A\-N\-N\-Classifier}.
+
+\hypertarget{classhsom_1_1_classifier_a86175b0c10c80d7e0ea84e608ec49d19}{\index{hsom\-::\-Classifier@{hsom\-::\-Classifier}!train@{train}}
+\index{train@{train}!hsom::Classifier@{hsom\-::\-Classifier}}
+\subsubsection[{train}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Classifier\-::train} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ \-Suspect\-Ptr $>$}]{suspects, }
+\item[{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$}]{training\-Parameters}
+\end{DoxyParamCaption}
+)}}\label{classhsom_1_1_classifier_a86175b0c10c80d7e0ea84e608ec49d19}
+
+
+\-Trains the classifier using a collection of known suspects. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em suspects} & \-The list of suspects with which to train this classifier \\
+\hline
+{\em training\-Parameters} & \-The tuning parameters used to train this classifier \\
+\hline
+\end{DoxyParams}
+\hypertarget{classhsom_1_1_classifier_a1f622d490d89f851c8641b0401648acb}{\index{hsom\-::\-Classifier@{hsom\-::\-Classifier}!train\-Classifier@{train\-Classifier}}
+\index{train\-Classifier@{train\-Classifier}!hsom::Classifier@{hsom\-::\-Classifier}}
+\subsubsection[{train\-Classifier}]{\setlength{\rightskip}{0pt plus 5cm}virtual void {\bf hsom\-::\-Classifier\-::train\-Classifier} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Vector$<$ \-Suspect\-Ptr $>$}]{suspects, }
+\item[{\-Q\-Map$<$ \-Q\-String, \-Q\-Variant $>$}]{training\-Parameters}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected, pure virtual\mbox{]}}}}\label{classhsom_1_1_classifier_a1f622d490d89f851c8641b0401648acb}
+
+
+\-Performs specific training algorithm for a classifier. 
+
+
+\begin{DoxyParams}{\-Parameters}
+{\em suspects} & \-The list of suspects with which to train this classifier \\
+\hline
+{\em training\-Parameters} & \-The tuning parameters used to train this classifier \\
+\hline
+\end{DoxyParams}
+
+
+\-Implemented in \hyperlink{classhsom_1_1_a_n_n_classifier_ac3f43b1ab6681ad13acc52924e3c3fc5}{hsom\-::\-A\-N\-N\-Classifier}.
+
+\hypertarget{classhsom_1_1_classifier_a44fd60ca14d06f5f3889e3d49573cd75}{\index{hsom\-::\-Classifier@{hsom\-::\-Classifier}!write\-Classifier\-Data@{write\-Classifier\-Data}}
+\index{write\-Classifier\-Data@{write\-Classifier\-Data}!hsom::Classifier@{hsom\-::\-Classifier}}
+\subsubsection[{write\-Classifier\-Data}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf hsom\-::\-Classifier\-::write\-Classifier\-Data} (
+\begin{DoxyParamCaption}
+\item[{\-Q\-Dom\-Element \&}]{element}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected, virtual\mbox{]}}}}\label{classhsom_1_1_classifier_a44fd60ca14d06f5f3889e3d49573cd75}
+
+
+\-Interfaces with the \-Persist\-X\-M\-L \-A\-P\-I to ensure correct saving order for a classifier. 
+
+\begin{DoxyNote}{\-Note}
+\-This is optional. \-If not implemented by a derived class, this function does nothing 
+\end{DoxyNote}
+
+
+\-Reimplemented in \hyperlink{classhsom_1_1_a_n_n_classifier_a16189d3191b92fefe2f3103b5b789a9d}{hsom\-::\-A\-N\-N\-Classifier}.
+
+
+
+\-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/classifiers/classifier.\-h\item 
+\-C\-:/\-Users/d3x874/\-Documents/source/urania/classifiers/classifier.\-cpp\end{DoxyCompactItemize}
