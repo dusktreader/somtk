@@ -9,6 +9,9 @@ NullNormalizer::NullNormalizer() :
 void NullNormalizer::calculateNormalizer( QVector<Feature>, QMap<QString, QVariant> )
 {}
 
+void NullNormalizer::clear()
+{}
+
 void NullNormalizer::normalize( Feature& )
 {}
 

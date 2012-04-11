@@ -24,6 +24,7 @@ public:
 
 
     // The Normalizer API
+	virtual void clear();
 
     /// @see normalizer.h for full documentation
     virtual void normalize( Feature& );
