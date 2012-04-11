@@ -2,6 +2,7 @@
 #include <QtTest/QtTest>
 #include <QImage>
 #include <QPainter>
+#include <iostream>
 
 #include "som.h"
 #include "normalizers/nullnormalizer.h"
@@ -71,6 +72,15 @@ void SomTest::visualTest()
     som->train( inputFeatures, normalizer, somParameters, true );
 
     grid.visualize( 10, &render ).save( "finalGrid.png" );
+
+    for( int i=0; i<inputFeatures.size(); i++ )
+    {
+        Feature feature = inputFeatures[i];
+        for(int j=0; j<feature.size(); j++ )
+            std::cout << feature[j] << " ";
+        std::cout << std::endl;
+    }
+
 
     QVERIFY2(true, "Failure");
 }
