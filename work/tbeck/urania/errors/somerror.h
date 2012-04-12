@@ -3,7 +3,7 @@
 #include <QString>
 #include <exception>
 
-namespace hsom {
+namespace somtk {
 
 class SOMError : public std::exception
 {

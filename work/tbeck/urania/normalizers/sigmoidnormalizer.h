@@ -2,12 +2,14 @@
 
 #include <QSharedPointer>
 
+#include "tools/localassert.h"
+#include "tools/convert.hpp"
 #include "normalizer.h"
 
 /// A constant describing the conversion factor between FWHM and sigma
 #define FWHM_FACTOR 2.3548200450309493
 
-namespace hsom {
+namespace somtk {
 
 /// @see normalizer.h for full documentation of the Normalizer API
 class SigmoidNormalizer : public Normalizer
@@ -39,7 +41,7 @@ private:
 protected:
 
     /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<Feature> features, QMap<QString, QVariant> normalizerParameters );
+    virtual void calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters );
 
 
 
@@ -50,10 +52,10 @@ public:
     // The Normalizer API
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( Feature& feature );
+    virtual void normalize( FeaturePtr feature );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( Feature& feature );
+    virtual void setFeature( FeaturePtr feature );
 };
 
 typedef QSharedPointer<SigmoidNormalizer> SigmoidNormalizerPtr;

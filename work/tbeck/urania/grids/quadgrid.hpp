@@ -7,7 +7,7 @@
 #include "errors/somerror.h"
 
 
-namespace hsom {
+namespace somtk {
 
 /// Defines the vertical distance between cells in the grid
 #define HG_B 0.86602540378443837

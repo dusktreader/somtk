@@ -14,22 +14,22 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-URANIA_ROOT = $$PWD/../..
-INCLUDEPATH += $$URANIA_ROOT
+SOMTK_ROOT = $$PWD/../..
+INCLUDEPATH += $$SOMTK_ROOT
 
 HEADERS +=                                       \
-    $$URANIA_ROOT/grids/grid.hpp                 \
-    $$URANIA_ROOT/grids/hexgrid.hpp              \
-    $$URANIA_ROOT/feature.h                      \
-    $$URANIA_ROOT/tools/utilities.hpp            \
-    $$URANIA_ROOT/tools/localassert.h            \
-    $$URANIA_ROOT/tools/randmaster.h             \
-    $$URANIA_ROOT/errors/somerror.h              \
+    $$SOMTK_ROOT/grids/grid.hpp                 \
+    $$SOMTK_ROOT/grids/hexgrid.hpp              \
+    $$SOMTK_ROOT/feature.h                      \
+    $$SOMTK_ROOT/tools/utilities.hpp            \
+    $$SOMTK_ROOT/tools/localassert.h            \
+    $$SOMTK_ROOT/tools/randmaster.h             \
+    $$SOMTK_ROOT/errors/somerror.h              \
 
 SOURCES +=                                       \
-    $$URANIA_ROOT/tools/utilities.cpp            \
-    $$URANIA_ROOT/tools/localassert.cpp          \
-    $$URANIA_ROOT/tools/randmaster.cpp           \
+    $$SOMTK_ROOT/tools/utilities.cpp            \
+    $$SOMTK_ROOT/tools/localassert.cpp          \
+    $$SOMTK_ROOT/tools/randmaster.cpp           \
     tst_hexgridtest.cpp                          \
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

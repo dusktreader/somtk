@@ -1,9 +1,8 @@
 #include "som.h"
 
-namespace hsom {
+namespace somtk {
 
-SOM::SOM( Grid<Feature>& grid ) : grid( grid )
-{}
+SOM::SOM( Grid<FeaturePtr>& grid ) : _grid( grid ){}
 
 SOM::~SOM(){}
 
@@ -37,7 +36,7 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
     alpha_Nf = 0.25;   // This is a tuning factor...should not be hardcoded
     alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * maxEpochs );
 
-    initialRadius = initialRadiusRatio * grid.diagonal();
+    initialRadius = initialRadiusRatio * _grid.diagonal();
     radius_tf = 0.25;   // This is a tuning factor...should not be hardcoded
     radius_Nf = 0.50;   // This is a tuning factor...should not be hardcoded
     radius_gamma = -log( radius_Nf ) / ( radius_tf * maxEpochs );
@@ -45,11 +44,11 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
     currentEpoch = -1;
     nextEpoch();
 
-    for( int i=0; i<grid.capacity(); i++ )
+    for( int i=0; i<_grid.capacity(); i++ )
     {
-        Feature newFeature( featureSize );
+        FeaturePtr newFeature( new Feature( featureSize ) );
         normalizer->setFeature( newFeature );
-        grid[i] = newFeature;
+        _grid[i] = newFeature;
     }
 }
 
@@ -96,7 +95,7 @@ void SOM::precalculateWeights()
 
 
 
-int SOM::closestFeature( Feature feature )
+int SOM::closestFeature( FeaturePtr feature )
 {
     double globalMinimumDistance = DBL_MAX;
     int    globalMinimumIndex    = -1;
@@ -104,14 +103,16 @@ int SOM::closestFeature( Feature feature )
     double localMinimumDistance = DBL_MAX;
     int    localMinimumIndex    = -1;
 
+    Feature& f = *feature.data();
+
     // Reduce operation will collect the local minimums for each thread and then combine them in the global minimums
     #pragma omp parallel firstprivate( localMinimumDistance, localMinimumIndex )
     {
         #pragma omp for
-        for( int i = 0; i < grid.capacity(); i++ )
+        for( int i = 0; i < _grid.capacity(); i++ )
         {
             // Calculate the distance between the input feature and the map feature at index i
-            double distance = feature.distance( grid[i] );
+            double distance = f.distance( _grid[i] );
 
             if( distance  < localMinimumDistance )
             {
@@ -137,10 +138,11 @@ int SOM::closestFeature( Feature feature )
 }
 
 
-void SOM::update( Feature feature )
+
+void SOM::update( FeaturePtr feature )
 {
     // Find the neighborhood in the SOM that of the feature that is the closest to the input feature
-    QVector< QPair<int, int> > neighbors = grid.neighborhood( weights.size(), closestFeature( feature ));
+    QVector< QPair<int, int> > neighbors = _grid.neighborhood( weights.size(), closestFeature( feature ));
 
     // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
     #pragma omp parallel for
@@ -148,16 +150,16 @@ void SOM::update( Feature feature )
     {
         int index     = neighbors[i].first;
         int distance  = neighbors[i].second;
-        grid[index].adjust( feature, weights[ distance ] );
+        _grid[index]->adjust( feature, weights[ distance ] );
     }
 }
 
 
 
-void SOM::train( QVector<Feature> features, NormalizerPtr normalizer, QMap<QString, QVariant> somParameters, bool skipInit_debugOnly )
+void SOM::train( QVector<FeaturePtr> features, NormalizerPtr normalizer, QMap<QString, QVariant> somParameters, bool skipInit_debugOnly )
 {
     if( skipInit_debugOnly == false )
-        initializeTraining( somParameters, normalizer, features.front().size() );
+        initializeTraining( somParameters, normalizer, features.front()->size() );
 
     do
     {
@@ -168,16 +170,16 @@ void SOM::train( QVector<Feature> features, NormalizerPtr normalizer, QMap<QStri
 
         // Update the SOM with each feature from the globalFeatures list.
         // @todo: consider random sampling for the training if the number of features is high
-        foreach( Feature feature, features )
+        foreach( FeaturePtr feature, features )
             update( feature );
 
     } while( nextEpoch() != false );
 
 }
 
-QVector<Feature> SOM::dumpFeatures()
+Grid<FeaturePtr>& SOM::grid()
 {
-    return grid.items();
+    return _grid;
 }
 
 } // namespace hsom

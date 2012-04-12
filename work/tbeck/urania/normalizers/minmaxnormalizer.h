@@ -5,9 +5,11 @@
 
 
 #include "normalizer.h"
-#include "randmaster.h"
+#include "tools/randmaster.h"
+#include "tools/localassert.h"
+#include "tools/convert.hpp"
 
-namespace hsom {
+namespace somtk {
 
 /// @see normalizer.h for full documentation of the Normalizer API
 class MinMaxNormalizer : public Normalizer
@@ -45,10 +47,10 @@ public:
     // The Normalizer API
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( Feature& feature );
+    virtual void normalize( FeaturePtr feature );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( Feature& feature );
+    virtual void setFeature( FeaturePtr feature );
 };
 
 } // namespace hsom

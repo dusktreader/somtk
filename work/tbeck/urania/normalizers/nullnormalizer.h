@@ -4,7 +4,7 @@
 
 #include "normalizer.h"
 
-namespace hsom {
+namespace somtk {
 
 /// @see normalizer.h for full documentation of the Normalizer API
 class NullNormalizer : public Normalizer
@@ -13,7 +13,7 @@ class NullNormalizer : public Normalizer
 protected:
 
     /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer(QVector<Feature>, QMap<QString, QVariant>);
+    virtual void calculateNormalizer( QVector<FeaturePtr>, QMap<QString, QVariant> );
 
 
 
@@ -24,13 +24,13 @@ public:
 
 
     // The Normalizer API
-	virtual void clear();
+    virtual void clear();
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( Feature& );
+    virtual void normalize( FeaturePtr );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( Feature &feature );
+    virtual void setFeature( FeaturePtr feature );
 };
 
 typedef QSharedPointer<NullNormalizer> NullNormalizerPtr;

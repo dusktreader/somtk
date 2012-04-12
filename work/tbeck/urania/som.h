@@ -27,7 +27,7 @@
 /// A constant describing the conversion factor between FWHM and sigma
 #define FWHM_FACTOR 2.3548200450309493
 
-namespace hsom {
+namespace somtk {
 
 class SOM
 {
@@ -35,7 +35,7 @@ class SOM
 private:
 
     /// The grid of features that represents the internal state of the SOMs
-    Grid<Feature>& grid;
+    Grid<FeaturePtr>& _grid;
 
     /// The number of training epochs to use
     int maxEpochs;
@@ -89,8 +89,8 @@ public:
 
     /// Constructs an SOM with a specific size
     SOM(
-        Grid<Feature>& grid ///< The grid of features that the SOM will use internally
-         );
+        Grid<FeaturePtr>& _grid ///< The grid of features that the SOM will use internally
+        );
 
     /// Destructs this SOM
     virtual ~SOM();
@@ -109,11 +109,11 @@ public:
 
     /// Trains the SOM with a single feature
     void update(
-        Feature feature ///< The feature with which to update the SOM
+        FeaturePtr feature ///< The feature with which to update the SOM
         );
 
     void train(
-        QVector<Feature> features,             ///< The features with which to train the SOM
+        QVector<FeaturePtr> features,          ///< The features with which to train the SOM
         NormalizerPtr normalizer,              ///< A normalizer used to adjust new features in the grid
         QMap<QString, QVariant> somParameters, ///< The tuning parameters to use for the training
         bool skipInit_debugOnly = false        ///< Only to be used for debugging
@@ -121,8 +121,11 @@ public:
 
     /// Fetches the index of the cell that holds the closest feature in the SOM to an input feature
     int closestFeature(
-        Feature feature ///< The input feature to compare against feature in the SOM
+        FeaturePtr feature ///< The input feature to compare against feature in the SOM
         );
+
+    /// Fetches the underlying grid of features from the SOM
+    Grid<FeaturePtr>& grid();
 
     /// Dumps the features from this SOM out to a regular vector
     QVector<Feature> dumpFeatures();

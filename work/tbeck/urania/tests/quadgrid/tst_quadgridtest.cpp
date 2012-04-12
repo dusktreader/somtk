@@ -4,11 +4,11 @@
 #include <QPainter>
 #include <QTextStream>
 
+#include "tools/randmaster.h"
 #include "grids/quadgrid.hpp"
 #include "som.h"
-#include "tools/randmaster.h"
 
-using namespace hsom;
+using namespace somtk;
 
 class QuadGridTest : public QObject
 {

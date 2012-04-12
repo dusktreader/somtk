@@ -1,6 +1,6 @@
 #include "normalizer.h"
 
-namespace hsom {
+namespace somtk {
 
 Normalizer::Normalizer() :
     _isCalculated( false )
@@ -8,8 +8,7 @@ Normalizer::Normalizer() :
 
 
 
-
-void Normalizer::calculate( QVector<Feature> features, QMap<QString, QVariant> calculationParameters )
+void Normalizer::calculate( QVector<FeaturePtr> features, QMap<QString, QVariant> calculationParameters )
 {
     _calculationParameters = calculationParameters;
     calculateNormalizer( features, calculationParameters );

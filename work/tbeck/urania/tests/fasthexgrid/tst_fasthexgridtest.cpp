@@ -8,7 +8,7 @@
 #include "som.h"
 #include "tools/randmaster.h"
 
-using namespace hsom;
+using namespace somtk;
 
 class FastHexGridTest : public QObject
 {

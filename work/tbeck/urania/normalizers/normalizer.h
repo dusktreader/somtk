@@ -8,7 +8,7 @@
 #include "tools/randmaster.h"
 #include "feature.h"
 
-namespace hsom {
+namespace somtk {
 
 /// @todo  Document Classes and files
 class Normalizer
@@ -37,7 +37,7 @@ protected:
       * @note  This function is called by calculate() in this base class.  It should never be called explicitly.
       */
     virtual void calculateNormalizer(
-            QVector<Feature> features,                  ///< A sample of features for which to compute the normalization
+            QVector<FeaturePtr> features,               ///< A sample of features for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
             ) = 0;
 
@@ -53,7 +53,7 @@ public:
       *         never be called explicitly.
       */
     void calculate(
-            QVector<Feature> features,                  ///< A sample of features for which to compute the normalization
+            QVector<FeaturePtr> features,               ///< A sample of features for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
             );
 
@@ -65,10 +65,10 @@ public:
     virtual void clear() = 0;
 
     /// Normalizes a single feature
-    virtual void normalize( Feature& feature ) = 0;
+    virtual void normalize( FeaturePtr feature ) = 0;
 
     /// Sets a features values based upon calculated normalization
-    virtual void setFeature( Feature& feature ) = 0;
+    virtual void setFeature( FeaturePtr feature ) = 0;
 
 };
 

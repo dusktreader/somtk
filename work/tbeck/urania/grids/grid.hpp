@@ -9,7 +9,7 @@
 
 #include "errors/somerror.h"
 
-namespace hsom {
+namespace somtk {
 
 template <class T>
 class Grid
