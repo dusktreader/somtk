@@ -5,13 +5,13 @@
 
 #include <algorithm>
 
-#include "normalizer.h"
 #include "som.h"
-#include "suspect.h"
-#include "somerror.h"
-#include "classifier.h"
+#include "/normalizers/normalizer.h"
+#include "/suspects/suspect.h"
+#include "/errors/somerror.h"
+#include "/classifiers/classifier.h"
 
-namespace hsom {
+namespace somtk {
 
 /** @brief  The SOM class provides an abstract base class for Self-Organizing Maps
   * @todo   Implement this as a thread so that training can run in the background
@@ -84,4 +84,4 @@ public:
         );
 };
 
-} // namespace hsom
+} // namespace

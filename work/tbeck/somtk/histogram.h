@@ -6,7 +6,7 @@
 
 #include "grids/hexgrid.hpp"
 
-namespace hsom {
+namespace somtk {
 
 class Histogram : public HexGrid<double>
 {

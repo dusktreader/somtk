@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Urania: C:/Users/d3x874/Documents/source/urania/som.h Source File</title>
+<title>SOMtk: C:/Users/d3x874/Documents/source/somtk/som.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -27,7 +27,7 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Urania
+   <div id="projectname">SOMtk
    
    </div>
    
@@ -76,7 +76,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">C:/Users/d3x874/Documents/source/urania/som.h</div>  </div>
+<div class="title">C:/Users/d3x874/Documents/source/somtk/som.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#pragma once</span>
@@ -105,14 +105,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00026"></a>00026 <span class="preprocessor"></span>
 <a name="l00028"></a>00028 <span class="preprocessor">#define FWHM_FACTOR 2.3548200450309493</span>
 <a name="l00029"></a>00029 <span class="preprocessor"></span>
-<a name="l00030"></a>00030 <span class="keyword">namespace </span>hsom {
+<a name="l00030"></a>00030 <span class="keyword">namespace </span>somtk {
 <a name="l00031"></a>00031 
-<a name="l00032"></a><a class="code" href="classhsom_1_1_s_o_m.html">00032</a> <span class="keyword">class </span><a class="code" href="classhsom_1_1_s_o_m.html">SOM</a>
+<a name="l00032"></a><a class="code" href="classsomtk_1_1_s_o_m.html">00032</a> <span class="keyword">class </span><a class="code" href="classsomtk_1_1_s_o_m.html">SOM</a>
 <a name="l00033"></a>00033 {
 <a name="l00034"></a>00034 
 <a name="l00035"></a>00035 <span class="keyword">private</span>:
 <a name="l00036"></a>00036 
-<a name="l00038"></a>00038     <a class="code" href="classhsom_1_1_grid.html">Grid&lt;Feature&gt;</a>&amp; grid;
+<a name="l00038"></a>00038     <a class="code" href="classsomtk_1_1_grid.html">Grid&lt;FeaturePtr&gt;</a>&amp; _grid;
 <a name="l00039"></a>00039 
 <a name="l00041"></a>00041     <span class="keywordtype">int</span> maxEpochs;
 <a name="l00042"></a>00042 
@@ -150,41 +150,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00087"></a>00087 
 <a name="l00088"></a>00088 <span class="keyword">public</span>:
 <a name="l00089"></a>00089 
-<a name="l00091"></a>00091     <a class="code" href="classhsom_1_1_s_o_m.html#ab4b14f1b6e57fe03a7adadf17a9b795c" title="Constructs an SOM with a specific size.">SOM</a>(
-<a name="l00092"></a>00092         <a class="code" href="classhsom_1_1_grid.html">Grid&lt;Feature&gt;</a>&amp; grid 
-<a name="l00093"></a>00093          );
+<a name="l00091"></a>00091     <a class="code" href="classsomtk_1_1_s_o_m.html#a8102008528c5e42f6e5bd4da92256ce3" title="Constructs an SOM with a specific size.">SOM</a>(
+<a name="l00092"></a>00092         <a class="code" href="classsomtk_1_1_grid.html">Grid&lt;FeaturePtr&gt;</a>&amp; _grid 
+<a name="l00093"></a>00093         );
 <a name="l00094"></a>00094 
-<a name="l00096"></a>00096     <span class="keyword">virtual</span> <a class="code" href="classhsom_1_1_s_o_m.html#af57a10bef7963dda7075084eee9863cd" title="Destructs this SOM.">~SOM</a>();
+<a name="l00096"></a>00096     <span class="keyword">virtual</span> <a class="code" href="classsomtk_1_1_s_o_m.html#a5941c1c8d010cdc799132528b286e4eb" title="Destructs this SOM.">~SOM</a>();
 <a name="l00097"></a>00097 
-<a name="l00099"></a>00099     <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_s_o_m.html#ab49f133b064128ddce266f806ece2229" title="Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature t...">initializeTraining</a>(
+<a name="l00099"></a>00099     <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_s_o_m.html#aadfc8959f890dae25ae4ffcb3006b307" title="Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature t...">initializeTraining</a>(
 <a name="l00100"></a>00100         QMap&lt;QString, QVariant&gt; somParameters, 
 <a name="l00101"></a>00101         NormalizerPtr normalizer,              
 <a name="l00102"></a>00102         <span class="keywordtype">int</span> featureSize                        
 <a name="l00103"></a>00103         );
 <a name="l00104"></a>00104 
-<a name="l00108"></a>00108     <span class="keywordtype">bool</span> <a class="code" href="classhsom_1_1_s_o_m.html#a48f8a8d75b242f13536dafaf6cd1f4b0" title="Advances the SOM to the next epoch.">nextEpoch</a>();
+<a name="l00108"></a>00108     <span class="keywordtype">bool</span> <a class="code" href="classsomtk_1_1_s_o_m.html#ac4c9088c220128aba3fec74d8c387d43" title="Advances the SOM to the next epoch.">nextEpoch</a>();
 <a name="l00109"></a>00109 
-<a name="l00111"></a>00111     <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_s_o_m.html#a0a538a4ffbb3701eed2dce4701ab9ffa" title="Trains the SOM with a single feature.">update</a>(
-<a name="l00112"></a>00112         <a class="code" href="classhsom_1_1_feature.html" title="The feature class provides an abstract base class for SOM features.">Feature</a> feature 
+<a name="l00111"></a>00111     <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_s_o_m.html#a823a2f7a9c1b0140b13538147c7f4b58" title="Trains the SOM with a single feature.">update</a>(
+<a name="l00112"></a>00112         FeaturePtr feature 
 <a name="l00113"></a>00113         );
 <a name="l00114"></a>00114 
-<a name="l00115"></a>00115     <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_s_o_m.html#af2da5b87e68a9c593d69b345ac0cffee">train</a>(
-<a name="l00116"></a>00116         QVector&lt;Feature&gt; features,             
+<a name="l00115"></a>00115     <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_s_o_m.html#a9067011d2beeeeb948bb834a3958d84d">train</a>(
+<a name="l00116"></a>00116         QVector&lt;FeaturePtr&gt; features,          
 <a name="l00117"></a>00117         NormalizerPtr normalizer,              
 <a name="l00118"></a>00118         QMap&lt;QString, QVariant&gt; somParameters, 
 <a name="l00119"></a>00119         <span class="keywordtype">bool</span> skipInit_debugOnly = <span class="keyword">false</span>        
 <a name="l00120"></a>00120         );
 <a name="l00121"></a>00121 
-<a name="l00123"></a>00123     <span class="keywordtype">int</span> <a class="code" href="classhsom_1_1_s_o_m.html#a24d43f02fbf821f5ef25530906f73d85" title="Fetches the index of the cell that holds the closest feature in the SOM to an input feature...">closestFeature</a>(
-<a name="l00124"></a>00124         <a class="code" href="classhsom_1_1_feature.html" title="The feature class provides an abstract base class for SOM features.">Feature</a> feature 
+<a name="l00123"></a>00123     <span class="keywordtype">int</span> <a class="code" href="classsomtk_1_1_s_o_m.html#a7bea93eface819899dcda02810d5a500" title="Fetches the index of the cell that holds the closest feature in the SOM to an input feature...">closestFeature</a>(
+<a name="l00124"></a>00124         FeaturePtr feature 
 <a name="l00125"></a>00125         );
 <a name="l00126"></a>00126 
-<a name="l00128"></a>00128     QVector&lt;Feature&gt; <a class="code" href="classhsom_1_1_s_o_m.html#a86b03005201c40b1f657c2811ff5b51c" title="Dumps the features from this SOM out to a regular vector.">dumpFeatures</a>();
-<a name="l00129"></a>00129 };
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131 <span class="keyword">typedef</span> QSharedPointer&lt;SOM&gt; SOMPtr;
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133 } <span class="comment">// namespace hsom</span>
+<a name="l00128"></a>00128     <a class="code" href="classsomtk_1_1_grid.html">Grid&lt;FeaturePtr&gt;</a>&amp; <a class="code" href="classsomtk_1_1_s_o_m.html#a881eda663f75dc9cd970101b710a9273" title="Fetches the underlying grid of features from the SOM.">grid</a>();
+<a name="l00129"></a>00129 
+<a name="l00131"></a>00131     QVector&lt;Feature&gt; <a class="code" href="classsomtk_1_1_s_o_m.html#a886ad942d65c9ff5c064fb9ba11e71e2" title="Dumps the features from this SOM out to a regular vector.">dumpFeatures</a>();
+<a name="l00132"></a>00132 };
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134 <span class="keyword">typedef</span> QSharedPointer&lt;SOM&gt; SOMPtr;
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136 } <span class="comment">// namespace hsom</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -203,7 +205,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 10 2012 18:54:08 for Urania by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 12 2012 10:59:29 for SOMtk by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

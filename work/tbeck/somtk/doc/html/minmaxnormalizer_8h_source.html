@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Urania: C:/Users/d3x874/Documents/source/urania/normalizers/minmaxnormalizer.h Source File</title>
+<title>SOMtk: C:/Users/d3x874/Documents/source/somtk/normalizers/minmaxnormalizer.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -27,7 +27,7 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Urania
+   <div id="projectname">SOMtk
    
    </div>
    
@@ -76,7 +76,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">C:/Users/d3x874/Documents/source/urania/normalizers/minmaxnormalizer.h</div>  </div>
+<div class="title">C:/Users/d3x874/Documents/source/somtk/normalizers/minmaxnormalizer.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#pragma once</span>
@@ -86,45 +86,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00005"></a>00005 
 <a name="l00006"></a>00006 
 <a name="l00007"></a>00007 <span class="preprocessor">#include &quot;normalizer.h&quot;</span>
-<a name="l00008"></a>00008 <span class="preprocessor">#include &quot;randmaster.h&quot;</span>
-<a name="l00009"></a>00009 
-<a name="l00010"></a>00010 <span class="keyword">namespace </span>hsom {
+<a name="l00008"></a>00008 <span class="preprocessor">#include &quot;tools/randmaster.h&quot;</span>
+<a name="l00009"></a>00009 <span class="preprocessor">#include &quot;tools/localassert.h&quot;</span>
+<a name="l00010"></a>00010 <span class="preprocessor">#include &quot;tools/convert.hpp&quot;</span>
 <a name="l00011"></a>00011 
-<a name="l00013"></a><a class="code" href="classhsom_1_1_min_max_normalizer.html">00013</a> <span class="keyword">class </span><a class="code" href="classhsom_1_1_min_max_normalizer.html">MinMaxNormalizer</a> : <span class="keyword">public</span> <a class="code" href="classhsom_1_1_normalizer.html">Normalizer</a>
-<a name="l00014"></a>00014 {
-<a name="l00015"></a>00015 
-<a name="l00016"></a>00016 <span class="keyword">private</span>:
+<a name="l00012"></a>00012 <span class="keyword">namespace </span>somtk {
+<a name="l00013"></a>00013 
+<a name="l00015"></a><a class="code" href="classsomtk_1_1_min_max_normalizer.html">00015</a> <span class="keyword">class </span><a class="code" href="classsomtk_1_1_min_max_normalizer.html">MinMaxNormalizer</a> : <span class="keyword">public</span> <a class="code" href="classsomtk_1_1_normalizer.html">Normalizer</a>
+<a name="l00016"></a>00016 {
 <a name="l00017"></a>00017 
-<a name="l00019"></a>00019     <span class="keywordtype">double</span> loLimit;
-<a name="l00020"></a>00020 
-<a name="l00022"></a>00022     <span class="keywordtype">double</span> hiLimit;
-<a name="l00023"></a>00023 
-<a name="l00025"></a>00025     QVector&lt;double&gt; los;
-<a name="l00026"></a>00026 
-<a name="l00028"></a>00028     QVector&lt;double&gt; his;
-<a name="l00029"></a>00029 
-<a name="l00030"></a>00030 
+<a name="l00018"></a>00018 <span class="keyword">private</span>:
+<a name="l00019"></a>00019 
+<a name="l00021"></a>00021     <span class="keywordtype">double</span> loLimit;
+<a name="l00022"></a>00022 
+<a name="l00024"></a>00024     <span class="keywordtype">double</span> hiLimit;
+<a name="l00025"></a>00025 
+<a name="l00027"></a>00027     QVector&lt;double&gt; los;
+<a name="l00028"></a>00028 
+<a name="l00030"></a>00030     QVector&lt;double&gt; his;
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="keyword">protected</span>:
+<a name="l00032"></a>00032 
 <a name="l00033"></a>00033 
-<a name="l00035"></a>00035     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_min_max_normalizer.html#a767b6a382aa190053e41f4c664f6594d">calculateNormalizer</a>( QVector&lt;FeaturePtr&gt; features, QMap&lt;QString, QVariant&gt; nomalizerParameters );
-<a name="l00036"></a>00036 
-<a name="l00037"></a>00037 
+<a name="l00034"></a>00034 <span class="keyword">protected</span>:
+<a name="l00035"></a>00035 
+<a name="l00037"></a>00037     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_min_max_normalizer.html#a05bba22aec8d721d8f264065a1b19e51">calculateNormalizer</a>( QVector&lt;FeaturePtr&gt; features, QMap&lt;QString, QVariant&gt; nomalizerParameters );
 <a name="l00038"></a>00038 
-<a name="l00039"></a>00039 <span class="keyword">public</span>:
+<a name="l00039"></a>00039 
 <a name="l00040"></a>00040 
-<a name="l00041"></a>00041     <a class="code" href="classhsom_1_1_min_max_normalizer.html">MinMaxNormalizer</a>();
+<a name="l00041"></a>00041 <span class="keyword">public</span>:
 <a name="l00042"></a>00042 
-<a name="l00043"></a>00043 
+<a name="l00043"></a>00043     <a class="code" href="classsomtk_1_1_min_max_normalizer.html">MinMaxNormalizer</a>();
 <a name="l00044"></a>00044 
-<a name="l00045"></a>00045     <span class="comment">// The Normalizer API</span>
+<a name="l00045"></a>00045 
 <a name="l00046"></a>00046 
-<a name="l00048"></a>00048     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_min_max_normalizer.html#a9d7504876aadfb2dc473af23550fef39">normalize</a>( <a class="code" href="classhsom_1_1_feature.html" title="The feature class provides an abstract base class for SOM features.">Feature</a>&amp; feature );
-<a name="l00049"></a>00049 
-<a name="l00051"></a>00051     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_min_max_normalizer.html#a659a9e0299dee946934b37f2b62720fc">setFeature</a>( <a class="code" href="classhsom_1_1_feature.html" title="The feature class provides an abstract base class for SOM features.">Feature</a>&amp; feature );
-<a name="l00052"></a>00052 };
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 } <span class="comment">// namespace hsom</span>
+<a name="l00047"></a>00047     <span class="comment">// The Normalizer API</span>
+<a name="l00048"></a>00048 
+<a name="l00050"></a>00050     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_min_max_normalizer.html#a284759df00e6896f874e617bb351e7b6">normalize</a>( FeaturePtr feature );
+<a name="l00051"></a>00051 
+<a name="l00053"></a>00053     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_min_max_normalizer.html#a5fb94793ab4156e7b2fbaade1c673886">setFeature</a>( FeaturePtr feature );
+<a name="l00054"></a>00054 };
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056 } <span class="comment">// namespace hsom</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -143,7 +145,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 10 2012 18:54:08 for Urania by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 12 2012 10:59:29 for SOMtk by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

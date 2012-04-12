@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['visualize',['visualize',['../classhsom_1_1_grid.html#ad45b81e9f494b7d41a8b8a1691be2c8c',1,'hsom::Grid']]]
+  ['visualize',['visualize',['../classsomtk_1_1_grid.html#a6d56ec1ac3792a0ec1a3d6011e4446b4',1,'somtk::Grid']]]
 ];

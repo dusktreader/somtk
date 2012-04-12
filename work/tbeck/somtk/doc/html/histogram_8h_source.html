@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Urania: C:/Users/d3x874/Documents/source/urania/histogram.h Source File</title>
+<title>SOMtk: C:/Users/d3x874/Documents/source/somtk/histogram.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -27,7 +27,7 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Urania
+   <div id="projectname">SOMtk
    
    </div>
    
@@ -76,7 +76,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">C:/Users/d3x874/Documents/source/urania/histogram.h</div>  </div>
+<div class="title">C:/Users/d3x874/Documents/source/somtk/histogram.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#pragma once</span>
@@ -87,40 +87,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00006"></a>00006 
 <a name="l00007"></a>00007 <span class="preprocessor">#include &quot;grids/hexgrid.hpp&quot;</span>
 <a name="l00008"></a>00008 
-<a name="l00009"></a>00009 <span class="keyword">namespace </span>hsom {
+<a name="l00009"></a>00009 <span class="keyword">namespace </span>somtk {
 <a name="l00010"></a>00010 
-<a name="l00011"></a><a class="code" href="classhsom_1_1_histogram.html">00011</a> <span class="keyword">class </span><a class="code" href="classhsom_1_1_histogram.html">Histogram</a> : <span class="keyword">public</span> <a class="code" href="classhsom_1_1_hex_grid.html">HexGrid</a>&lt;double&gt;
+<a name="l00011"></a><a class="code" href="classsomtk_1_1_histogram.html">00011</a> <span class="keyword">class </span><a class="code" href="classsomtk_1_1_histogram.html">Histogram</a> : <span class="keyword">public</span> <a class="code" href="classsomtk_1_1_hex_grid.html">HexGrid</a>&lt;double&gt;
 <a name="l00012"></a>00012 {
 <a name="l00013"></a>00013 
 <a name="l00014"></a>00014 <span class="keyword">public</span>:
 <a name="l00015"></a>00015 
-<a name="l00017"></a>00017     <a class="code" href="classhsom_1_1_histogram.html#a41eb5ce79d812d39fc9d650f3b9874f7" title="Constructs a Histogram with default values.">Histogram</a>();
+<a name="l00017"></a>00017     <a class="code" href="classsomtk_1_1_histogram.html#a9e8f85b881bc32b59a44ada902e3acee" title="Constructs a Histogram with default values.">Histogram</a>();
 <a name="l00018"></a>00018 
-<a name="l00020"></a>00020     <a class="code" href="classhsom_1_1_histogram.html#a41eb5ce79d812d39fc9d650f3b9874f7" title="Constructs a Histogram with default values.">Histogram</a>(
-<a name="l00021"></a>00021         QSize <a class="code" href="classhsom_1_1_grid.html#a3e846473299eb2c7c259659eb61a6234" title="Fetches the size of the grid.">size</a> 
+<a name="l00020"></a>00020     <a class="code" href="classsomtk_1_1_histogram.html#a9e8f85b881bc32b59a44ada902e3acee" title="Constructs a Histogram with default values.">Histogram</a>(
+<a name="l00021"></a>00021         QSize <a class="code" href="classsomtk_1_1_grid.html#a12fcda8137dabed239c9cff932bf3974" title="Fetches the size of the grid.">size</a> 
 <a name="l00022"></a>00022         );
 <a name="l00023"></a>00023 
-<a name="l00025"></a>00025     <span class="keyword">virtual</span> <a class="code" href="classhsom_1_1_histogram.html#a0b7e057690970983d770ac299076792a" title="Destructs the Histogram.">~Histogram</a>();
+<a name="l00025"></a>00025     <span class="keyword">virtual</span> <a class="code" href="classsomtk_1_1_histogram.html#ad52c0c53384d6744b207822894c11a3e" title="Destructs the Histogram.">~Histogram</a>();
 <a name="l00026"></a>00026 
-<a name="l00028"></a>00028     <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_histogram.html#ac40e46b1cfcc0761c97ec81909c2186d" title="Resets this Histogram&#39;s bins to 0.">reset</a>();
+<a name="l00028"></a>00028     <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_histogram.html#a98be962af3f272481147f88a0db8b2f5" title="Resets this Histogram&#39;s bins to 0.">reset</a>();
 <a name="l00029"></a>00029 
-<a name="l00031"></a>00031     <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_histogram.html#a776befe4699ed118a5950eeb411bee1e" title="Increments a bin in the histogram.">increment</a>(
+<a name="l00031"></a>00031     <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_histogram.html#a2ddfebe7d68789cadf994fd82e4a7223" title="Increments a bin in the histogram.">increment</a>(
 <a name="l00032"></a>00032         QPoint point 
 <a name="l00033"></a>00033         );
 <a name="l00034"></a>00034 
-<a name="l00036"></a>00036     <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_histogram.html#a776befe4699ed118a5950eeb411bee1e" title="Increments a bin in the histogram.">increment</a>(
+<a name="l00036"></a>00036     <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_histogram.html#a2ddfebe7d68789cadf994fd82e4a7223" title="Increments a bin in the histogram.">increment</a>(
 <a name="l00037"></a>00037         <span class="keywordtype">int</span> idx 
 <a name="l00038"></a>00038         );
 <a name="l00039"></a>00039 
-<a name="l00041"></a>00041     <span class="keywordtype">double</span> <a class="code" href="classhsom_1_1_histogram.html#abb26049b94e85453ff0fa1be76b08eab" title="Gets the value of a bin at the given index.">bin</a>(
+<a name="l00041"></a>00041     <span class="keywordtype">double</span> <a class="code" href="classsomtk_1_1_histogram.html#ae98ca77ffdf31a46c2965aff4e3c71f4" title="Gets the value of a bin at the given index.">bin</a>(
 <a name="l00042"></a>00042         <span class="keywordtype">int</span> idx 
 <a name="l00043"></a>00043         );
 <a name="l00044"></a>00044 
-<a name="l00046"></a>00046     <span class="keywordtype">double</span> <a class="code" href="classhsom_1_1_histogram.html#abb26049b94e85453ff0fa1be76b08eab" title="Gets the value of a bin at the given index.">bin</a>(
+<a name="l00046"></a>00046     <span class="keywordtype">double</span> <a class="code" href="classsomtk_1_1_histogram.html#ae98ca77ffdf31a46c2965aff4e3c71f4" title="Gets the value of a bin at the given index.">bin</a>(
 <a name="l00047"></a>00047         QPoint point 
 <a name="l00048"></a>00048         );
 <a name="l00049"></a>00049 
-<a name="l00052"></a>00052     <span class="keywordtype">void</span> <a class="code" href="classhsom_1_1_histogram.html#a8f4a1e9947fa29a974e550c0b97f7496">normalize</a>();
+<a name="l00052"></a>00052     <span class="keywordtype">void</span> <a class="code" href="classsomtk_1_1_histogram.html#ae25cb4f8c8f4ab7cb237ad770e1f2e66">normalize</a>();
 <a name="l00053"></a>00053 
 <a name="l00056"></a>00056     <span class="comment">// cv::Mat visualize();</span>
 <a name="l00057"></a>00057 
@@ -147,7 +147,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 10 2012 18:54:08 for Urania by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 12 2012 10:59:29 for SOMtk by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bin',['bin',['../classhsom_1_1_histogram.html#abb26049b94e85453ff0fa1be76b08eab',1,'hsom::Histogram::bin(int idx)'],['../classhsom_1_1_histogram.html#a639ac3ca28a029ca8fc97d9734150bb8',1,'hsom::Histogram::bin(QPoint point)']]]
+  ['bin',['bin',['../classsomtk_1_1_histogram.html#ae98ca77ffdf31a46c2965aff4e3c71f4',1,'somtk::Histogram::bin(int idx)'],['../classsomtk_1_1_histogram.html#adcc517d379379048e1dba6a0b3cb082c',1,'somtk::Histogram::bin(QPoint point)']]]
 ];

@@ -1,6 +1,6 @@
 #include "hsom.h"
 
-namespace hsom {
+namespace somtk {
 
 HSOM::HSOM( QObject* parent ) :
     QThread( parent )
