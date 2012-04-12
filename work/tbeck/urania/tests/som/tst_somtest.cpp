@@ -8,6 +8,8 @@
 #include "normalizers/nullnormalizer.h"
 #include "grids/quadgrid.hpp"
 #include "grids/hexgrid.hpp"
+#include "grids/fasthexgrid.hpp"
+#include "grids/wraphexgrid.hpp"
 #include "tools/randmaster.h"
 
 using namespace hsom;
@@ -43,7 +45,7 @@ void SomTest::visualTest()
 
     QVector<int> size;
     size << 24 << 24;
-    HexGrid<Feature> grid( size );
+    QuadGrid<Feature> grid( size );
     SOMPtr som( new SOM( grid ) );
     RandMaster rnd;
 
@@ -72,15 +74,6 @@ void SomTest::visualTest()
     som->train( inputFeatures, normalizer, somParameters, true );
 
     grid.visualize( 10, &render ).save( "finalGrid.png" );
-
-    for( int i=0; i<inputFeatures.size(); i++ )
-    {
-        Feature feature = inputFeatures[i];
-        for(int j=0; j<feature.size(); j++ )
-            std::cout << feature[j] << " ";
-        std::cout << std::endl;
-    }
-
 
     QVERIFY2(true, "Failure");
 }

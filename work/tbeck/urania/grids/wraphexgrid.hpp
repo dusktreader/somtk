@@ -2,7 +2,10 @@
 
 #include <QVector>
 
+#include <iostream>
+
 #include "grids/grid.hpp"
+#include "grids/fasthexgrid.hpp"
 #include "errors/somerror.h"
 
 
@@ -15,64 +18,44 @@ namespace hsom {
   * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
   */
 template <class T>
-class FastHexGrid : public Grid<T>
+class WrapHexGrid : public FastHexGrid<T>
 {
 
 public:
 
 
     /// Constructs a hex grid with no size information
-    FastHexGrid(){}
+    WrapHexGrid() : FastHexGrid<T>(){}
 
     /// Constructs the hex grid with a specified size
-    FastHexGrid(
+    WrapHexGrid(
             QVector<int> size ///< The size of the new grid
             )
-    {
-        this->init( size );
-    }
+        : FastHexGrid<T>(size){}
 
     /// Constructs the hex grid with a specified size
-    FastHexGrid(
+    WrapHexGrid(
             int s ///< The length of one side of the grid
             )
-    {
-        QVector<int> size;
-        size << s;
-        this->init( size );
-    }
+        : FastHexGrid<T>(s){}
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    FastHexGrid(
+    WrapHexGrid(
             QVector<int> size, ///< The size of the new grid
             QVector<T> items   ///< The items with which to populate the grid
             )
-    {
-        this->init( size, items );
-    }
+        : FastHexGrid<T>(size,items){}
 
     /// Constructs the hex grid with the specified size and fills it with the supplied values
-    FastHexGrid(
+    WrapHexGrid(
             int s,           ///< The length of one side of the grid
             QVector<T> items ///< The items with which to populate the grid
             )
-    {
-        QVector<int> size;
-        size << s;
-        this->init( size, items );
-    }
+        : FastHexGrid<T>( s, items ){}
 
     /// Destructs the HexGrid
-    virtual ~FastHexGrid(){}
+    virtual ~WrapHexGrid(){}
 
-
-
-    // Convenience functions for using QPoints and QSizes
-
-    int s()
-    {
-        return this->_size[0];
-    }
 
 
 
@@ -84,99 +67,49 @@ public:
                                     "Size vector must have exactly one element for a side of the grid" );
         int s = size[0];
 
-        SOMError::requireCondition( s > 0,
-                                    "Grid side must be greater than 0" );
-    }
+        SOMError::requireCondition( s % 2 == 0,
+                                    "Grid side must be even to facilitate wrapping" );
 
-    virtual int capacityFromSize( QVector<int> size )
-    {
-        checkSize( size );
-        int s = size[0];
-        return s * s;
-    }
-
-    virtual void checkCoords( QVector<int> coords )
-    {
-        SOMError::requireCondition( coords.size() == 2,
-                                    "Coords vector must have exactly two elements for x and y" );
-        int x = coords[0];
-        int y = coords[1];
-
-        SOMError::requireCondition( x >= 0 && x < s(),
-                                    QString( "x coordinate must be in the range [ 0 , %1 ): was %2" )
-                                    .arg( this->s() ).arg( x ) );
-
-        SOMError::requireCondition( y >= 0 && y < s(),
-                                    QString( "y coordinate must be in the range [ 0 , %1 ): was %2" )
-                                    .arg( this->s() ).arg( y ) );
-    }
-
-    virtual int index(
-            QVector<int> coords ///< The point in the grid for which to fetch the index
-            )
-    {
-        checkCoords( coords );
-        int x = coords[0];
-        int y = coords[1];
-        return y * s() + x;
-    }
-
-    virtual QVector<int> coords(
-        int idx ///< The index in the grid for which to fetch the coordinates
-        )
-    {
-        QVector<int> coords( 2 );
-        coords[0] = idx % this->s();
-        coords[1] = idx / this->s();
-
-        return coords;
-    }
-
-    virtual QVector<double> realBounds()
-    {
-        QVector<double> bounds( 2 );
-        bounds << 2 * this->s() * 0.5;
-        bounds << 2 * this->s() * HG_B;
-        return bounds;
-    }
-
-    virtual QVector<double> realCoords( int idx )
-    {
-        double offset = HG_B * this->s();
-        QVector<int> coords = this->coords( idx );
-        int x = coords[0];
-        int y = coords[1];
-        QVector<double> realCoords( 2 );
-        realCoords[0] = ( y + x ) *  0.5 + offset;
-        realCoords[1] = ( y - x ) * HG_B;
-        return realCoords;
-    }
-
-    virtual int diagonal()
-    {
-        /// @todo  Come  up with a more precise computation of this
-        return this->s();
+        FastHexGrid<T>::checkSize( size );
     }
 
     virtual int distance( int idx0, int idx1 )
     {
-        QVector<int> coords0 = coords( idx0 );
+        QVector<int> coords0 = this->coords( idx0 );
         int x0 = coords0[0];
         int y0 = coords0[1];
 
-        QVector<int> coords1 = coords( idx1 );
+        QVector<int> coords1 = this->coords( idx1 );
         int x1 = coords1[0];
         int y1 = coords1[1];
 
-        int dx = x1 - x0;
-        int dy = y1 - y0;
-        int norm_distance = std::max( std::max( abs(dx), abs(dy) ), abs( dy - dx ) );
+        int dx_norm = x1 - x0;
+        int dy_norm = y1 - y0;
 
-        dx += dx > 0 ? -this->s() : this->s();
-        dy += dy > 0 ? -this->s() : this->s();
-        int wrap_distance = std::max( std::max( abs(dx), abs(dy) ), abs( dy - dx ) );
+        int dx_wrap = dx_norm + ( dx_norm > 0 ? -this->s() : this->s() );
+        int dy_wrap = dy_norm + ( dy_norm > 0 ? -this->s() : this->s() );
 
-        return std::min( norm_distance, wrap_distance );
+        int dist_norm_xy = qMax( qMax( abs(dx_norm), abs(dy_norm) ), abs( dy_norm + dx_norm ) );
+        int dist_wrap_x  = qMax( qMax( abs(dx_wrap), abs(dy_norm) ), abs( dy_norm + dx_wrap ) );
+        int dist_wrap_y  = qMax( qMax( abs(dx_norm), abs(dy_wrap) ), abs( dy_wrap + dx_norm ) );
+        int dist_wrap_xy = qMax( qMax( abs(dx_wrap), abs(dy_wrap) ), abs( dy_wrap + dx_wrap ) );
+
+        /*
+        std::cout << "dx_norm=" << dx_norm << std::endl;
+        std::cout << "dy_norm=" << dy_norm << std::endl;
+
+        std::cout << "dx_wrap=" << dx_norm << std::endl;
+        std::cout << "dy_wrap=" << dy_wrap << std::endl;
+
+        std::cout << "dist_norm_xy=" << dist_norm_xy << std::endl;
+        std::cout << "dist_wrap_x="  << dist_wrap_x  << std::endl;
+        std::cout << "dist_wrap_y="  << dist_wrap_y << std::endl;
+        std::cout << "dist_wrap_xy=" << dist_wrap_xy << std::endl;
+        */
+
+        int distance = qMin( qMin( qMin( dist_norm_xy, dist_wrap_x ), dist_wrap_y ), dist_wrap_xy );
+
+        return distance;
     }
 
 

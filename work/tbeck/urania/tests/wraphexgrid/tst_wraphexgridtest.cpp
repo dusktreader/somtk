@@ -28,14 +28,14 @@ WrapHexGridTest::WrapHexGridTest()
 
 void WrapHexGridTest::distanceTest()
 {
-    FastHexGrid<int> grid( 5 );
+    WrapHexGrid<int> grid( 6 );
 
     int targetDistance, actualDistance;
     int idx0, idx1;
 
-    targetDistance = 1;
+    targetDistance = 3;
     idx0 = 0;
-    idx1 = 24;
+    idx1 = 3;
     actualDistance = grid.distance( idx0, idx1 );
     QVERIFY2( targetDistance == actualDistance,
               QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
@@ -48,7 +48,59 @@ void WrapHexGridTest::distanceTest()
 
     targetDistance = 3;
     idx0 = 0;
-    idx1 = 8;
+    idx1 = 18;
+    actualDistance = grid.distance( idx0, idx1 );
+    QVERIFY2( targetDistance == actualDistance,
+              QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
+              .arg( idx0 )
+              .arg( idx1 )
+              .arg( targetDistance )
+              .arg( actualDistance )
+              .toAscii()
+              );
+
+    targetDistance = 4;
+    idx0 = 7;
+    idx1 = 21;
+    actualDistance = grid.distance( idx0, idx1 );
+    QVERIFY2( targetDistance == actualDistance,
+              QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
+              .arg( idx0 )
+              .arg( idx1 )
+              .arg( targetDistance )
+              .arg( actualDistance )
+              .toAscii()
+              );
+
+    targetDistance = 3;
+    idx0 = 9;
+    idx1 = 26;
+    actualDistance = grid.distance( idx0, idx1 );
+    QVERIFY2( targetDistance == actualDistance,
+              QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
+              .arg( idx0 )
+              .arg( idx1 )
+              .arg( targetDistance )
+              .arg( actualDistance )
+              .toAscii()
+              );
+
+    targetDistance = 3;
+    idx0 = 10;
+    idx1 = 31;
+    actualDistance = grid.distance( idx0, idx1 );
+    QVERIFY2( targetDistance == actualDistance,
+              QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
+              .arg( idx0 )
+              .arg( idx1 )
+              .arg( targetDistance )
+              .arg( actualDistance )
+              .toAscii()
+              );
+
+    targetDistance = 3;
+    idx0 = 25;
+    idx1 = 10;
     actualDistance = grid.distance( idx0, idx1 );
     QVERIFY2( targetDistance == actualDistance,
               QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
@@ -60,8 +112,21 @@ void WrapHexGridTest::distanceTest()
               );
 
     targetDistance = 2;
-    idx0 = 19;
-    idx1 = 6;
+    idx0 = 35;
+    idx1 = 0;
+    actualDistance = grid.distance( idx0, idx1 );
+    QVERIFY2( targetDistance == actualDistance,
+              QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
+              .arg( idx0 )
+              .arg( idx1 )
+              .arg( targetDistance )
+              .arg( actualDistance )
+              .toAscii()
+              );
+
+    targetDistance = 4;
+    idx0 = 25;
+    idx1 = 3;
     actualDistance = grid.distance( idx0, idx1 );
     QVERIFY2( targetDistance == actualDistance,
               QString( "Distance incorrect: dist( %1, %2 ) should be %3, was %4")
@@ -76,7 +141,7 @@ void WrapHexGridTest::distanceTest()
 
 void WrapHexGridTest::neighborhoodTest()
 {
-    FastHexGrid<int> grid( 4 );
+    WrapHexGrid<int> grid( 4 );
     QVector< QPair<int, int> > neighborhood;
     QSet<int> testNeighborhoodIndices;
     QSet<int> trueNeighborhoodIndices;

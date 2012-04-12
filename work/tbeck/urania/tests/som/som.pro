@@ -23,6 +23,7 @@ HEADERS +=                                       \
     $$URANIA_ROOT/grids/quadgrid.hpp             \
     $$URANIA_ROOT/grids/hexgrid.hpp              \
     $$URANIA_ROOT/grids/fasthexgrid.hpp          \
+    $$URANIA_ROOT/grids/wraphexgrid.hpp          \
     $$URANIA_ROOT/feature.h                      \
     $$URANIA_ROOT/normalizers/normalizer.h       \
     $$URANIA_ROOT/normalizers/nullnormalizer.h   \

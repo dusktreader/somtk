@@ -5,6 +5,7 @@
 #include "grids/grid.hpp"
 #include "errors/somerror.h"
 
+#include <iostream>
 
 namespace hsom {
 
@@ -134,21 +135,21 @@ public:
 
     virtual QVector<double> realBounds()
     {
-        QVector<double> bounds( 2 );
-        bounds << 2 * this->s() * 0.5;
-        bounds << 2 * this->s() * HG_B;
+        QVector<double> bounds;
+        bounds << this->s() + this->s() / 2.0;
+        bounds << this->s() * HG_B;
         return bounds;
     }
 
     virtual QVector<double> realCoords( int idx )
     {
-        double offset = HG_B * this->s();
         QVector<int> coords = this->coords( idx );
         int x = coords[0];
         int y = coords[1];
+
         QVector<double> realCoords( 2 );
-        realCoords[0] = ( y + x ) *  0.5 + offset;
-        realCoords[1] = ( y - x ) * HG_B;
+        realCoords[0] = x + 0.5 * y;
+        realCoords[1] = y * HG_B;
         return realCoords;
     }
 
@@ -171,7 +172,7 @@ public:
         int dx = x1 - x0;
         int dy = y1 - y0;
 
-        int distance = std::max( std::max( abs(dx), abs(dy) ), abs( dy - dx ) );
+        int distance = std::max( std::max( abs(dx), abs(dy) ), abs( dy + dx ) );
 
         return distance;
     }

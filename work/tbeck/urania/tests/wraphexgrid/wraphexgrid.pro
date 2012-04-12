@@ -20,6 +20,7 @@ INCLUDEPATH += $$URANIA_ROOT
 HEADERS +=                                       \
     $$URANIA_ROOT/grids/grid.hpp                 \
     $$URANIA_ROOT/grids/wraphexgrid.hpp          \
+    $$URANIA_ROOT/grids/fasthexgrid.hpp          \
     $$URANIA_ROOT/feature.h                      \
     $$URANIA_ROOT/tools/utilities.hpp            \
     $$URANIA_ROOT/tools/localassert.h            \
