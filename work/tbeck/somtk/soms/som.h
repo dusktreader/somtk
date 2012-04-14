@@ -13,7 +13,7 @@
 #include "tools/localassert.h"
 #include "tools/convert.hpp"
 
-#include "feature.h"
+#include "features/feature.h"
 #include "grids/grid.hpp"
 #include "errors/somerror.h"
 #include "normalizers/normalizer.h"
@@ -29,13 +29,15 @@
 
 namespace somtk {
 
+typedef QSharedPointer< Grid<FeaturePtr> > FeatureGrid;
+
 class SOM
 {
 
 private:
 
     /// The grid of features that represents the internal state of the SOMs
-    Grid<FeaturePtr>& _grid;
+    FeatureGrid _grid;
 
     /// The number of training epochs to use
     int maxEpochs;
@@ -89,7 +91,7 @@ public:
 
     /// Constructs an SOM with a specific size
     SOM(
-        Grid<FeaturePtr>& _grid ///< The grid of features that the SOM will use internally
+        FeatureGrid _grid ///< The grid of features that the SOM will use internally
         );
 
     /// Destructs this SOM
@@ -125,7 +127,7 @@ public:
         );
 
     /// Fetches the underlying grid of features from the SOM
-    Grid<FeaturePtr>& grid();
+    FeatureGrid grid();
 
     /// Dumps the features from this SOM out to a regular vector
     QVector<Feature> dumpFeatures();
@@ -133,4 +135,4 @@ public:
 
 typedef QSharedPointer<SOM> SOMPtr;
 
-} // namespace hsom
+} // namespace

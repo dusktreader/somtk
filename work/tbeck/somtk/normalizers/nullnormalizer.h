@@ -13,7 +13,7 @@ class NullNormalizer : public Normalizer
 protected:
 
     /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<FeaturePtr>, QMap<QString, QVariant> );
+    virtual void calculateNormalizer( QVector<DVectorPtr>, QMap<QString, QVariant> );
 
 
 
@@ -27,12 +27,12 @@ public:
     virtual void clear();
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( FeaturePtr );
+    virtual void normalize( DVectorPtr );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( FeaturePtr feature );
+    virtual void setFeature( DVectorPtr vector );
 };
 
 typedef QSharedPointer<NullNormalizer> NullNormalizerPtr;
 
-} // namespace hsom
+} // namespace

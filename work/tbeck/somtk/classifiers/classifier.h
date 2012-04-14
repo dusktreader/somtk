@@ -11,7 +11,7 @@
 #include "suspect.h"
 #include "persist.h"
 
-namespace hsom {
+namespace somtk {
 
 class Classifier : PersistXML
 {
@@ -79,4 +79,4 @@ public:
 
 typedef QSharedPointer<Classifier> ClassifierPtr;
 
-} // namespace hsom
+} // namespace

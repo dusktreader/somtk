@@ -241,4 +241,4 @@ public:
 
 };
 
-} // namespace hsom
+} // namespace

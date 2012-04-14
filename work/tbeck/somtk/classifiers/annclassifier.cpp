@@ -1,6 +1,6 @@
 #include "annclassifier.h"
 
-namespace hsom {
+namespace somtk {
 
 ANNClassifier::ANNClassifier( QString fileName ) :
     ann( NULL ),
@@ -162,4 +162,4 @@ void ANNClassifier::classify( SuspectPtr suspect )
     suspect->setClassification( classification );
 }
 
-} // namespace hsom
+} // namespace

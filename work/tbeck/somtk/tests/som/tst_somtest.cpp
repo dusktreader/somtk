@@ -3,7 +3,7 @@
 #include <QImage>
 #include <QPainter>
 
-#include "som.h"
+#include "soms/som.h"
 #include "normalizers/nullnormalizer.h"
 #include "grids/quadgrid.hpp"
 #include "grids/hexgrid.hpp"
@@ -28,10 +28,7 @@ private Q_SLOTS:
     void visualTest();
 };
 
-SomTest::SomTest()
-{
-    cout << "creating test" << endl;
-}
+SomTest::SomTest(){}
 
 QColor render( FeaturePtr feature )
 {
@@ -44,12 +41,11 @@ QColor render( FeaturePtr feature )
 
 void SomTest::visualTest()
 {
-    cout << "visualTest" << endl;
     NormalizerPtr normalizer( new NullNormalizer() );
 
     QVector<int> size;
     size << 24 << 24;
-    QuadGrid<FeaturePtr> grid( size );
+    FeatureGrid grid( new QuadGrid<FeaturePtr>( size ) );
     SOMPtr som( new SOM( grid ) );
     RandMaster rnd;
 
@@ -74,11 +70,11 @@ void SomTest::visualTest()
     somParameters["initialRadiusRatio"] = 0.4999;
 
     som->initializeTraining( somParameters, normalizer, inputFeatures.front()->size() );
-    grid.visualize( 10, &render ).save( "initialGrid.png" );
+    som->grid()->visualize( 10, &render ).save( "initialGrid.png" );
 
     som->train( inputFeatures, normalizer, somParameters, true );
 
-    grid.visualize( 10, &render ).save( "finalGrid.png" );
+    som->grid()->visualize( 10, &render ).save( "finalGrid.png" );
 
     QVERIFY2(true, "Failure");
 }

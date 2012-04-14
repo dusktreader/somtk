@@ -181,5 +181,5 @@ public:
 
 };
 
-} // namespace hsom
+} // namespace
 

@@ -1,14 +1,17 @@
 #pragma once
 
+#include <QVector>
 #include <QMap>
 #include <QString>
 #include <QVariant>
 #include <QSharedPointer>
 
 #include "tools/randmaster.h"
-#include "feature.h"
 
 namespace somtk {
+
+typedef QVector<double> DVector;
+typedef QSharedPointer<DVector> DVectorPtr;
 
 /// @todo  Document Classes and files
 class Normalizer
@@ -37,7 +40,7 @@ protected:
       * @note  This function is called by calculate() in this base class.  It should never be called explicitly.
       */
     virtual void calculateNormalizer(
-            QVector<FeaturePtr> features,               ///< A sample of features for which to compute the normalization
+            QVector<DVectorPtr> vectors ,               ///< A sample of vectors for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
             ) = 0;
 
@@ -53,7 +56,7 @@ public:
       *         never be called explicitly.
       */
     void calculate(
-            QVector<FeaturePtr> features,               ///< A sample of features for which to compute the normalization
+            QVector<DVectorPtr> vectors,                ///< A sample of vectors for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
             );
 
@@ -65,13 +68,13 @@ public:
     virtual void clear() = 0;
 
     /// Normalizes a single feature
-    virtual void normalize( FeaturePtr feature ) = 0;
+    virtual void normalize( DVectorPtr vector ) = 0;
 
     /// Sets a features values based upon calculated normalization
-    virtual void setFeature( FeaturePtr feature ) = 0;
+    virtual void setFeature( DVectorPtr vector ) = 0;
 
 };
 
 typedef QSharedPointer<Normalizer> NormalizerPtr;
 
-} // namespace hsom
+} // namespace

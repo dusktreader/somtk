@@ -2,7 +2,7 @@
 
 namespace somtk {
 
-SOM::SOM( Grid<FeaturePtr>& grid ) : _grid( grid ){}
+SOM::SOM( FeatureGrid grid ) : _grid( grid ){}
 
 SOM::~SOM(){}
 
@@ -36,7 +36,7 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
     alpha_Nf = 0.25;   // This is a tuning factor...should not be hardcoded
     alpha_gamma = -log( alpha_Nf ) / ( alpha_tf * maxEpochs );
 
-    initialRadius = initialRadiusRatio * _grid.diagonal();
+    initialRadius = initialRadiusRatio * _grid->diagonal();
     radius_tf = 0.25;   // This is a tuning factor...should not be hardcoded
     radius_Nf = 0.50;   // This is a tuning factor...should not be hardcoded
     radius_gamma = -log( radius_Nf ) / ( radius_tf * maxEpochs );
@@ -44,11 +44,11 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
     currentEpoch = -1;
     nextEpoch();
 
-    for( int i=0; i<_grid.capacity(); i++ )
+    for( int i=0; i<_grid->capacity(); i++ )
     {
         FeaturePtr newFeature( new Feature( featureSize ) );
         normalizer->setFeature( newFeature );
-        _grid[i] = newFeature;
+        _grid->item(i) = newFeature;
     }
 }
 
@@ -109,10 +109,10 @@ int SOM::closestFeature( FeaturePtr feature )
     #pragma omp parallel firstprivate( localMinimumDistance, localMinimumIndex )
     {
         #pragma omp for
-        for( int i = 0; i < _grid.capacity(); i++ )
+        for( int i = 0; i < _grid->capacity(); i++ )
         {
             // Calculate the distance between the input feature and the map feature at index i
-            double distance = f.distance( _grid[i] );
+            double distance = f.distance( _grid->item(i) );
 
             if( distance  < localMinimumDistance )
             {
@@ -142,7 +142,7 @@ int SOM::closestFeature( FeaturePtr feature )
 void SOM::update( FeaturePtr feature )
 {
     // Find the neighborhood in the SOM that of the feature that is the closest to the input feature
-    QVector< QPair<int, int> > neighbors = _grid.neighborhood( weights.size(), closestFeature( feature ));
+    QVector< QPair<int, int> > neighbors = _grid->neighborhood( weights.size(), closestFeature( feature ));
 
     // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
     #pragma omp parallel for
@@ -150,7 +150,7 @@ void SOM::update( FeaturePtr feature )
     {
         int index     = neighbors[i].first;
         int distance  = neighbors[i].second;
-        _grid[index]->adjust( feature, weights[ distance ] );
+        _grid->item(index)->adjust( feature, weights[ distance ] );
     }
 }
 
@@ -177,9 +177,9 @@ void SOM::train( QVector<FeaturePtr> features, NormalizerPtr normalizer, QMap<QS
 
 }
 
-Grid<FeaturePtr>& SOM::grid()
+FeatureGrid SOM::grid()
 {
     return _grid;
 }
 
-} // namespace hsom
+} // namespace

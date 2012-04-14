@@ -1,6 +1,6 @@
 #include "classifier.h"
 
-namespace hsom {
+namespace somtk {
 
 Classifier::Classifier() :
     _isTrained( false )
@@ -45,4 +45,4 @@ void Classifier::writeData( QDomElement& element )
     writeClassifierData( element );
 }
 
-} // namespace hsom
+} // namespace

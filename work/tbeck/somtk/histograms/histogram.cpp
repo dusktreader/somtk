@@ -2,40 +2,23 @@
 
 namespace somtk {
 
-Histogram::Histogram() :
-    HexGrid()
-{}
+Histogram::Histogram( Grid&<double> grid ) : _grid( grid ){}
 
-Histogram::Histogram( QSize size ) :
-    HexGrid( size )
-{}
-
-Histogram::~Histogram()
-{}
+virtual Histogram::~Histogram(){}
 
 double Histogram::bin( int idx )
 {
-    return grid[idx];
-}
-
-double Histogram::bin( QPoint point )
-{
-    return grid[point];
+    return _grid[idx];
 }
 
 void Histogram::reset()
 {
-    setTo( 0.0 );
-}
-
-void Histogram::increment( QPoint point )
-{
-    grid[point]++;
+    _grid.setTo( 0.0 );
 }
 
 void Histogram::increment( int idx )
 {
-    grid[idx]++;
+    _grid[idx]++;
 }
 
 void Histogram::normalize()
@@ -52,4 +35,4 @@ void Histogram::normalize()
         bin( i ) = ( bin( i ) - minVal ) / maxVal;
 }
 
-}
+} // namespace

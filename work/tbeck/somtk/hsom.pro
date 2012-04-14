@@ -4,8 +4,6 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
-
 QT       += gui
 
 TARGET = tst_somtest
@@ -14,19 +12,21 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-SOMTK_ROOT = $$PWD/../..
+SOMTK_ROOT = $$PWD
 INCLUDEPATH += $$SOMTK_ROOT
 
 include( $$SOMTK_ROOT/soms/soms.pri )
+include( $$SOMTK_ROOT/suspects/suspects.pri )
+include( $$SOMTK_ROOT/normalizers/nomralizers.pri )
+include( $$SOMTK_ROOT/classifiers/classifiers.pri )
+include( $$SOMTK_ROOT/histograms/histograms.pri )
 
-HEADERS +=                             \
-    $$SOMTK_ROOT/tools/randmaster.h    \
-    $$SOMTK_ROOT/tools/localassert.h   \
+HEADERS += \
+    hsom.h \
 
-SOURCES +=                             \
-    $$SOMTK_ROOT/tools/randmaster.cpp  \
-    $$SOMTK_ROOT/tools/localassert.cpp \
-    tst_somtest.cpp                    \
+SOURCES +=   \
+    hsom.cpp \
+    main.cpp \
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

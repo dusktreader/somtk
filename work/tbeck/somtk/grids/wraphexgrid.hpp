@@ -94,19 +94,6 @@ public:
         int dist_wrap_y  = qMax( qMax( abs(dx_norm), abs(dy_wrap) ), abs( dy_wrap + dx_norm ) );
         int dist_wrap_xy = qMax( qMax( abs(dx_wrap), abs(dy_wrap) ), abs( dy_wrap + dx_wrap ) );
 
-        /*
-        std::cout << "dx_norm=" << dx_norm << std::endl;
-        std::cout << "dy_norm=" << dy_norm << std::endl;
-
-        std::cout << "dx_wrap=" << dx_norm << std::endl;
-        std::cout << "dy_wrap=" << dy_wrap << std::endl;
-
-        std::cout << "dist_norm_xy=" << dist_norm_xy << std::endl;
-        std::cout << "dist_wrap_x="  << dist_wrap_x  << std::endl;
-        std::cout << "dist_wrap_y="  << dist_wrap_y << std::endl;
-        std::cout << "dist_wrap_xy=" << dist_wrap_xy << std::endl;
-        */
-
         int distance = qMin( qMin( qMin( dist_norm_xy, dist_wrap_x ), dist_wrap_y ), dist_wrap_xy );
 
         return distance;
@@ -116,5 +103,5 @@ public:
 
 };
 
-} // namespace hsom
+} // namespace
 

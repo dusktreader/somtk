@@ -5,11 +5,11 @@
 
 #include <algorithm>
 
-#include "som.h"
-#include "/normalizers/normalizer.h"
-#include "/suspects/suspect.h"
-#include "/errors/somerror.h"
-#include "/classifiers/classifier.h"
+#include "soms/som.h"
+#include "normalizers/normalizer.h"
+#include "suspects/suspect.h"
+#include "errors/somerror.h"
+#include "classifiers/classifier.h"
 
 namespace somtk {
 

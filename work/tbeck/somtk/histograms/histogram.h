@@ -4,21 +4,23 @@
 
 #include "opencv2/core/core.hpp"
 
-#include "grids/hexgrid.hpp"
+#include "grids/grid.hpp"
 
 namespace somtk {
 
 class Histogram : public HexGrid<double>
 {
 
+protected:
+
+    /// The grid that this Histogram operates over
+    Grid<double>& _grid;
+
 public:
 
-    /// Constructs a Histogram with default values
-    Histogram();
-
-    /// Constructs the Histogram with specified size
+    /// Constructs the Histogram with a supplied grid
     Histogram(
-        QSize size ///< The desired size of the histogram
+        Grid<double>& grid ///< The grid that this Histogram will use
         );
 
     /// Destructs the Histogram
@@ -59,4 +61,4 @@ public:
 
 typedef QSharedPointer<Histogram> HistogramPtr;
 
-} // namespace hsom
+} // namespace

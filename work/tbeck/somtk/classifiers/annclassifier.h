@@ -5,7 +5,7 @@
 
 #include "classifier.h"
 
-namespace hsom {
+namespace somtk {
 
 class ANNClassifier : public Classifier
 {
@@ -45,4 +45,4 @@ public:
 
 typedef QSharedPointer<ANNClassifier> ANNClassifierPtr;
 
-} // namespace hsom
+} // namespace

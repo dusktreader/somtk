@@ -47,4 +47,4 @@ void Feature::adjust( FeaturePtr other, double scaleFactor )
     adjust( *this, *other.data(), scaleFactor );
 }
 
-} // namespace hsom
+} // namespace

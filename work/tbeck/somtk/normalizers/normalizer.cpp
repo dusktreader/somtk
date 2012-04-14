@@ -8,11 +8,11 @@ Normalizer::Normalizer() :
 
 
 
-void Normalizer::calculate( QVector<FeaturePtr> features, QMap<QString, QVariant> calculationParameters )
+void Normalizer::calculate( QVector< QSharedPointer< QVector<double> > > vectors, QMap<QString, QVariant> calculationParameters )
 {
     _calculationParameters = calculationParameters;
-    calculateNormalizer( features, calculationParameters );
+    calculateNormalizer( vectors, calculationParameters );
     _isCalculated = true;
 }
 
-} // namespace hsom
+} // namespace

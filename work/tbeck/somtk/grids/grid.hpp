@@ -250,4 +250,4 @@ public:
     virtual QVector<double> realCoords( int idx ) = 0;
 };
 
-} // namespace hsom
+} // namespace
