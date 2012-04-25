@@ -5,6 +5,7 @@
 
 #include "soms/som.h"
 #include "normalizers/nullnormalizer.h"
+#include "normalizers/sigmoidnormalizer.h"
 #include "grids/quadgrid.hpp"
 #include "grids/hexgrid.hpp"
 #include "grids/fasthexgrid.hpp"
@@ -41,7 +42,7 @@ QColor render( FeaturePtr feature )
 
 void SomTest::visualTest()
 {
-    NormalizerPtr normalizer( new NullNormalizer() );
+    NormalizerPtr normalizer( new SigmoidNormalizer() );
 
     QVector<int> size;
     size << 24 << 24;
@@ -55,14 +56,20 @@ void SomTest::visualTest()
     {
         FeaturePtr feature( new Feature( 3 ) );
         Feature& f = *feature.data();
-        double r = rnd.randd();
-        double g = rnd.randd();
-        double b = rnd.randd();
+        double r = rnd.randd(-100.0, 100.0);
+        double g = rnd.randd(10000.0,20000.0);
+        double b = rnd.randd(0.001, 0.002);
         f[0] = r;
         f[1] = g;
         f[2] = b;
         inputFeatures.append( feature );
     }
+
+    QMap<QString, QVariant> normalizerParameters;
+    normalizerParameters["epsilon"] = 0.125;
+    normalizerParameters["sigmaStep"] = 3;
+    normalizer->calculate( inputFeatures, normalizerParameters );
+    normalizer->normalize( inputFeatures );
 
     QMap<QString, QVariant> somParameters;
     somParameters["maxEpochs"] = 40;

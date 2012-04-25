@@ -6,7 +6,7 @@ MinMaxNormalizer::MinMaxNormalizer() : Normalizer(){}
 
 
 
-void MinMaxNormalizer::calculateNormalizer( QVector<DVectorPtr> vectors, QMap<QString, QVariant> normalizerParameters )
+void MinMaxNormalizer::calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters )
 {
     bool ok = true;
 
@@ -19,15 +19,15 @@ void MinMaxNormalizer::calculateNormalizer( QVector<DVectorPtr> vectors, QMap<QS
     ASSERT_MSG( ok, "Couldn't convert low limit parameter" );
     ASSERT_MSG( loLimit < hiLimit, "Low limit must be less than high limit" );
 
-    int vectorSize = vectors.first()->size();
+    int featureSize = features.first()->size();
 
-    los = QVector<double>( vectorSize, DBL_MAX );
-    his = QVector<double>( vectorSize, DBL_MIN );
+    los = QVector<double>( featureSize, DBL_MAX );
+    his = QVector<double>( featureSize, DBL_MIN );
 
-    foreach( DVectorPtr vector, vectors )
+    foreach( FeaturePtr feature, features )
     {
-        QVector<double>& v = *vector.data();
-        for( int i = 0; i < vectorSize; i++ )
+        QVector<double>& v = *feature.data();
+        for( int i = 0; i < featureSize; i++ )
         {
             los[i] = qMin( v[i], los[i] );
             his[i] = qMax( v[i], his[i] );
@@ -37,9 +37,9 @@ void MinMaxNormalizer::calculateNormalizer( QVector<DVectorPtr> vectors, QMap<QS
 
 
 
-void MinMaxNormalizer::normalize( DVectorPtr vector )
+void MinMaxNormalizer::normalize( FeaturePtr feature )
 {
-    QVector<double>& v = *vector.data();
+    QVector<double>& v = *feature.data();
     for( int i = 0; i < v.size(); i++ )
     {
         v[i] = qMin( v[i], his[i] );
@@ -50,9 +50,9 @@ void MinMaxNormalizer::normalize( DVectorPtr vector )
 
 
 
-void MinMaxNormalizer::setFeature( DVectorPtr vector )
+void MinMaxNormalizer::setFeature( FeaturePtr feature )
 {
-    QVector<double>& v = *vector.data();
+    QVector<double>& v = *feature.data();
     for( int i = 0; i < v.size(); i++ )
         v[i] = randomizer.randd( loLimit, hiLimit );
 }

@@ -4,15 +4,13 @@ namespace somtk {
 
 NullNormalizer::NullNormalizer() : Normalizer(){}
 
-void NullNormalizer::calculateNormalizer( QVector<DVectorPtr>, QMap<QString, QVariant> ){}
+void NullNormalizer::calculateNormalizer( QVector<FeaturePtr>, QMap<QString, QVariant> ){}
 
-void NullNormalizer::clear(){}
+void NullNormalizer::normalize( FeaturePtr ){}
 
-void NullNormalizer::normalize( DVectorPtr ){}
-
-void NullNormalizer::setFeature( DVectorPtr vector )
+void NullNormalizer::setFeature( FeaturePtr feature )
 {
-    QVector<double>& v = *vector.data();
+    QVector<double>& v = *feature.data();
     for( int i=0; i<v.size(); i++ )
         v[i] = randomizer.randd();
 }

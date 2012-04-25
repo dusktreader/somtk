@@ -5,7 +5,7 @@ namespace somtk {
 SigmoidNormalizer::SigmoidNormalizer() : Normalizer(){}
 
 
-void SigmoidNormalizer::calculateNormalizer( QVector<DVectorPtr> vectors,
+void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features,
                                              QMap<QString, QVariant> normalizerParameters )
 {
     bool ok = true;
@@ -21,45 +21,45 @@ void SigmoidNormalizer::calculateNormalizer( QVector<DVectorPtr> vectors,
     ASSERT_MSG( ok, "Couldn't convert sigma step" );
     ASSERT_MSG( sigmaStep > 0, "Sigma step must be greater than 0" );
 
-    int vectorSize = vectors.first()->size();
-    int vectorCount = vectors.size();
+    int featureSize  = features.first()->size();
+    int featureCount = features.size();
 
-    normMean  = QVector<double>( vectorSize, 0.0 );
-    normStdv  = QVector<double>( vectorSize, 0.0 );
-    normAlpha = QVector<double>( vectorSize, 0.0 );
+    normMean  = QVector<double>( featureSize, 0.0 );
+    normStdv  = QVector<double>( featureSize, 0.0 );
+    normAlpha = QVector<double>( featureSize, 0.0 );
 
-    foreach( DVectorPtr vector, vectors )
+    foreach( FeaturePtr feature, features )
     {
-        QVector<double>& f = *vector.data();
-        for( int i = 0; i < vectorSize; i++ )
+        QVector<double>& f = *feature.data();
+        for( int i = 0; i < featureSize; i++ )
         {
             double t = f[i] - normMean[i];
-            normMean[i] += t / vectorCount;
+            normMean[i] += t / featureCount;
             normStdv[i] += t * ( f[i] - normMean[i] );
         }
     }
 
-    for( int i = 0; i < vectorSize; i++ )
+    for( int i = 0; i < featureSize; i++ )
     {
-        normStdv[i] = sqrt( normStdv[i] / ( vectors.size() - 1 ) );
+        normStdv[i] = sqrt( normStdv[i] / ( features.size() - 1 ) );
         normAlpha[i] = log( 1 / epsilon - 1 ) / ( sigmaStep * normStdv[i] );
     }
 }
 
 
 
-void SigmoidNormalizer::normalize( DVectorPtr vector )
+void SigmoidNormalizer::normalize( FeaturePtr feature )
 {
-    QVector<double>& v = *vector.data();
+    QVector<double>& v = *feature.data();
     for( int i = 0; i < v.size(); i++ )
         v[i] = 1 / ( 1 + exp( -normAlpha[i] * ( v[i] - normMean[i] ) ) );
 }
 
 
 
-void SigmoidNormalizer::setFeature( DVectorPtr vector )
+void SigmoidNormalizer::setFeature( FeaturePtr feature )
 {
-    QVector<double>& v = *vector.data();
+    QVector<double>& v = *feature.data();
     for( int i = 0; i < v.size(); i++ )
         v[i] = randomizer.randg( normMean[i], normStdv[i] );
 }

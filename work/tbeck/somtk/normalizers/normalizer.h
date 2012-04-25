@@ -7,11 +7,9 @@
 #include <QSharedPointer>
 
 #include "tools/randmaster.h"
+#include "features/feature.h"
 
 namespace somtk {
-
-typedef QVector<double> DVector;
-typedef QSharedPointer<DVector> DVectorPtr;
 
 /// @todo  Document Classes and files
 class Normalizer
@@ -40,7 +38,7 @@ protected:
       * @note  This function is called by calculate() in this base class.  It should never be called explicitly.
       */
     virtual void calculateNormalizer(
-            QVector<DVectorPtr> vectors ,               ///< A sample of vectors for which to compute the normalization
+            QVector<FeaturePtr> features,               ///< A sample of vectors for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
             ) = 0;
 
@@ -56,22 +54,26 @@ public:
       *         never be called explicitly.
       */
     void calculate(
-            QVector<DVectorPtr> vectors,                ///< A sample of vectors for which to compute the normalization
+            QVector<FeaturePtr> features,               ///< A sample of vectors for which to compute the normalization
             QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
+            );
+
+    /** @brief Normalizes a vector of features
+      * @note  This function calls the virtual normalize function on each feature in the vector.
+      */
+    void normalize(
+            QVector<FeaturePtr> features ///< A sample of vectors for which to compute the normalization
             );
 
 
 
     // The Normalizer API
 
-    /// Clears the normalizer
-    virtual void clear() = 0;
-
     /// Normalizes a single feature
-    virtual void normalize( DVectorPtr vector ) = 0;
+    virtual void normalize( FeaturePtr vector ) = 0;
 
     /// Sets a features values based upon calculated normalization
-    virtual void setFeature( DVectorPtr vector ) = 0;
+    virtual void setFeature( FeaturePtr vector ) = 0;
 
 };
 

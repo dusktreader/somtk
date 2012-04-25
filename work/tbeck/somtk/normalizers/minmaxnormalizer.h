@@ -34,7 +34,7 @@ private:
 protected:
 
     /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<DVectorPtr> vectors, QMap<QString, QVariant> nomalizerParameters );
+    virtual void calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> nomalizerParameters );
 
 
 
@@ -47,10 +47,10 @@ public:
     // The Normalizer API
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( DVectorPtr vectors );
+    virtual void normalize( FeaturePtr vectors );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( DVectorPtr vectors );
+    virtual void setFeature( FeaturePtr vectors );
 };
 
 } // namespace

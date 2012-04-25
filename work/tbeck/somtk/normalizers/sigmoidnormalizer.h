@@ -41,7 +41,7 @@ private:
 protected:
 
     /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<DVectorPtr> vectors, QMap<QString, QVariant> normalizerParameters );
+    virtual void calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters );
 
 
 
@@ -52,10 +52,10 @@ public:
     // The Normalizer API
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( DVectorPtr vector );
+    virtual void normalize( FeaturePtr vector );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( DVectorPtr vector );
+    virtual void setFeature( FeaturePtr vector );
 };
 
 typedef QSharedPointer<SigmoidNormalizer> SigmoidNormalizerPtr;
