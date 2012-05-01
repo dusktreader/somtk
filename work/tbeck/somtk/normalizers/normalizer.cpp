@@ -11,7 +11,7 @@ Normalizer::Normalizer() :
 void Normalizer::calculate( QVector<FeaturePtr> features, QMap<QString, QVariant> calculationParameters )
 {
     _calculationParameters = calculationParameters;
-    calculateNormalizer( features, calculationParameters );
+    calculateNormalizer( features );
     _isCalculated = true;
 }
 

@@ -41,7 +41,7 @@ private:
 protected:
 
     /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters );
+    virtual void calculateNormalizer( QVector<FeaturePtr> features );
 
 
 

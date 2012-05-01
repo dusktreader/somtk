@@ -6,16 +6,16 @@ MinMaxNormalizer::MinMaxNormalizer() : Normalizer(){}
 
 
 
-void MinMaxNormalizer::calculateNormalizer( QVector<FeaturePtr> features, QMap<QString, QVariant> normalizerParameters )
+void MinMaxNormalizer::calculateNormalizer( QVector<FeaturePtr> features )
 {
     bool ok = true;
 
-    ASSERT_MSG( normalizerParameters.contains( "HiLimit" ), "Normalizer parameters do not include a high value limit" );
-    hiLimit = normalizerParameters[ "HiLimit" ].toDouble( &ok );
+    ASSERT_MSG( _calculationParameters.contains( "HiLimit" ), "Normalizer parameters do not include a high value limit" );
+    hiLimit = _calculationParameters[ "HiLimit" ].toDouble( &ok );
     ASSERT_MSG( ok, "Couldn't convert high limit parameter" );
 
-    ASSERT_MSG( normalizerParameters.contains( "LoLimit" ), "Normalizer parameters do not include a low value limit" );
-    loLimit = normalizerParameters[ "LoLimit" ].toDouble( &ok );
+    ASSERT_MSG( _calculationParameters.contains( "LoLimit" ), "Normalizer parameters do not include a low value limit" );
+    loLimit = _calculationParameters[ "LoLimit" ].toDouble( &ok );
     ASSERT_MSG( ok, "Couldn't convert low limit parameter" );
     ASSERT_MSG( loLimit < hiLimit, "Low limit must be less than high limit" );
 

@@ -5,6 +5,7 @@
 
 #include "soms/som.h"
 #include "normalizers/nullnormalizer.h"
+#include "normalizers/minmaxnormalizer.h"
 #include "normalizers/sigmoidnormalizer.h"
 #include "grids/quadgrid.hpp"
 #include "grids/hexgrid.hpp"
@@ -42,7 +43,6 @@ QColor render( FeaturePtr feature )
 
 void SomTest::visualTest()
 {
-    NormalizerPtr normalizer( new SigmoidNormalizer() );
 
     QVector<int> size;
     size << 24 << 24;
@@ -66,8 +66,13 @@ void SomTest::visualTest()
     }
 
     QMap<QString, QVariant> normalizerParameters;
-    normalizerParameters["epsilon"] = 0.125;
-    normalizerParameters["sigmaStep"] = 3;
+    //normalizerParameters["HiLimit"] = 1.0;
+    //normalizerParameters["LoLimit"] = 0.0;
+    //NormalizerPtr normalizer( new MinMaxNormalizer() );
+    normalizerParameters["epsilon"] = 0.0625;
+    normalizerParameters["sigmaStep"] = 2;
+    NormalizerPtr normalizer( new SigmoidNormalizer() );
+
     normalizer->calculate( inputFeatures, normalizerParameters );
     normalizer->normalize( inputFeatures );
 

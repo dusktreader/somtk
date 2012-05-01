@@ -4,7 +4,7 @@ namespace somtk {
 
 NullNormalizer::NullNormalizer() : Normalizer(){}
 
-void NullNormalizer::calculateNormalizer( QVector<FeaturePtr>, QMap<QString, QVariant> ){}
+void NullNormalizer::calculateNormalizer( QVector<FeaturePtr> ){}
 
 void NullNormalizer::normalize( FeaturePtr ){}
 

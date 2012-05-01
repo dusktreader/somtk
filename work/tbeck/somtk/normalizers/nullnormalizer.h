@@ -13,7 +13,7 @@ class NullNormalizer : public Normalizer
 protected:
 
     /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<FeaturePtr>, QMap<QString, QVariant> );
+    virtual void calculateNormalizer( QVector<FeaturePtr> );
 
 
 

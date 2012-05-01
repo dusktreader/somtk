@@ -38,8 +38,7 @@ protected:
       * @note  This function is called by calculate() in this base class.  It should never be called explicitly.
       */
     virtual void calculateNormalizer(
-            QVector<FeaturePtr> features,               ///< A sample of vectors for which to compute the normalization
-            QMap<QString, QVariant> nomalizerParameters ///< The tuning parameters used to compute the normalization
+            QVector<FeaturePtr> features ///< A sample of vectors for which to compute the normalization
             ) = 0;
 
 

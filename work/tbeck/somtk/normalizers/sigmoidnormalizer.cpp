@@ -5,25 +5,25 @@ namespace somtk {
 SigmoidNormalizer::SigmoidNormalizer() : Normalizer(){}
 
 
-void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features,
-                                             QMap<QString, QVariant> normalizerParameters )
+void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features )
 {
     bool ok = true;
 
-    ASSERT_MSG( normalizerParameters.contains( "epsilon" ), "Normalizer parameters do not contain an epsilon" );
-    epsilon = normalizerParameters["epsilon"].toDouble( &ok );
+    ASSERT_MSG( _calculationParameters.contains( "epsilon" ), "Normalizer parameters do not contain an epsilon" );
+    epsilon = _calculationParameters["epsilon"].toDouble( &ok );
     ASSERT_MSG( ok, "Couldn't convert epsilon value" );
     ASSERT_MSG( epsilon > 0, "Epsilon value must be greater than 0.0" );
     ASSERT_MSG( epsilon < 1.0, "Epsilon value must be less than 1.0" );
 
-    ASSERT_MSG( normalizerParameters.contains( "sigmaStep" ), "Normalizer parameters do not include a sigma step" );
-    sigmaStep = normalizerParameters["sigmaStep"].toInt( &ok );
+    ASSERT_MSG( _calculationParameters.contains( "sigmaStep" ), "Normalizer parameters do not include a sigma step" );
+    sigmaStep = _calculationParameters["sigmaStep"].toInt( &ok );
     ASSERT_MSG( ok, "Couldn't convert sigma step" );
     ASSERT_MSG( sigmaStep > 0, "Sigma step must be greater than 0" );
 
     int featureSize  = features.first()->size();
     int featureCount = features.size();
 
+    QVector<double> normSum( featureSize, 0.0 );
     normMean  = QVector<double>( featureSize, 0.0 );
     normStdv  = QVector<double>( featureSize, 0.0 );
     normAlpha = QVector<double>( featureSize, 0.0 );
@@ -33,10 +33,23 @@ void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features,
         QVector<double>& f = *feature.data();
         for( int i = 0; i < featureSize; i++ )
         {
+            normSum[i] += f[i];
             double t = f[i] - normMean[i];
             normMean[i] += t / featureCount;
             normStdv[i] += t * ( f[i] - normMean[i] );
         }
+    }
+
+    for( int i = 0; i < featureSize; i++ )
+    {
+        normMean[i] = normSum[i] / featureCount;
+    }
+
+    foreach( FeaturePtr feature, features )
+    {
+        QVector<double>& f = *feature.data();
+        for( int i = 0; i < featureSize; i++ )
+            normStdv[i] += pow2( f[i] - normMean[i] );
     }
 
     for( int i = 0; i < featureSize; i++ )
