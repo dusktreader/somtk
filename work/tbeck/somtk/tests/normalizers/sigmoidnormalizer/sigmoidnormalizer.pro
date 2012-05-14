@@ -14,6 +14,18 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+SOMTK_ROOT = $$PWD/../../..
+INCLUDEPATH += $$SOMTK_ROOT
 
-SOURCES += tst_sigmoidnormalizertest.cpp
+include( $$SOMTK_ROOT/normalizers/normalizers.pri )
+
+HEADERS +=                             \
+    $$SOMTK_ROOT/tools/randmaster.h    \
+    $$SOMTK_ROOT/tools/localassert.h   \
+
+SOURCES +=                             \
+    $$SOMTK_ROOT/tools/randmaster.cpp  \
+    $$SOMTK_ROOT/tools/localassert.cpp \
+    tst_sigmoidnormalizertest.cpp
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

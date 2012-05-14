@@ -33,8 +33,8 @@ private:
     /// The epsilon value to use for the sigmoid squashing
     double epsilon;
 
-    /// The number of standard deviations fro which to calibrate the sigmoid curve
-    int sigmaStep;
+    /// The number of standard deviations for which to calibrate the sigmoid curve
+    double sigmaStep;
 
 
 

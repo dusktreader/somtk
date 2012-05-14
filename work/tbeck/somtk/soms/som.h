@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cfloat>
 #include <climits>
+#include <iostream>
 
 #include "tools/localassert.h"
 #include "tools/convert.hpp"
@@ -100,8 +101,15 @@ public:
     /// Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature type
     void initializeTraining(
         QMap<QString, QVariant> somParameters, ///< The parameters to be used for training this SOM
-        NormalizerPtr normalizer,              ///< A normalizer to adjust new features in the grid
-        int featureSize                        ///< The length of the features with which to train
+        QVector<FeaturePtr> features,          ///< The features with which to train the SOM
+        NormalizerPtr normalizer               ///< A normalizer used to adjust new features in the grid
+        );
+
+    void train(
+        QMap<QString, QVariant> somParameters, ///< The tuning parameters to use for the training
+        QVector<FeaturePtr> features,          ///< The features with which to train the SOM
+        NormalizerPtr normalizer,              ///< A normalizer used to adjust new features in the grid
+        bool skipInit_debugOnly = false        ///< Only to be used for debugging
         );
 
     /** @brief  Advances the SOM to the next epoch
@@ -112,13 +120,6 @@ public:
     /// Trains the SOM with a single feature
     void update(
         FeaturePtr feature ///< The feature with which to update the SOM
-        );
-
-    void train(
-        QVector<FeaturePtr> features,          ///< The features with which to train the SOM
-        NormalizerPtr normalizer,              ///< A normalizer used to adjust new features in the grid
-        QMap<QString, QVariant> somParameters, ///< The tuning parameters to use for the training
-        bool skipInit_debugOnly = false        ///< Only to be used for debugging
         );
 
     /// Fetches the index of the cell that holds the closest feature in the SOM to an input feature

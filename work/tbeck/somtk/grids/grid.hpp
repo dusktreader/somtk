@@ -155,7 +155,6 @@ public:
         int idx ///< The origin index for the neighborhood ( center cell )
         )
     {
-
         // The neighbors vector will contain the indices of all cells in the neighborhood
         QVector< QPair<int, int> > globalNeighbors;
 

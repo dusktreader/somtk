@@ -60,7 +60,7 @@ public:
     /** @brief Normalizes a vector of features
       * @note  This function calls the virtual normalize function on each feature in the vector.
       */
-    void normalize(
+    void normalizeAll(
             QVector<FeaturePtr> features ///< A sample of vectors for which to compute the normalization
             );
 
@@ -69,10 +69,10 @@ public:
     // The Normalizer API
 
     /// Normalizes a single feature
-    virtual void normalize( FeaturePtr vector ) = 0;
+    virtual void normalize( FeaturePtr feature ) = 0;
 
     /// Sets a features values based upon calculated normalization
-    virtual void setFeature( FeaturePtr vector ) = 0;
+    virtual void setFeature( FeaturePtr feature ) = 0;
 
 };
 

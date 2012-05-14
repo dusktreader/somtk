@@ -6,8 +6,13 @@ SOM::SOM( FeatureGrid grid ) : _grid( grid ){}
 
 SOM::~SOM(){}
 
-void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerPtr normalizer, int featureSize )
+void SOM::initializeTraining( QMap<QString, QVariant> somParameters, QVector<FeaturePtr> features, NormalizerPtr normalizer )
 {
+    requireCondition( features.count() > 0, "Cannot train with an empty feature set" );
+
+    int featureSize = features.front()->size();
+    requireCondition( featureSize > 0 , "Feature size must be greater than 0" );
+
     bool ok = true;
 
     // Describes the number of epochs of training the SOM will need
@@ -50,6 +55,30 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, NormalizerP
         normalizer->setFeature( newFeature );
         _grid->item(i) = newFeature;
     }
+
+    normalizer->normalizeAll( features );
+}
+
+
+
+void SOM::train( QMap<QString, QVariant> somParameters, QVector<FeaturePtr> features, NormalizerPtr normalizer, bool skipInit_debugOnly )
+{
+
+    if( skipInit_debugOnly == false )
+        initializeTraining( somParameters, features, normalizer );
+
+    do
+    {
+       // Shuffle the list of features to remove bias
+        std::random_shuffle( features.begin(), features.end() );
+
+        // Update the SOM with each feature from the globalFeatures list.
+        // @todo: consider random sampling for the training if the number of features is high
+        foreach( FeaturePtr feature, features )
+            update( feature );
+
+    } while( nextEpoch() != false );
+
 }
 
 
@@ -155,27 +184,6 @@ void SOM::update( FeaturePtr feature )
 }
 
 
-
-void SOM::train( QVector<FeaturePtr> features, NormalizerPtr normalizer, QMap<QString, QVariant> somParameters, bool skipInit_debugOnly )
-{
-    if( skipInit_debugOnly == false )
-        initializeTraining( somParameters, normalizer, features.front()->size() );
-
-    do
-    {
-       // Shuffle the list of features to remove bias
-        std::random_shuffle( features.begin(), features.end() );
-
-        ;
-
-        // Update the SOM with each feature from the globalFeatures list.
-        // @todo: consider random sampling for the training if the number of features is high
-        foreach( FeaturePtr feature, features )
-            update( feature );
-
-    } while( nextEpoch() != false );
-
-}
 
 FeatureGrid SOM::grid()
 {

@@ -4,8 +4,6 @@
 #include <QSharedPointer>
 
 #include <cmath>
-#include <fstream>
-#include <ios>
 
 namespace somtk {
 
