@@ -6,19 +6,24 @@ MinMaxNormalizer::MinMaxNormalizer() : Normalizer(){}
 
 
 
-void MinMaxNormalizer::calculateNormalizer( QVector<FeaturePtr> features )
+void MinMaxNormalizer::initialize( QMap<QString, QVariant> nomalizerParameters )
 {
     bool ok = true;
 
-    ASSERT_MSG( _calculationParameters.contains( "HiLimit" ), "Normalizer parameters do not include a high value limit" );
-    hiLimit = _calculationParameters[ "HiLimit" ].toDouble( &ok );
+    ASSERT_MSG( nomalizerParameters.contains( "HiLimit" ), "Normalizer parameters do not include a high value limit" );
+    hiLimit = nomalizerParameters[ "HiLimit" ].toDouble( &ok );
     ASSERT_MSG( ok, "Couldn't convert high limit parameter" );
 
-    ASSERT_MSG( _calculationParameters.contains( "LoLimit" ), "Normalizer parameters do not include a low value limit" );
-    loLimit = _calculationParameters[ "LoLimit" ].toDouble( &ok );
+    ASSERT_MSG( nomalizerParameters.contains( "LoLimit" ), "Normalizer parameters do not include a low value limit" );
+    loLimit = nomalizerParameters[ "LoLimit" ].toDouble( &ok );
     ASSERT_MSG( ok, "Couldn't convert low limit parameter" );
     ASSERT_MSG( loLimit < hiLimit, "Low limit must be less than high limit" );
+}
 
+
+
+void MinMaxNormalizer::calculate( QVector<FeaturePtr> features )
+{
     int featureSize = features.first()->size();
 
     los = QVector<double>( featureSize, DBL_MAX );
@@ -50,7 +55,7 @@ void MinMaxNormalizer::normalize( FeaturePtr feature )
 
 
 
-void MinMaxNormalizer::setFeature( FeaturePtr feature )
+void MinMaxNormalizer::set( FeaturePtr feature )
 {
     QVector<double>& v = *feature.data();
     for( int i = 0; i < v.size(); i++ )

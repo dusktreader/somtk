@@ -5,8 +5,6 @@
 #include <QTextStream>
 
 #include "grids/fasthexgrid.hpp"
-#include "som.h"
-#include "tools/randmaster.h"
 
 using namespace somtk;
 

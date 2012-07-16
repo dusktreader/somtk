@@ -2,7 +2,6 @@
 
 #include "suspect.h"
 #include "feature.h"
-#include "colorfeature.h"
 
 #include "cv.h"
 #include "cxcore.h"

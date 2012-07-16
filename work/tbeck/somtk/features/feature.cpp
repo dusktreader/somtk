@@ -2,11 +2,23 @@
 
 namespace somtk {
 
-Feature::Feature() : QVector<double>(){}
+Feature::Feature() : QVector<double>(), normalized(false){}
 
-Feature::Feature( int size ) : QVector<double>( size ){}
+Feature::Feature( int size ) : QVector<double>( size ), normalized(false){}
 
-Feature::Feature( QVector<double> other ) : QVector<double>( other ){}
+Feature::Feature( QVector<double> other ) : QVector<double>( other ), normalized(false){}
+
+
+
+bool Feature::isNormalized()
+{
+    return normalized;
+}
+
+void Feature::setNormalized()
+{
+    normalized = true;
+}
 
 
 

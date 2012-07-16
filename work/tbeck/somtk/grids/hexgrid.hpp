@@ -90,6 +90,12 @@ public:
 
     // Grid API
 
+    virtual QSharedPointer< Grid<T> > clone()
+    {
+        QSharedPointer< Grid<T> > newGrid( new HexGrid<T>( this->size(), this->items() ) );
+        return newGrid;
+    }
+
     /// Checks the supplied size to ensure that it is valid for the HexGrid
     virtual void checkSize( QVector<int> size )
     {

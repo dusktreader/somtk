@@ -2,27 +2,10 @@
 
 namespace somtk {
 
-HSOM::HSOM( QObject* parent ) :
-    QThread( parent )
-{}
-
-
-
-HSOM::HSOM( NormalizerPtr normalizer, SOMPtr som, ClassifierPtr classifier, QObject* parent ) :
-    QThread( parent ),
-    normalizer( normalizer ),
+HSOM::HSOM( SOMPtr som, ClassifierPtr classifier ) :
     som( som ),
     classifier( classifier )
 {}
-
-
-
-void HSOM::clear()
-{
-    normalizer->clear();
-    som->clear();
-    classifier->clear();
-}
 
 
 
@@ -37,7 +20,7 @@ QVector<Feature> HSOM::extractFeatures( QVector<SuspectPtr> suspects )
 
 
 
-void HSOM::generateHistograms( QVector<SuspectPtr>& suspects )
+void HSOM::generateHistograms( QVector<SuspectPtr> suspects )
 {
     for( int i=0; i<suspects.size(); i++ )
         generateHistogram( trainingSuspects[i] );
@@ -47,30 +30,21 @@ void HSOM::generateHistograms( QVector<SuspectPtr>& suspects )
 
 void HSOM::generateHistogram( SuspectPtr suspect )
 {
+    // Increment the suspect's histogram bin at the index of the closest feature for each suspect
     foreach( Feature feature, suspect->features() )
-    {
-        // Find the feature that is closest to the input feature
-        QPoint pt = som->closestFeatureCoords( feature );
-
-        // Increment the suspect's histogram bin at the point of the closest feature
-        suspect->histogram()->increment( pt );
-    }
+        suspect->histogram()->increment( som->closestFeature( feature ) );
 }
 
 
 
 void HSOM::train( QVector<SuspectPtr>& suspects,
-                  QMap<QString, QVariant> normalizerParameters,
                   QMap<QString, QVariant> somParameters,
                   QMap<QString, QVariant> classifierParameters )
 {
     try
     {
         QVector<Feature> features = extractFeatures( suspects );
-        normalizer->calculateNormalizer( features, normalizerParameters );
-        foreach( Feature feature, features )
-            normalizer->normalize( feature );
-        som->train( features, normalizer, somParameters );
+        som->train( somParameters, features );
         generateHistograms( suspects );
         classifier->train( suspects, classifierParameters );
     }
@@ -85,13 +59,17 @@ void HSOM::train( QVector<SuspectPtr>& suspects,
 }
 
 
+
+void HSOM::classify( QVector<SuspectPtr> suspects )
+{
+    foreach( SuspectPtr suspect, suspects )
+        classify( suspect );
+}
+
+
 void HSOM::classify( SuspectPtr suspect )
 {
-    QVector<Feature> features = suspect->features();
-    normalizeFeatures( features );
-
     generateHistogram( suspect );
-
     classifier->classify( suspect );
 }
 

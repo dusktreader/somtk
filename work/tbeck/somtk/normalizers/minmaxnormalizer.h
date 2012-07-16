@@ -31,26 +31,29 @@ private:
 
 
 
-protected:
-
-    /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<FeaturePtr> features );
-
-
-
 public:
 
     MinMaxNormalizer();
 
 
 
-    // The Normalizer API
+// The Normalizer API
+
+protected:
+
+    /// @see normalizer.h for full documentation
+    virtual void calculate( QVector<FeaturePtr> features );
 
     /// @see normalizer.h for full documentation
     virtual void normalize( FeaturePtr vectors );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( FeaturePtr vectors );
+    virtual void set( FeaturePtr vectors );
+
+public:
+
+    /// @see normalizer.h for full documentation
+    virtual void initialize( QMap<QString, QVariant> nomalizerParameters );
 };
 
 } // namespace

@@ -46,45 +46,45 @@ void SomTest::visualTest()
 
     // Create the grid that the SOM will use
     QVector<int> gridSize;
-    gridSize << 24 << 24;
-    FeatureGrid grid( new QuadGrid<FeaturePtr>( gridSize ) );
+    gridSize << 24;
+    FeatureGrid grid( new FastHexGrid<FeaturePtr>( gridSize ) );
 
     // Create a new RandMaster for generating random values
     RandMaster rnd;
 
     // Create the input features for the SOM
     QVector<FeaturePtr> features;
-    int featureCount = 1000;
+    int featureCount = 100;
     for( int i=0; i<featureCount; i++ )
     {
         FeaturePtr feature( new Feature( 3 ) );
         Feature& f = *feature.data();
 
         // Notice that each input has a different range
-        f[0] = rnd.randd(-100.0, 100.0);
-        f[1] = rnd.randd(10000.0,20000.0);
-        f[2] = rnd.randd(0.001, 0.002);
+        f[0] = rnd.randd(  -100.000,   100.000 );
+        f[1] = rnd.randd( 10000.000, 20000.000 );
+        f[2] = rnd.randd(     0.001,     0.002 );
         features.append( feature );
     }
 
-    // Create the normalize for the input data
-    NormalizerPtr normalizer( new SigmoidNormalizer() );
+    // Create the normalizer for the input data
     QMap<QString, QVariant> normalizerParameters;
     normalizerParameters["epsilon"] = 1.0e-6;
     normalizerParameters["sigmaStep"] = 5;
-    normalizer->calculate( features, normalizerParameters );
+    NormalizerPtr normalizer( new SigmoidNormalizer() );
+    normalizer->initialize( normalizerParameters );
 
     // Create the SOM
-    SOMPtr som( new SOM( grid ) );
+    SOMPtr som( new SOM( grid, normalizer ) );
+
     QMap<QString, QVariant> somParameters;
-    somParameters["maxEpochs"] = 40;
+    somParameters["maxEpochs"] = 20;
     somParameters["initialAlpha"] = 0.8;
     somParameters["initialRadiusRatio"] = 0.4999;
-
-    som->initializeTraining( somParameters, features, normalizer );
+    som->initializeTraining( somParameters, features );
     som->grid()->visualize( 10, &render ).save( "initialGrid.png" );
 
-    som->train( somParameters, features, normalizer, true );
+    som->train( somParameters, features, true );
 
     som->grid()->visualize( 10, &render ).save( "finalGrid.png" );
 

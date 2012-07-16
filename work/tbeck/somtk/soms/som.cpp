@@ -2,11 +2,11 @@
 
 namespace somtk {
 
-SOM::SOM( FeatureGrid grid ) : _grid( grid ){}
+SOM::SOM( FeatureGrid grid, NormalizerPtr normalizer ) : _grid( grid ), _normalizer( normalizer ){}
 
 SOM::~SOM(){}
 
-void SOM::initializeTraining( QMap<QString, QVariant> somParameters, QVector<FeaturePtr> features, NormalizerPtr normalizer )
+void SOM::initializeTraining( QMap<QString, QVariant> somParameters, QVector<FeaturePtr> features )
 {
     requireCondition( features.count() > 0, "Cannot train with an empty feature set" );
 
@@ -49,23 +49,27 @@ void SOM::initializeTraining( QMap<QString, QVariant> somParameters, QVector<Fea
     currentEpoch = -1;
     nextEpoch();
 
+    // Calculate the normalizer given the training features
+    _normalizer->calculateNormalizer( features );
+
     for( int i=0; i<_grid->capacity(); i++ )
     {
         FeaturePtr newFeature( new Feature( featureSize ) );
-        normalizer->setFeature( newFeature );
+        _normalizer->setFeature( newFeature );
         _grid->item(i) = newFeature;
     }
 
-    normalizer->normalizeAll( features );
+    // Normalize the input features
+    _normalizer->normalizeAll( features );
 }
 
 
 
-void SOM::train( QMap<QString, QVariant> somParameters, QVector<FeaturePtr> features, NormalizerPtr normalizer, bool skipInit_debugOnly )
+void SOM::train( QMap<QString, QVariant> somParameters, QVector<FeaturePtr> features, bool skipInit_debugOnly )
 {
 
     if( skipInit_debugOnly == false )
-        initializeTraining( somParameters, features, normalizer );
+        initializeTraining( somParameters, features );
 
     do
     {
@@ -126,6 +130,9 @@ void SOM::precalculateWeights()
 
 int SOM::closestFeature( FeaturePtr feature )
 {
+    if( !feature->isNormalized() )
+        _normalizer->normalizeFeature( feature );
+
     double globalMinimumDistance = DBL_MAX;
     int    globalMinimumIndex    = -1;
 
@@ -170,6 +177,8 @@ int SOM::closestFeature( FeaturePtr feature )
 
 void SOM::update( FeaturePtr feature )
 {
+    _normalizer->normalizeFeature( feature );
+
     // Find the neighborhood in the SOM that of the feature that is the closest to the input feature
     QVector< QPair<int, int> > neighbors = _grid->neighborhood( weights.size(), closestFeature( feature ));
 
@@ -179,7 +188,9 @@ void SOM::update( FeaturePtr feature )
     {
         int index     = neighbors[i].first;
         int distance  = neighbors[i].second;
-        _grid->item(index)->adjust( feature, weights[ distance ] );
+
+        FeaturePtr gridFeature = _grid->item( index );
+        gridFeature->adjust( feature, weights[ distance ] );
     }
 }
 
@@ -188,6 +199,13 @@ void SOM::update( FeaturePtr feature )
 FeatureGrid SOM::grid()
 {
     return _grid;
+}
+
+
+
+NormalizerPtr SOM::normalizer()
+{
+    return _normalizer;
 }
 
 } // namespace

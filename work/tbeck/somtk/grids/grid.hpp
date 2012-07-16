@@ -161,9 +161,9 @@ public:
         // The local neighbors vector will contain all cells within the neighborhood discovered by each omp thread
         QVector< QPair<int, int> > localNeighbors;
 
-        #pragma omp parallel
+        #pragma omp parallel shared( globalNeighbors) private( localNeighbors )
         {
-            #pragma omp for private( localNeighbors )
+            #pragma omp for
             for( int i = 0; i < this->capacity(); i++ )
             {
                 int distance = this->distance( idx, i );
@@ -214,6 +214,9 @@ public:
 
 
     // Grid API
+
+    /// Creates a duplicate of this grid
+    virtual QSharedPointer< Grid<T> > clone() = 0;
 
     /// Gets the capacity of a grid based on the size of the grid
     virtual int capacityFromSize( QVector<int> size ) = 0;

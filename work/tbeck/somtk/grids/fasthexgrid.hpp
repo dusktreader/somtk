@@ -79,6 +79,12 @@ public:
 
     // Grid API - See grid.hpp for doumentation
 
+    virtual QSharedPointer< Grid<T> > clone()
+    {
+        QSharedPointer< Grid<T> > newGrid( new FastHexGrid<T>( this->size(), this->items() ) );
+        return newGrid;
+    }
+
     virtual void checkSize( QVector<int> size )
     {
         SOMError::requireCondition( size.size() == 1,

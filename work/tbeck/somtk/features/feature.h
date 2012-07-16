@@ -15,6 +15,13 @@ typedef QSharedPointer<Feature> FeaturePtr;
 class Feature : public QVector<double>
 {
 
+private:
+
+    /// Indicates whether this feature has been normalized yet
+    bool normalized;
+
+
+
 public:
 
     /// Constructs an empty Feature
@@ -27,6 +34,12 @@ public:
     Feature( QVector<double> other );
 
 
+
+    /// Checks to see if the feature has been normalized yet
+    bool isNormalized();
+
+    /// Indicates that the feature has been normalized
+    void setNormalized();
 
     /// Calculates the Euclidean distance between this and another feature
     static double distance(

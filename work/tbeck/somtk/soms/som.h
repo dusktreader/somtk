@@ -40,6 +40,9 @@ private:
     /// The grid of features that represents the internal state of the SOMs
     FeatureGrid _grid;
 
+    /// The normalizer for incoming features
+    NormalizerPtr _normalizer;
+
     /// The number of training epochs to use
     int maxEpochs;
 
@@ -92,7 +95,8 @@ public:
 
     /// Constructs an SOM with a specific size
     SOM(
-        FeatureGrid _grid ///< The grid of features that the SOM will use internally
+        FeatureGrid grid,        ///< The grid of features that the SOM will use internally
+        NormalizerPtr normalizer ///< The normalizer used to adjust new features in the grid
         );
 
     /// Destructs this SOM
@@ -101,14 +105,12 @@ public:
     /// Initializes the SOM training process by resetting the epochs, alpha, radius, and the target feature type
     void initializeTraining(
         QMap<QString, QVariant> somParameters, ///< The parameters to be used for training this SOM
-        QVector<FeaturePtr> features,          ///< The features with which to train the SOM
-        NormalizerPtr normalizer               ///< A normalizer used to adjust new features in the grid
+        QVector<FeaturePtr> features           ///< The features with which to train the SOM
         );
 
     void train(
         QMap<QString, QVariant> somParameters, ///< The tuning parameters to use for the training
         QVector<FeaturePtr> features,          ///< The features with which to train the SOM
-        NormalizerPtr normalizer,              ///< A normalizer used to adjust new features in the grid
         bool skipInit_debugOnly = false        ///< Only to be used for debugging
         );
 
@@ -129,6 +131,9 @@ public:
 
     /// Fetches the underlying grid of features from the SOM
     FeatureGrid grid();
+
+    /// Fetches the normalizer used by this SOM
+    NormalizerPtr normalizer();
 
     /// Dumps the features from this SOM out to a regular vector
     QVector<Feature> dumpFeatures();

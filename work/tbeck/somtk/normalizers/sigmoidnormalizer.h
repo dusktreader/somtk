@@ -38,24 +38,29 @@ private:
 
 
 
-protected:
-
-    /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<FeaturePtr> features );
-
-
-
 public:
 
     SigmoidNormalizer();
 
-    // The Normalizer API
+
+
+// The Normalizer API
+
+protected:
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( FeaturePtr vector );
+    virtual void calculate( QVector<FeaturePtr> features );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( FeaturePtr vector );
+    virtual void normalize( FeaturePtr vectors );
+
+    /// @see normalizer.h for full documentation
+    virtual void set( FeaturePtr vectors );
+
+public:
+
+    /// @see normalizer.h for full documentation
+    virtual void initialize( QMap<QString, QVariant> nomalizerParameters );
 };
 
 typedef QSharedPointer<SigmoidNormalizer> SigmoidNormalizerPtr;

@@ -4,29 +4,28 @@
 #
 #-------------------------------------------------
 
-QT       += gui
+QT       += testlib
 
-TARGET = hsom
+QT       += guid
+
+TARGET = tst_histogramtest
 CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-SOMTK_ROOT = $$PWD
+SOMTK_ROOT = $$PWD/../..
 INCLUDEPATH += $$SOMTK_ROOT
 
-include( $$SOMTK_ROOT/soms/soms.pri )
-include( $$SOMTK_ROOT/suspects/suspects.pri )
-include( $$SOMTK_ROOT/normalizers/normalizers.pri )
-include( $$SOMTK_ROOT/classifiers/classifiers.pri )
 include( $$SOMTK_ROOT/histograms/histograms.pri )
+include( $$SOMTK_ROOT/grids/grids.pri )
 
-HEADERS += \
-    hsom.h \
+HEADERS +=                             \
+    $$SOMTK_ROOT/tools/localassert.h   \
 
-SOURCES +=   \
-    hsom.cpp \
-    main.cpp \
+SOURCES +=                             \
+    $$SOMTK_ROOT/tools/localassert.cpp \
+    tst_histogramtest.cpp                    \
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

@@ -5,21 +5,27 @@ namespace somtk {
 SigmoidNormalizer::SigmoidNormalizer() : Normalizer(){}
 
 
-void SigmoidNormalizer::calculateNormalizer( QVector<FeaturePtr> features )
+
+void SigmoidNormalizer::initialize( QMap<QString, QVariant> nomalizerParameters )
 {
     bool ok = true;
 
-    ASSERT_MSG( _calculationParameters.contains( "epsilon" ), "Normalizer parameters do not contain an epsilon" );
-    epsilon = _calculationParameters["epsilon"].toDouble( &ok );
+    ASSERT_MSG( nomalizerParameters.contains( "epsilon" ), "Normalizer parameters do not contain an epsilon" );
+    epsilon = nomalizerParameters["epsilon"].toDouble( &ok );
     ASSERT_MSG( ok, "Couldn't convert epsilon value" );
     ASSERT_MSG( epsilon > 0, "Epsilon value must be greater than 0.0" );
     ASSERT_MSG( epsilon < 1.0, "Epsilon value must be less than 1.0" );
 
-    ASSERT_MSG( _calculationParameters.contains( "sigmaStep" ), "Normalizer parameters do not include a sigma step" );
-    sigmaStep = _calculationParameters["sigmaStep"].toDouble( &ok );
+    ASSERT_MSG( nomalizerParameters.contains( "sigmaStep" ), "Normalizer parameters do not include a sigma step" );
+    sigmaStep = nomalizerParameters["sigmaStep"].toDouble( &ok );
     ASSERT_MSG( ok, "Couldn't convert sigma step" );
     ASSERT_MSG( sigmaStep > 0.0, "Sigma step must be greater than 0" );
+}
 
+
+
+void SigmoidNormalizer::calculate( QVector<FeaturePtr> features )
+{
     int featureSize  = features.first()->size();
     int featureCount = features.size();
 
@@ -68,7 +74,7 @@ void SigmoidNormalizer::normalize( FeaturePtr feature )
 
 
 
-void SigmoidNormalizer::setFeature( FeaturePtr feature )
+void SigmoidNormalizer::set( FeaturePtr feature )
 {
     /// @todo  Use parameters to caluclate directly instead of using two step procedure
     QVector<double>& f = *feature.data();

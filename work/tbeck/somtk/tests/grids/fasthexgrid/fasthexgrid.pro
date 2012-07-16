@@ -8,32 +8,21 @@ QT       += testlib
 
 QT       += gui
 
-TARGET = tst_test
+TARGET = tst_fasthexgridtest
 CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-SOMTK_ROOT = $$PWD/../..
+SOMTK_ROOT = $$PWD/../../..
 INCLUDEPATH += $$SOMTK_ROOT
 
-HEADERS +=                                       \
-    $$SOMTK_ROOT/grids/grid.hpp                 \
-    $$SOMTK_ROOT/grids/fasthexgrid.hpp          \
-    $$SOMTK_ROOT/feature.h                      \
-    $$SOMTK_ROOT/tools/utilities.hpp            \
-    $$SOMTK_ROOT/tools/localassert.h            \
-    $$SOMTK_ROOT/tools/randmaster.h             \
-    $$SOMTK_ROOT/errors/somerror.h              \
+include( $$SOMTK_ROOT/grids/grids.pri )
 
-SOURCES +=                                       \
-    $$SOMTK_ROOT/tools/utilities.cpp            \
-    $$SOMTK_ROOT/tools/localassert.cpp          \
-    $$SOMTK_ROOT/tools/randmaster.cpp           \
-    tst_fasthexgridtest.cpp                      \
+SOURCES +=  tst_fasthexgridtest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 QMAKE_CXXFLAGS_RELEASE += -fopenmp -g
-QMAKE_LFLAGS_RELEASE += -fopenmp
-QMAKE_CXXFLAGS_DEBUG += -g
+QMAKE_LFLAGS_RELEASE   += -fopenmp
+QMAKE_CXXFLAGS_DEBUG   += -g

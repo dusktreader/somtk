@@ -10,26 +10,29 @@ namespace somtk {
 class NullNormalizer : public Normalizer
 {
 
-protected:
-
-    /// @see normalizer.h for full documentation
-    virtual void calculateNormalizer( QVector<FeaturePtr> );
-
-
-
 public:
 
     NullNormalizer();
 
 
 
-    // The Normalizer API
+// The Normalizer API
+
+protected:
 
     /// @see normalizer.h for full documentation
-    virtual void normalize( FeaturePtr );
+    virtual void calculate( QVector<FeaturePtr> features );
 
     /// @see normalizer.h for full documentation
-    virtual void setFeature( FeaturePtr vector );
+    virtual void normalize( FeaturePtr vectors );
+
+    /// @see normalizer.h for full documentation
+    virtual void set( FeaturePtr vectors );
+
+public:
+
+    /// @see normalizer.h for full documentation
+    virtual void initialize( QMap<QString, QVariant> nomalizerParameters );
 };
 
 typedef QSharedPointer<NullNormalizer> NullNormalizerPtr;

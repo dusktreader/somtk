@@ -1,4 +1,4 @@
-#include "imagesuspect.h"
+#include "suspect.h"
 
 namespace hsom {
 

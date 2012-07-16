@@ -1,83 +1,71 @@
-#include "suspect.h"
+#pragma once
 
-namespace hsom {
+#include <QSharedPointer>
 
-int Suspect::_categoryCount = -1;
+#include "tools/localassert.h"
+#include "features/feature.h"
+#include "histograms/histogram.h"
 
-void Suspect::setCatergoryCount( int count )
+namespace somtk {
+
+class Suspect
 {
-    _categoryCount = count;
-}
 
-int Suspect::categoryCount()
-{
-    return _categoryCount;
-}
+protected:
 
-Suspect::Suspect() :
-    _realCategory( -1 ),
-    _predCategory( -1 )
-{}
+    /// The actual category of this suspect
+    int _realCategory;
 
-Suspect::~Suspect()
-{}
+    /// The category that a classifier has predicted this suspect to be
+    int _predCategory;
 
-QVector<Feature> Suspect::features()
-{
-    if( _features.empty() )
-        generateFeatures();
-    return _features;
-}
+    /// A classification vector defining how this Suspect was classified
+    QVector<double> _classification;
 
-void Suspect::setHistogram( HistogramPtr histogram )
-{
-    _histogram = histogram;
-}
+    /// The histogram produced for this suspect by a SOM
+    HistogramPtr _histogram;
 
-HistogramPtr Suspect::histogram()
-{
-    return _histogram;
-}
+    /// The features embedded in this Suspect
+    QVector<FeaturePtr> _features;
 
-void Suspect::setClassification( const QVector<double>& classification )
-{
-    SOMError::requireCondition( classification.size() == Suspect::categoryCount(),
-                                "Invalid classification vector.  Output count is incorrect" );
+    /// Generates the features for this Suspect
+    virtual void generateFeatures() = 0;
 
-    _classification = classification;
-    double maxCategory;
-    for( unsigned i=0; i_<classification.size(); i++ )
-    {
-        if( _classification[i] > maxCategory )
-        {
-            maxCategory = _classification[i];
-            _predCategory = i;
-        }
-    }
-}
 
-const QVector<double>& Suspect::classification() const
-{
-    return _classification;
-}
 
-void Suspect::setRealCategory( int category )
-{
-    SOMError::requireCondition( category >= 0, "Attempted to set an invalid category");
+public:
 
-    _realCategory = category;
-}
+    /// Construct a default suspect
+    Suspect(
+            HistogramPtr templateHistogram ///< A histogram template to use to generate this suspect's histogram
+            );
 
-int Suspect::realCategory()
-{
-    SOMError::requireCondition( _realCategory >= 0, "Real category hasn't been set yet.  Cannot fetch it" );
-    return _realCategory;
-}
+    /// Fetches a vector of the features embedded in this suspect
+    QVector<FeaturePtr> features();
 
-int Suspect::predCategory()
-{
-    SOMError::requireCondition( _predCategory >= 0, "Classification hasn't been set yet.  Cannot fetch prediction" );
-    return _predCategory;
-}
+    /// Fetches the real category for this Suspect
+    int realCategory();
+
+    /// Sets the real category for this Suspect
+    void setRealCategory( int realCategory );
+
+    /// Fetches the predicted category for this Suspect
+    int predCategory();
+
+    /// Manually sets this suspects histogram to the supplied histogram
+    void setHistogram(
+            HistogramPtr histogram ///< The histogram to force
+            );
+
+    /// Fetches the histogram for this suspect
+    HistogramPtr histogram();
+
+    /// Sets the classification for this susect using a classification vector
+    void setClassification(
+            QVector<double> classification ///< A vector composed of binary flags indicating the classification
+            );
+};
+
+typedef QSharedPointer<Suspect> SuspectPtr;
 
 } // namespace hsom

@@ -31,7 +31,7 @@ public:
         return _message;
     }
 
-    static void requireCondition( bool condition, QString message="Condition failed" )
+    static inline void requireCondition( bool condition, QString message="Condition failed" )
     {
         if( condition == false )
             throw SOMError( message );
