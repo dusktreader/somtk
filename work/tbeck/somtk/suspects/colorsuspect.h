@@ -1,36 +1,31 @@
 #pragma once
 
-#include "suspect.h"
-#include "feature.h"
+#include <QImage>
+#include <QSize>
+#include <QPoint>
+#include <QRect>
+#include <QVector>
 
-#include "cv.h"
-#include "cxcore.h"
+#include "suspects/suspect.h"
+#include "histograms/histogram.h"
+#include "features/feature.h"
 
-#include "tools.hpp"
-#include "cvtools.hpp"
-#include "cvtypesplus.hpp"
+namespace somtk {
 
 class ColorSuspect : public Suspect
 {
+
 private:
-    cv::Mat img;
-    std::vector< cv::Mat_<uchar> > spectrum;
-    PointPlus<int> imgPt;
+
+    QImage _image;
+
+protected:
+
+    void generateFeatures();
+
 public:
-    ColorSuspect();
 
-    /** Creates a new ColorSuspect
-      * @param  img     - The image that this Suspect represents
-      * @param  realCat - The actual category for this Suspect
-      * @param  catCt   - The number of categories possilbel for this Suspect
-      * @param  gridSz  - The size of this Suspect's histogram
-      * @param  name    - The name of this Suspect
-      */
-    ColorSuspect( const cv::Mat& img, int realCat, int catCt, const SizePlus<int>& histSz, std::string name );
-
-    /** Destructs this suspect */
-    virtual ~ColorSuspect();
-
-    /** Generates the next feature from this Suspect */
-    virtual Feature* getNextFeature();
+    ColorSuspect( QImage image, HistogramGrid gridTemplate );
 };
+
+} // namespace somtk

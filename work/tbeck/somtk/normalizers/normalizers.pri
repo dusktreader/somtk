@@ -2,6 +2,7 @@
     included_modules += $$PWD
     message( "Including $$PWD" )
 
+    include( $$SOMTK_ROOT/tools/randmaster/randmaster.pri )
     include( $$SOMTK_ROOT/features/features.pri )
 
     HEADERS +=                      \

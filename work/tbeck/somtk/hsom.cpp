@@ -13,8 +13,7 @@ QVector<Feature> HSOM::extractFeatures( QVector<SuspectPtr> suspects )
 {
     QVector<Feature> features;
     foreach( SuspectPtr suspect, suspects )
-        foreach( Feature feature, suspect->features() )
-            features.append( feature );
+        features << suspect->features();
     return features;
 }
 
@@ -23,7 +22,7 @@ QVector<Feature> HSOM::extractFeatures( QVector<SuspectPtr> suspects )
 void HSOM::generateHistograms( QVector<SuspectPtr> suspects )
 {
     for( int i=0; i<suspects.size(); i++ )
-        generateHistogram( trainingSuspects[i] );
+        generateHistogram( suspects[i] );
 }
 
 
@@ -37,13 +36,13 @@ void HSOM::generateHistogram( SuspectPtr suspect )
 
 
 
-void HSOM::train( QVector<SuspectPtr>& suspects,
+void HSOM::train( QVector<SuspectPtr> trainingSuspects,
                   QMap<QString, QVariant> somParameters,
                   QMap<QString, QVariant> classifierParameters )
 {
     try
     {
-        QVector<Feature> features = extractFeatures( suspects );
+        QVector<Feature> features = extractFeatures( trainingSuspects );
         som->train( somParameters, features );
         generateHistograms( suspects );
         classifier->train( suspects, classifierParameters );

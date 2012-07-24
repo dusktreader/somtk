@@ -5,9 +5,6 @@
 
 
 #include "normalizer.h"
-#include "tools/randmaster.h"
-#include "tools/localassert.h"
-#include "tools/convert.hpp"
 
 namespace somtk {
 

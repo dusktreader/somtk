@@ -1,35 +1,44 @@
 #include "colorsuspect.h"
 
-using namespace std;
+namespace somtk {
 
-ColorSuspect::ColorSuspect( const cv::Mat& img,
-                            int realCat, int catCt,
-                            const SizePlus<int>& histSz,
-                            string name )
-    : Suspect( name, realCat, catCt, histSz )
+ColorSuspect::ColorSuspect( QImage image, HistogramGrid gridTemplate )
+    : Suspect( gridTemplate ), _image( image )
+{}
+
+void ColorSuspect::generateFeatures()
 {
-    cv::resize( img, this->img, cv::Size( 20, 20 ), 0, 0, cv::INTER_CUBIC );
-}
-
-ColorSuspect::~ColorSuspect(){}
-
-Feature* ColorSuspect::getNextFeature()
-{
-    RectPlus<int> bounds( img.size() );
-    while( imgPt.inside( bounds )  )
+    int steps = 4;
+    int N = steps * steps;
+    QSize windowSize( _image.size().width() / steps, _image.size().height() / steps );
+    _features = QVector<FeaturePtr>( N );
+    #pragma omp parallel for
+    for( int i = 0; i < N; i++ )
     {
-        if( currFeat != NULL )
-            delete currFeat;
-        currFeat = new ColorFeature( img.at<cv::Vec3b>( imgPt ) );
-        imgPt.x += 1;
-        if( imgPt.x >= bounds.right() )
+        int x = i % steps;
+        int y = i / steps;
+        QRect window( QPoint( x, y ), windowSize );
+        QImage subImage = _image.copy( window );
+        QVector<double> meanColor( 3, 0.0 );
+        int n = 0;
+        for( y = 0; y < window.height(); y++ )
         {
-            imgPt.x = 0;
-            imgPt.y += 1;
+            for( x = 0; x < window.width(); x++ )
+            {
+                QRgb currentColor = subImage.pixel( x, y );
+
+                meanColor[0] += qRed( currentColor );
+                meanColor[1] += qGreen( currentColor );
+                meanColor[2] += qBlue( currentColor );
+                n++;
+            }
         }
-        if( currFeat->hasContent() )
-            return currFeat;
+        meanColor[0] /= (double)n;
+        meanColor[1] /= (double)n;
+        meanColor[2] /= (double)n;
+
+        _features[i] = FeaturePtr( new Feature( meanColor ) );
     }
-    imgPt = PointPlus<int>();
-    return NULL;
 }
+
+} // namespace somtk

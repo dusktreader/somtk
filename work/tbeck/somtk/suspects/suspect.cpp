@@ -1,12 +1,13 @@
 #include "suspect.h"
 
-namespace hsom {
+namespace somtk {
 
-Suspect::Suspect( HistogramPtr templateHistogram )
+Suspect::Suspect( HistogramGrid gridTemplate )
 {
     _predCategory = -1;
     _realCategory = -1;
 
+    _histogram = HistogramPtr( new Histogram( gridTemplate ) );
 }
 
 QVector<FeaturePtr> Suspect::features()
@@ -37,7 +38,7 @@ void Suspect::setClassification( QVector<double> classification )
 {
     _classification = classification;
 
-    double maxCategory;
+    double maxCategory = DBL_MIN;
     for( int i = 0; i < _classification.size(); i++ )
     {
         if( _classification[i] > maxCategory )
@@ -79,4 +80,4 @@ int Suspect::predCategory()
     return _predCategory;
 }
 
-} // namespace hsom
+} // namespace somtk

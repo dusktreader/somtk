@@ -6,7 +6,7 @@
 #include <QVariant>
 #include <QSharedPointer>
 
-#include "tools/randmaster.h"
+#include "tools/randmaster/randmaster.h"
 #include "features/feature.h"
 #include "errors/somerror.h"
 

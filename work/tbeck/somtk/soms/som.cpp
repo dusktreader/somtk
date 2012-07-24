@@ -8,31 +8,37 @@ SOM::~SOM(){}
 
 void SOM::initializeTraining( QMap<QString, QVariant> somParameters, QVector<FeaturePtr> features )
 {
-    requireCondition( features.count() > 0, "Cannot train with an empty feature set" );
+    SOMError::requireCondition( features.count() > 0, "Cannot train with an empty feature set" );
 
     int featureSize = features.front()->size();
-    requireCondition( featureSize > 0 , "Feature size must be greater than 0" );
+    SOMError::requireCondition( featureSize > 0 , "Feature size must be greater than 0" );
 
     bool ok = true;
 
     // Describes the number of epochs of training the SOM will need
-    ASSERT_MSG( somParameters.contains( "maxEpochs" ), "SOM parameters doesn't contain epoch count" );
+    SOMError::requireCondition( somParameters.contains( "maxEpochs" ), "SOM parameters doesn't contain epoch count" );
     maxEpochs = somParameters["maxEpochs"].toInt( &ok );
-    ASSERT_MSG( ok, "Couldn't convert maximum epoch count to an int" );
+    SOMError::requireCondition( ok, "Couldn't convert maximum epoch count to an int" );
 
     // Describes the inital training weight for the SOM
-    ASSERT_MSG( somParameters.contains( "initialAlpha" ), "SOM parameters doesn't contain initial alpha" );
+    SOMError::requireCondition(
+                somParameters.contains( "initialAlpha" ),
+                "SOM parameters doesn't contain initial alpha"
+                );
     initialAlpha = somParameters["initialAlpha"].toDouble( &ok );
     /// @todo  Add range check to alpha (hint on values)
     /// @todo  Perhaps use default values if the parameters aren't specified
-    ASSERT_MSG( ok, "Couldn't convert initial alpha to a double" );
+    SOMError::requireCondition( ok, "Couldn't convert initial alpha to a double" );
 
     // Describes the inital radius of the training neighborhood for the SOM
-    ASSERT_MSG( somParameters.contains( "initialRadiusRatio" ), "SOM parameters doesn't contain initial radius ratio" );
+    SOMError::requireCondition(
+                somParameters.contains( "initialRadiusRatio" ),
+                "SOM parameters doesn't contain initial radius ratio"
+                );
     double initialRadiusRatio = somParameters["initialRadiusRatio"].toDouble( &ok );
-    ASSERT_MSG( ok, "Couldn't convvert initial radius ratio to a double" );
-    ASSERT_MSG( initialRadiusRatio < 0.5, "Initial radius ratio may not exceed 0.5" );
-    ASSERT_MSG( initialRadiusRatio > 0.0, "Initial radius ratio must be greater than 0" );
+    SOMError::requireCondition( ok, "Couldn't convvert initial radius ratio to a double" );
+    SOMError::requireCondition( initialRadiusRatio < 0.5, "Initial radius ratio may not exceed 0.5" );
+    SOMError::requireCondition( initialRadiusRatio > 0.0, "Initial radius ratio must be greater than 0" );
 
 
     /// @todo  determine if there should be other constraints to alpha and radius ratio (negatives, ffs!)

@@ -4,6 +4,7 @@
 #include <QPainter>
 
 #include "grids/quadgrid.hpp"
+#include "grids/fasthexgrid.hpp"
 #include "histograms/histogram.h"
 
 #include <iostream>
@@ -34,8 +35,8 @@ void HistogramTest::visualTest()
 
     // Create the grid that the SOM will use
     QVector<int> gridSize;
-    gridSize << 5 << 5;
-    HistogramGrid grid( new QuadGrid<double>( gridSize ) );
+    gridSize << 20;
+    HistogramGrid grid( new FastHexGrid<double>( gridSize ) );
     grid->setTo( 0.0 );
 
     Histogram histogram( grid );

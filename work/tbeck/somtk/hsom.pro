@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += gui
+QT       += gui xml
 
 TARGET = hsom
 CONFIG   += console
@@ -18,15 +18,17 @@ INCLUDEPATH += $$SOMTK_ROOT
 include( $$SOMTK_ROOT/soms/soms.pri )
 include( $$SOMTK_ROOT/suspects/suspects.pri )
 include( $$SOMTK_ROOT/normalizers/normalizers.pri )
-include( $$SOMTK_ROOT/classifiers/classifiers.pri )
 include( $$SOMTK_ROOT/histograms/histograms.pri )
+#include( $$SOMTK_ROOT/classifiers/classifiers.pri )
 
 HEADERS += \
-    hsom.h \
+    library.h \
+#    hsom.h \
 
 SOURCES +=   \
-    hsom.cpp \
+    library.cpp \
     main.cpp \
+#    hsom.cpp \
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

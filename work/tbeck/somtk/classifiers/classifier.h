@@ -8,12 +8,11 @@
 #include <QtXml/QDomNodeList>
 
 
-#include "suspect.h"
-#include "persist.h"
+#include "suspects/suspect.h"
 
 namespace somtk {
 
-class Classifier : PersistXML
+class Classifier
 {
     Q_OBJECT
 
@@ -30,16 +29,6 @@ protected:
     QMap<QString, QVariant> _trainingParameters;
 
     // The Classifier API
-
-    /** @brief  Interfaces with the PersistXML API to ensure correct loading order for a classifier
-     *  @note   This is optional.  If not implemented by a derived class, this function does nothing
-     */
-    virtual void readClassifierData( QDomElement& element );
-
-    /** @brief  Interfaces with the PersistXML API to ensure correct saving order for a classifier
-     *  @note   This is optional.  If not implemented by a derived class, this function does nothing
-     */
-    virtual void writeClassifierData( QDomElement& element );
 
     /// Performs specific training algorithm for a classifier
     virtual void trainClassifier(

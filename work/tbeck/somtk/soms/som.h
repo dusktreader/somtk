@@ -11,8 +11,6 @@
 #include <climits>
 #include <iostream>
 
-#include "tools/localassert.h"
-#include "tools/convert.hpp"
 
 #include "features/feature.h"
 #include "grids/grid.hpp"

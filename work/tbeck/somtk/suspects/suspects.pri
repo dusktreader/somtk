@@ -7,11 +7,9 @@
     HEADERS +=               \
         $$PWD/suspect.h      \
         $$PWD/colorsuspect.h \
-        $$PWD/imagesuspect.h \
 
     SOURCES +=                 \
         $$PWD/suspect.cpp      \
         $$PWD/colorsuspect.cpp \
-        $$PWD/imagesuspect.cpp \
 
 }

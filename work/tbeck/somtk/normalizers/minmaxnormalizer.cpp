@@ -10,14 +10,20 @@ void MinMaxNormalizer::initialize( QMap<QString, QVariant> nomalizerParameters )
 {
     bool ok = true;
 
-    ASSERT_MSG( nomalizerParameters.contains( "HiLimit" ), "Normalizer parameters do not include a high value limit" );
+    SOMError::requireCondition(
+                nomalizerParameters.contains( "HiLimit" ),
+                "Normalizer parameters do not include a high value limit"
+                );
     hiLimit = nomalizerParameters[ "HiLimit" ].toDouble( &ok );
-    ASSERT_MSG( ok, "Couldn't convert high limit parameter" );
+    SOMError::requireCondition( ok, "Couldn't convert high limit parameter" );
 
-    ASSERT_MSG( nomalizerParameters.contains( "LoLimit" ), "Normalizer parameters do not include a low value limit" );
+    SOMError::requireCondition(
+                nomalizerParameters.contains( "LoLimit" ),
+                "Normalizer parameters do not include a low value limit"
+                );
     loLimit = nomalizerParameters[ "LoLimit" ].toDouble( &ok );
-    ASSERT_MSG( ok, "Couldn't convert low limit parameter" );
-    ASSERT_MSG( loLimit < hiLimit, "Low limit must be less than high limit" );
+    SOMError::requireCondition( ok, "Couldn't convert low limit parameter" );
+    SOMError::requireCondition( loLimit < hiLimit, "Low limit must be less than high limit" );
 }
 
 

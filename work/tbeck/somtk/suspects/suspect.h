@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QSharedPointer>
+#include <cfloat>
 
 #include "tools/localassert.h"
 #include "features/feature.h"
@@ -37,7 +38,7 @@ public:
 
     /// Construct a default suspect
     Suspect(
-            HistogramPtr templateHistogram ///< A histogram template to use to generate this suspect's histogram
+            HistogramGrid girdTemplate ///< A histogram grid template used to generate this suspect's histogram
             );
 
     /// Fetches a vector of the features embedded in this suspect
@@ -64,6 +65,9 @@ public:
     void setClassification(
             QVector<double> classification ///< A vector composed of binary flags indicating the classification
             );
+
+    /// Fetches the classification vector for this suspect
+    QVector<double> classification();
 };
 
 typedef QSharedPointer<Suspect> SuspectPtr;

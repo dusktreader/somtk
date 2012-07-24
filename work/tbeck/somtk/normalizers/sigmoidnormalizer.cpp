@@ -10,16 +10,22 @@ void SigmoidNormalizer::initialize( QMap<QString, QVariant> nomalizerParameters 
 {
     bool ok = true;
 
-    ASSERT_MSG( nomalizerParameters.contains( "epsilon" ), "Normalizer parameters do not contain an epsilon" );
+    SOMError::requireCondition(
+                nomalizerParameters.contains( "epsilon" ),
+                "Normalizer parameters do not contain an epsilon"
+                );
     epsilon = nomalizerParameters["epsilon"].toDouble( &ok );
-    ASSERT_MSG( ok, "Couldn't convert epsilon value" );
-    ASSERT_MSG( epsilon > 0, "Epsilon value must be greater than 0.0" );
-    ASSERT_MSG( epsilon < 1.0, "Epsilon value must be less than 1.0" );
+    SOMError::requireCondition( ok, "Couldn't convert epsilon value" );
+    SOMError::requireCondition( epsilon > 0, "Epsilon value must be greater than 0.0" );
+    SOMError::requireCondition( epsilon < 1.0, "Epsilon value must be less than 1.0" );
 
-    ASSERT_MSG( nomalizerParameters.contains( "sigmaStep" ), "Normalizer parameters do not include a sigma step" );
+    SOMError::requireCondition(
+                nomalizerParameters.contains( "sigmaStep" ),
+                "Normalizer parameters do not include a sigma step"
+                );
     sigmaStep = nomalizerParameters["sigmaStep"].toDouble( &ok );
-    ASSERT_MSG( ok, "Couldn't convert sigma step" );
-    ASSERT_MSG( sigmaStep > 0.0, "Sigma step must be greater than 0" );
+    SOMError::requireCondition( ok, "Couldn't convert sigma step" );
+    SOMError::requireCondition( sigmaStep > 0.0, "Sigma step must be greater than 0" );
 }
 
 
