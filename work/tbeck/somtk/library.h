@@ -23,12 +23,21 @@ private:
     /// A mapping of category ids to string descriptions
     QMap< int, QString > _categories;
 
+    /// A list of the suspects contained in this library
     QVector< SuspectPtr > _suspects;
+
+    /// The name of this Library
+    QString _name;
+
+    /// The number of categories in this library
+    int _categoryCount;
+
+
 
 public:
 
     /// Constructs a Library of Suspects
-    Library();
+    Library( QString name="unnamed" );
 
     /// Loads a library of suspects from a given library description file
     void load(
@@ -41,8 +50,14 @@ public:
             int category = -1 /// The category of suspects to fetch.  -1 indicates all suspects
             );
 
-    /// Fetches a mapping of the categories for the given library
+    /// Fetches a mapping of the categories for this library
     QMap< int, QString > categories();
+
+    /// Fetches the number of categories in this library
+    int categoryCount();
+
+    /// Fetches the name of this library
+    QString name();
 };
 
 }

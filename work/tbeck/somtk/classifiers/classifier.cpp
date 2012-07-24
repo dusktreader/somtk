@@ -15,4 +15,12 @@ void Classifier::train( QVector<SuspectPtr> suspects, QMap<QString, QVariant> tr
     _isTrained = true;
 }
 
+
+
+void Classifier::classify( SuspectPtr suspect )
+{
+    SOMError::requireCondition( _isTrained, "Can't classify: the classifier isn't trained yet" );
+    classifySuspect( suspect );
+}
+
 } // namespace

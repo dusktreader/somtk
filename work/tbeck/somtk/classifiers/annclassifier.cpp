@@ -2,13 +2,12 @@
 
 namespace somtk {
 
-ANNClassifier::ANNClassifier( QString fileName ) :
-    ann( NULL ),
-    fileName( fileName )
+ANNClassifier::ANNClassifier() :
+    _ann( NULL )
 {}
 
 
-
+/*
 void ANNClassifier::readClassifierData( QDomElement& element )
 {
     fileName = element.attribute( "fileName" );
@@ -30,42 +29,44 @@ void ANNClassifier::writeClassifierData( QDomElement& element )
     if( ann != NULL )
         ann->save( fileName.toAscii() );
 }
-
+*/
 
 
 void ANNClassifier::trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,QVariant> trainingParameters )
 {
     bool ok = true;
 
+    /// @todo  add a fetch required parameters method to query which parameters are required for training
+
     /// @todo  Move the input and output width parameters down into the base class
     // Fetch the input width for this classifier
-    ASSERT_MSG( trainingParameters.contains( "inputWidth" ), "Missing required input width parameter" );
-    int inputWidth = trainingParameters[ "inputWidth" ].toInt( &ok );
-    ASSERT_MSG( ok, "Failed to convert input width parameter" );
-    ASSERT_MSG( inputWidth > 0, "Invalid input size" );
+    SOMError::requireCondition( trainingParameters.contains( "inputWidth" ), "Missing required input width parameter" );
+    inputWidth = trainingParameters[ "inputWidth" ].toInt( &ok );
+    SOMError::requireCondition( ok, "Failed to convert input width parameter" );
+    SOMError::requireCondition( inputWidth > 0, "Invalid input size" );
 
     // Fetch the output width for this classifier
-    ASSERT_MSG( trainingParameters.contains( "outputWidth" ), "Missing required output width parameter" );
-    int outputWidth = trainingParameters[ "outputWidth" ].toInt( &ok );
-    ASSERT_MSG( ok, "Failed to convert output width parameter" );
-    ASSERT_MSG( outputWidth > 0, "Invalid output size" );
+    SOMError::requireCondition( trainingParameters.contains( "outputWidth" ), "Missing required output width parameter" );
+    outputWidth = trainingParameters[ "outputWidth" ].toInt( &ok );
+    SOMError::requireCondition( ok, "Failed to convert output width parameter" );
+    SOMError::requireCondition( outputWidth > 0, "Invalid output size" );
 
     // Fetch the iterations parameter for this classifier
     int iterations = 0;
     if( trainingParameters.contains( "iterations" ) )
     {
         iterations = trainingParameters[ "iterations" ].toInt( &ok );
-        ASSERT_MSG( ok, "Failed to convert iterations parameter" );
-        ASSERT_MSG( iterations > 0, "Invalid iterations value" );
+        SOMError::requireCondition( ok, "Failed to convert iterations parameter" );
+        SOMError::requireCondition( iterations > 0, "Invalid iterations value" );
     }
 
     // Fetch the iterations parameter for this classifier
     double epsilon = 0.0;
     if( trainingParameters.contains( "epsilon" ) )
     {
-        iterations = trainingParameters[ "epsilon" ].toDouble( &ok );
-        ASSERT_MSG( ok, "Failed to convert epsilon parameter" );
-        ASSERT_MSG( epsilon > 0.0, "Invalid epsilon value" );
+        epsilon = trainingParameters[ "epsilon" ].toDouble( &ok );
+        SOMError::requireCondition( ok, "Failed to convert epsilon parameter" );
+        SOMError::requireCondition( epsilon > 0.0, "Invalid epsilon value" );
     }
 
     /* Make an input matrix for training the back-end MLPANN.
@@ -85,7 +86,7 @@ void ANNClassifier::trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,
 
         // Set the input for the training input matrix row to the histogram of the suspect
         for( int j=0; j<inputWidth; j++ )
-            input( i, j ) = histogram[j];
+            input( i, j ) = histogram->bin( j );
 
         // Set the output value for the real category of the suspect to 1.  All other values will already be 0
         output( i, suspect->realCategory() ) = 1.0;
@@ -95,8 +96,8 @@ void ANNClassifier::trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,
     terminationCriteria.type = 0;
     if( iterations != 0 )
         terminationCriteria.type += cv::TermCriteria::MAX_ITER;
-    if( epsilon != 0.0 )
-        terminationCriteria.type += cv::TermCriteria::EPS;
+    //if( epsilon != 0.0 )
+    //    terminationCriteria.type += cv::TermCriteria::EPS;
 
     cv::ANN_MLP_TrainParams trainingParams( terminationCriteria, CvANN_MLP_TrainParams::RPROP, iterations, epsilon );
 
@@ -128,36 +129,21 @@ void ANNClassifier::trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,
     _ann->train( input, output, cv::Mat(), cv::Mat(), trainingParams, normFlag );
 }
 
-void ANNClassifier::classify( SuspectPtr suspect )
+void ANNClassifier::classifySuspect( SuspectPtr suspect )
 {
-    bool ok = true;
-
-    /// @todo  Move the input and output width parameters down into the base class
-    // Fetch the input width for this classifier
-    ASSERT_MSG( trainingParameters.contains( "inputWidth" ), "Missing required input width parameter" );
-    int inputWidth = trainingParameters[ "inputWidth" ].toInt( &ok );
-    ASSERT_MSG( ok, "Failed to convert input width parameter" );
-    ASSERT_MSG( inputWidth > 0, "Invalid input size" );
-
-    // Fetch the output width for this classifier
-    ASSERT_MSG( trainingParameters.contains( "outputWidth" ), "Missing required output width parameter" );
-    int outputWidth = trainingParameters[ "outputWidth" ].toInt( &ok );
-    ASSERT_MSG( ok, "Failed to convert output width parameter" );
-    ASSERT_MSG( outputWidth > 0, "Invalid output size" );
-
     cv::Mat_<double>  input( 1, inputWidth, 0.0 );
     cv::Mat_<double> output( 1, outputWidth, 0.0 );
     /// @todo  ensure that the output widths match
 
     HistogramPtr histogram = suspect->histogram();
-    for( int i=0; i<histogram->size(); i++ )
-        input[i] = histogram[i];
+    for( int i=0; i<inputWidth; i++ )
+        input( 0, i ) = histogram->bin( i );
 
-    ann->predict( input, output );
+    _ann->predict( input, output );
 
     QVector<double> classification;
-    for( int i=0; i<Suspect::categoryCount(); i++ )
-        classification.push_back( output[i] );
+    for( int i=0; i<outputWidth; i++ )
+        classification.push_back( output( 1, i ) );
 
     suspect->setClassification( classification );
 }

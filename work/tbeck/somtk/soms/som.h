@@ -91,7 +91,7 @@ private:
 
 public:
 
-    /// Constructs an SOM with a specific size
+    /// Constructs an SOM with a specific grid
     SOM(
         FeatureGrid grid,        ///< The grid of features that the SOM will use internally
         NormalizerPtr normalizer ///< The normalizer used to adjust new features in the grid

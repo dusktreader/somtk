@@ -14,6 +14,9 @@ class Suspect
 
 protected:
 
+    /// The name of the suspect
+    QString _name;
+
     /// The actual category of this suspect
     int _realCategory;
 
@@ -68,6 +71,14 @@ public:
 
     /// Fetches the classification vector for this suspect
     QVector<double> classification();
+
+    /// Sets the name for this susect
+    void setName(
+            QString name ///< The name of the suspect
+            );
+
+    /// Fetches the name of this suspect
+    QString name();
 };
 
 typedef QSharedPointer<Suspect> SuspectPtr;

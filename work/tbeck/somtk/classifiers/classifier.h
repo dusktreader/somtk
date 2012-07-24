@@ -4,9 +4,6 @@
 #include <QString>
 #include <QVariant>
 #include <QSharedPointer>
-#include <QtXml/QDomElement>
-#include <QtXml/QDomNodeList>
-
 
 #include "suspects/suspect.h"
 
@@ -36,6 +33,11 @@ protected:
             QMap<QString,QVariant> trainingParameters ///< The tuning parameters used to train this classifier
             ) = 0;
 
+    /// Classifies a single suspect
+    virtual void classifySuspect(
+            SuspectPtr suspect ///< The suspect to be classified
+            ) = 0;
+
 
 
 public:
@@ -49,21 +51,10 @@ public:
             QMap<QString,QVariant> trainingParameters ///< The tuning parameters used to train this classifier
             );
 
-
-
-    // The Classifier API
-
-    /// Classifies a single suspect
-    virtual void classify(
+    /// Classifies a suspect
+    void classify(
             SuspectPtr suspect ///< The suspect to be classified
-            ) = 0;
-
-
-
-    // The PersistXML API.
-
-    virtual void readData( QDomElement& element );
-    virtual void writeData( QDomElement& element );
+            );
 };
 
 typedef QSharedPointer<Classifier> ClassifierPtr;

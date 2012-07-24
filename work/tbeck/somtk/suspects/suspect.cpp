@@ -6,6 +6,7 @@ Suspect::Suspect( HistogramGrid gridTemplate )
 {
     _predCategory = -1;
     _realCategory = -1;
+    _name = "unnamed";
 
     _histogram = HistogramPtr( new Histogram( gridTemplate ) );
 }
@@ -78,6 +79,20 @@ int Suspect::predCategory()
 {
     SOMError::requireCondition( _predCategory >= 0, "Classification hasn't been set yet.  Cannot fetch prediction" );
     return _predCategory;
+}
+
+
+
+void Suspect::setName( QString name )
+{
+    _name = name;
+}
+
+
+
+QString Suspect::name()
+{
+    return _name;
 }
 
 } // namespace somtk
