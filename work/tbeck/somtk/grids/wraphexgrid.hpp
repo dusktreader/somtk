@@ -1,13 +1,17 @@
 #pragma once
 
 #include <QVector>
-
 #include <iostream>
 
 #include "grids/grid.hpp"
 #include "grids/fasthexgrid.hpp"
 #include "errors/somerror.h"
 
+/// A fixed modulus operation....stupid c implementations
+inline int mod( int a, int n )
+{
+    return ( a < 0 ) ? n - abs(a) % n : a % n;
+}
 
 namespace somtk {
 
@@ -107,6 +111,22 @@ public:
 
 
 
+    virtual QVector<int> neighbors( int idx )
+    {
+        QVector<int> myCoords = this->coords( idx );
+        int x = myCoords[0];
+        int y = myCoords[1];
+
+        QVector<int> neighbors;
+        neighbors << index( QVector<int>() <<                 x << mod( y - 1, s() ) );
+        neighbors << index( QVector<int>() << mod( x + 1, s() ) << mod( y - 1, s() ) );
+        neighbors << index( QVector<int>() << mod( x - 1, s() ) << y );
+        neighbors << index( QVector<int>() << mod( x + 1, s() ) << y );
+        neighbors << index( QVector<int>() << mod( x - 1, s() ) << mod( y + 1, s() ) );
+        neighbors << index( QVector<int>() <<                 x << mod( y + 1, s() ) );
+
+        return neighbors;
+    }
 };
 
 } // namespace

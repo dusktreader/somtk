@@ -245,6 +245,19 @@ public:
         return distance;
     }
 
+
+    virtual QVector<int> neighbors( int idx )
+    {
+        QVector<int> myCoords = coords( idx );
+        int x = myCoords[0];
+        int y = myCoords[1];
+
+        SOMError::requireCondition( false, "Not implemented" );
+
+        QVector<int> neighbors;
+        return neighbors;
+    }
+
 };
 
 } // namespace

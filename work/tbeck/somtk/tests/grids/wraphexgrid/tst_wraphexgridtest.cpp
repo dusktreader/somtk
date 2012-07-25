@@ -1,12 +1,8 @@
 #include <QtCore/QString>
 #include <QtTest/QtTest>
-#include <QImage>
-#include <QPainter>
 #include <QTextStream>
 
 #include "grids/wraphexgrid.hpp"
-#include "som.h"
-#include "tools/randmaster.h"
 
 using namespace somtk;
 
@@ -19,6 +15,7 @@ public:
 
 private Q_SLOTS:
     void distanceTest();
+    void neighborTest();
     void neighborhoodTest();
 };
 
@@ -138,6 +135,33 @@ void WrapHexGridTest::distanceTest()
               );
 }
 
+void WrapHexGridTest::neighborTest()
+{
+    WrapHexGrid<int> grid( 6 ) ;
+    QVector<int> neighbors;
+
+    QSet<int> testNeighborIndices;
+    QSet<int> trueNeighborIndices;
+
+    QTextStream cout( stdout );
+
+    testNeighborIndices.clear();
+    trueNeighborIndices.clear();
+    neighbors = grid.neighbors( 3 );
+    foreach( int index, neighbors )
+        testNeighborIndices.insert( index );
+    trueNeighborIndices << 2 << 4 << 8 << 9 << 33 << 34;
+
+    cout << "testNeighbors: ";
+    foreach( int index, testNeighborIndices )
+        cout << index << " ";
+    cout << endl;
+
+    cout << "trueNeighbors: ";
+    foreach( int index, trueNeighborIndices )
+        cout << index << " ";
+    cout << endl;
+}
 
 void WrapHexGridTest::neighborhoodTest()
 {

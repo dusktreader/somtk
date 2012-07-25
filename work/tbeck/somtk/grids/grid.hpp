@@ -3,9 +3,11 @@
 #include <iostream>
 
 #include <QVector>
+#include <QQueue>
 #include <QColor>
 #include <QImage>
 #include <QPainter>
+#include <QMutex>
 
 #include "errors/somerror.h"
 
@@ -26,6 +28,8 @@ protected:
     /// A vector describing the size of the grid
     QVector<int> _size;
 
+
+
     /// Sets the size of the grid
     void setCapacity( int capacity )
     {
@@ -41,8 +45,12 @@ public:
     /// Constructs a hex grid with no size information
     Grid(){}
 
+
+
     /// Destructs the Grid
     virtual ~Grid(){}
+
+
 
     /// Initializes the hex grid with the specified size
     void init(
@@ -51,6 +59,8 @@ public:
     {
         setSize( size );
     }
+
+
 
     /// Initializes the hex grid with the specified size and fills it with the supplied values
     void init(
@@ -63,6 +73,8 @@ public:
         setItems( items );
     }
 
+
+
     /// Sets the items to the supplied items
     void setItems(
             QVector<T> items /// The items with which to populate the grid
@@ -72,17 +84,23 @@ public:
         this->_items = items;
     }
 
+
+
     /// Clears the grid
     void clear()
     {
         _items.clear();
     }
 
+
+
     /// Sets all of the slots in the grid to the specified item
     void setTo( const T& item )
     {
         _items.fill( item );
     }
+
+
 
     /// Fetches indices for all slots within a radius of the slot at the given point
     QVector<int> neighborhood(
@@ -93,6 +111,8 @@ public:
         return neighborhood( r, index(point) );
     }
 
+
+
     /// Sets the size of the hex grid
     virtual void setSize( QVector<int> size )
     {
@@ -100,11 +120,15 @@ public:
         this->_size = size;
     }
 
+
+
     /// Fetches the size of the grid
     QVector<int> size()
     {
         return this->_size;
     }
+
+
 
     /// Fetches the linear capacity of the grid
     int capacity()
@@ -112,11 +136,15 @@ public:
         return this->_items.size();
     }
 
+
+
     /// Fetches the vector of items from this grid
     QVector<T> items()
     {
         return this->_items;
     }
+
+
 
     /// Fetches the item at a specific index in the grid
     T& operator[](
@@ -127,6 +155,8 @@ public:
         return item( idx );
     }
 
+
+
     /// Fetches the item at a specific index in the grid
     virtual T& item(
         int idx ///< The index in the grid from which to fetch an item
@@ -134,6 +164,8 @@ public:
     {
         return this->_items[ idx ];
     }
+
+
 
     /// Ensures that a given index is valid for this grid
     void checkIndex(
@@ -149,6 +181,66 @@ public:
                                     .arg( idx ).arg( capacity() ) );
     }
 
+
+    /// Fetches indices for all slots within a radius of the specified slot
+    QVector< QPair<int, int> > neighborhood(
+        int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
+        int idx ///< The origin index for the neighborhood ( center cell )
+        )
+    {
+        QVector<int> distances( capacity(), INT_MAX );
+        QVector<int> unprocessed;
+        QVector< QPair<int, int> > neighborhood;
+        distances[idx] = 0;
+        unprocessed << idx;
+
+        QMutex locks[capacity()];
+
+        while( !unprocessed.isEmpty() )
+        {
+            #pragma omp parallel
+            {
+                QVector<int> myUnprocessed;
+                QVector< QPair<int, int> > myNeighborhood;
+
+                #pragma omp for
+                for( int i = 0; i < unprocessed.size(); i++ )
+                {
+                    int myIndex = unprocessed[i];
+                    QVector<int> myNeighbors = neighbors( myIndex );
+                    int myDistance = distances[myIndex];
+
+                    foreach( int neighborIndex, myNeighbors )
+                    {
+                        locks[neighborIndex].lock();
+                        int neighborDistance = myDistance + 1;
+                        if( neighborDistance <= r && distances[neighborIndex] > neighborDistance )
+                        {
+                            distances[neighborIndex] = neighborDistance;
+                            myUnprocessed << neighborIndex;
+                        }
+                        locks[neighborIndex].unlock();
+                    }
+
+                    myNeighborhood << QPair< int, int >( myIndex, myDistance );
+                }
+
+                #pragma omp critical
+                {
+                    unprocessed << myUnprocessed;
+                }
+
+                #pragma omp critical
+                {
+                    neighborhood << myNeighborhood;
+                }
+            }
+        }
+
+        return neighborhood;
+    }
+
+    /*
     /// Fetches indices for all slots within a radius of the specified slot
     QVector< QPair<int, int> > neighborhood(
         int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
@@ -180,6 +272,7 @@ public:
         }
         return globalNeighbors;
     }
+    */
 
     /// Visualizes a hex grid given a function pointer to visualize its contents
     QImage visualize( double cellRadius, QColor (*render)( T ) )
@@ -221,35 +314,54 @@ public:
     /// Gets the capacity of a grid based on the size of the grid
     virtual int capacityFromSize( QVector<int> size ) = 0;
 
+
+
     /// Checks the supplied size to ensure that it is valid for the Grid
     virtual void checkSize( QVector<int> size ) = 0;
+
+
 
     /// Checks a given point to ensure it is a valid reference to an element in the grid
     virtual void checkCoords(
         QVector<int> coords ///< The point in the grid for which to check for validity
         ) = 0;
 
+
+
     /// Fetches the index for the slot at the specified coordinates
     virtual int index(
         QVector<int> coords ///< The point in the grid for which to fetch the index
         ) = 0;
+
+
 
     /// Fetches the coordinates given an index
     virtual QVector<int> coords(
         int idx ///< The index in the grid for which to fetch the coordinates
         ) = 0;
 
+
+
     /// Fetches the length of the major diagonal running through the grid
     virtual int diagonal() = 0;
+
+
 
     /// Fetches the distance between two cells in the grid
     virtual int distance( int idx0, int idx1 ) = 0;
 
+
+
     /// Fetches the extents of the real coordinate mapping space ( should only be used for visualization )
     virtual QVector<double> realBounds() = 0;
 
+
+
     /// Fetches the real coordinates of a given index in the grid ( should only be used for visualization )
     virtual QVector<double> realCoords( int idx ) = 0;
+
+    /// Fetches the immediate neighbors of a given inde3x
+    virtual QVector<int> neighbors( int idx ) = 0;
 };
 
 } // namespace

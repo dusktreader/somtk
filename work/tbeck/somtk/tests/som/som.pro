@@ -16,6 +16,7 @@ TEMPLATE = app
 
 SOMTK_ROOT = $$PWD/../..
 INCLUDEPATH += $$SOMTK_ROOT
+DEPENDPATH *= $${INCLUDEPATH}
 
 include( $$SOMTK_ROOT/soms/soms.pri )
 

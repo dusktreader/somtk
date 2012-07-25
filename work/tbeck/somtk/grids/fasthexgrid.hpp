@@ -183,6 +183,34 @@ public:
         return distance;
     }
 
+    virtual QVector<int> neighbors( int idx )
+    {
+        QVector<int> myCoords = coords( idx );
+        int x = myCoords[0];
+        int y = myCoords[1];
+
+        QVector<int> neighbors;
+
+        if( x - 1 >= 0 )
+            neighbors << index( QVector<int>() << x - 1 <<     y );
+
+        if( x - 1 >= 0 && y + 1 < s() )
+            neighbors << index( QVector<int>() << x - 1 << y + 1 );
+
+        if( x + 1 < s() )
+            neighbors << index( QVector<int>() << x + 1 <<     y );
+
+        if( x + 1 < s() && y - 1 >= 0 )
+            neighbors << index( QVector<int>() << x + 1 << y - 1 );
+
+        if( y - 1 >= 0 )
+            neighbors << index( QVector<int>() <<     x << y - 1 );
+
+        if( y + 1 < s() )
+            neighbors << index( QVector<int>() <<     x << y + 1 );
+
+        return neighbors;
+    }
 
 
 };

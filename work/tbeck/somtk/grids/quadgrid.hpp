@@ -217,6 +217,47 @@ public:
         return distance;
     }
 
+
+
+    virtual QVector<int> neighbors( int idx )
+    {
+        QVector<int> myCoords = coords( idx );
+        int x = myCoords[0];
+        int y = myCoords[1];
+
+        QVector<int> neighbors;
+
+        neighbors[0][0] = ( x - 1 ) % s();
+        neighbors[0][1] = ( y - 1 ) % s();
+
+        neighbors[0][0] =               x;
+        neighbors[0][1] = ( y - 1 ) % s();
+
+        neighbors[0][0] = ( x + 1 ) % s();
+        neighbors[0][1] = ( y - 1 ) % s();
+
+
+
+        neighbors[0][0] = ( x - 1 ) % s();
+        neighbors[0][1] =               y;
+
+        neighbors[0][0] = ( x + 1 ) % s();
+        neighbors[0][1] =               y;
+
+
+
+        neighbors[0][0] = ( x - 1 ) % s();
+        neighbors[0][1] = ( y + 1 ) % s();
+
+        neighbors[0][0] =               x;
+        neighbors[0][1] = ( y + 1 ) % s();
+
+        neighbors[0][0] = ( x + 1 ) % s();
+        neighbors[0][1] = ( y + 1 ) % s();
+
+        return neighbors;
+    }
+
 };
 
 } // namespace

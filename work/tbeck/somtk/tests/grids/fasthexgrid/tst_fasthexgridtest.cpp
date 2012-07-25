@@ -1,7 +1,5 @@
 #include <QtCore/QString>
 #include <QtTest/QtTest>
-#include <QImage>
-#include <QPainter>
 #include <QTextStream>
 
 #include "grids/fasthexgrid.hpp"
@@ -17,6 +15,7 @@ public:
 
 private Q_SLOTS:
     void distanceTest();
+    //void neighborTest();
     void neighborhoodTest();
 };
 
