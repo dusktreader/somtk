@@ -6,26 +6,19 @@
 #include "grids/grid.hpp"
 #include "errors/somerror.h"
 
-
 namespace somtk {
 
-/// Defines the vertical distance between cells in the grid
-#define HG_B 0.86602540378443837
-
-/** The HexGrid class provides the basis for the spatial organization of the Self Organizing Map.  It provides a
-  * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
-  */
+/// The Quad Grid class provides an implementation of a wrapping 2d cartesian grid
 template <class T>
 class QuadGrid : public Grid<T>
 {
 
 public:
 
-
-    /// Constructs a hex grid with no size information
+    /// Constructs a grid with no size information
     QuadGrid(){}
 
-    /// Constructs the hex grid with a specified size
+    /// Constructs the grid with a specified size
     QuadGrid(
             QVector<int> size ///< The size of the new grid
             )
@@ -33,7 +26,7 @@ public:
         this->init( size );
     }
 
-    /// Constructs the hex grid with a specified size
+    /// Constructs the grid with a specified size
     QuadGrid(
             int w, ///< The width of the hex grid
             int h  ///< The height of the hex grid
@@ -44,7 +37,7 @@ public:
         this->init( size );
     }
 
-    /// Constructs the hex grid with the specified size and fills it with the supplied values
+    /// Constructs the grid with the specified size and fills it with the supplied values
     QuadGrid(
             QVector<int> size, ///< The size of the new grid
             QVector<T> items   ///< The items with which to populate the grid
@@ -53,7 +46,7 @@ public:
         this->init( size, items );
     }
 
-    /// Constructs the hex grid with the specified size and fills it with the supplied values
+    /// Constructs the grid with the specified size and fills it with the supplied values
     QuadGrid(
             int w,             ///< The width of the hex grid
             int h,             ///< The height of the hex grid
@@ -65,7 +58,7 @@ public:
         this->init( size, items );
     }
 
-    /// Destructs the HexGrid
+    /// Destructs the grid
     virtual ~QuadGrid(){}
 
 
@@ -94,7 +87,6 @@ public:
         return newGrid;
     }
 
-    /// Checks the supplied size to ensure that it is valid for the HexGrid
     virtual void checkSize( QVector<int> size )
     {
         SOMError::requireCondition( size.size() == 2,
@@ -219,6 +211,13 @@ public:
 
 
 
+    /// A fixed modulus operation....stupid c implementations
+    /// @todo Move this into utilities
+    inline int mod( int a, int n )
+    {
+        return ( a < 0 ) ? n - abs(a) % n : a % n;
+    }
+
     virtual QVector<int> neighbors( int idx )
     {
         QVector<int> myCoords = coords( idx );
@@ -226,34 +225,11 @@ public:
         int y = myCoords[1];
 
         QVector<int> neighbors;
-
-        neighbors[0][0] = ( x - 1 ) % s();
-        neighbors[0][1] = ( y - 1 ) % s();
-
-        neighbors[0][0] =               x;
-        neighbors[0][1] = ( y - 1 ) % s();
-
-        neighbors[0][0] = ( x + 1 ) % s();
-        neighbors[0][1] = ( y - 1 ) % s();
-
-
-
-        neighbors[0][0] = ( x - 1 ) % s();
-        neighbors[0][1] =               y;
-
-        neighbors[0][0] = ( x + 1 ) % s();
-        neighbors[0][1] =               y;
-
-
-
-        neighbors[0][0] = ( x - 1 ) % s();
-        neighbors[0][1] = ( y + 1 ) % s();
-
-        neighbors[0][0] =               x;
-        neighbors[0][1] = ( y + 1 ) % s();
-
-        neighbors[0][0] = ( x + 1 ) % s();
-        neighbors[0][1] = ( y + 1 ) % s();
+\
+        neighbors << index( QVector<int>() <<                 x << mod( y - 1, h() ) );
+        neighbors << index( QVector<int>() << mod( x - 1, w() ) <<                 y );
+        neighbors << index( QVector<int>() << mod( x + 1, w() ) <<                 y );
+        neighbors << index( QVector<int>() <<                 x << mod( y + 1, h() ) );
 
         return neighbors;
     }

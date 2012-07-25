@@ -224,6 +224,11 @@ public:
 
                     myNeighborhood << QPair< int, int >( myIndex, myDistance );
                 }
+\
+                #pragma omp single
+                {
+                    unprocessed.clear();
+                }
 
                 #pragma omp critical
                 {
@@ -239,10 +244,10 @@ public:
 
         return neighborhood;
     }
-
-    /*
+\
     /// Fetches indices for all slots within a radius of the specified slot
-    QVector< QPair<int, int> > neighborhood(
+    /// @note This method will be faster than the normal neighborhood method for small maps
+    QVector< QPair<int, int> > globalNeighborhood(
         int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
         int idx ///< The origin index for the neighborhood ( center cell )
         )
@@ -272,7 +277,6 @@ public:
         }
         return globalNeighbors;
     }
-    */
 
     /// Visualizes a hex grid given a function pointer to visualize its contents
     QImage visualize( double cellRadius, QColor (*render)( T ) )

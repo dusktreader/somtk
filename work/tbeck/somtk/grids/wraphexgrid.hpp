@@ -7,12 +7,6 @@
 #include "grids/fasthexgrid.hpp"
 #include "errors/somerror.h"
 
-/// A fixed modulus operation....stupid c implementations
-inline int mod( int a, int n )
-{
-    return ( a < 0 ) ? n - abs(a) % n : a % n;
-}
-
 namespace somtk {
 
 /// Defines the vertical distance between cells in the grid
@@ -109,7 +103,12 @@ public:
         return distance;
     }
 
-
+    /// A fixed modulus operation....stupid c implementations
+    /// @todo Move this into utilities
+    inline int mod( int a, int n )
+    {
+        return ( a < 0 ) ? n - abs(a) % n : a % n;
+    }
 
     virtual QVector<int> neighbors( int idx )
     {
@@ -118,12 +117,12 @@ public:
         int y = myCoords[1];
 
         QVector<int> neighbors;
-        neighbors << index( QVector<int>() <<                 x << mod( y - 1, s() ) );
-        neighbors << index( QVector<int>() << mod( x + 1, s() ) << mod( y - 1, s() ) );
-        neighbors << index( QVector<int>() << mod( x - 1, s() ) << y );
-        neighbors << index( QVector<int>() << mod( x + 1, s() ) << y );
-        neighbors << index( QVector<int>() << mod( x - 1, s() ) << mod( y + 1, s() ) );
-        neighbors << index( QVector<int>() <<                 x << mod( y + 1, s() ) );
+        neighbors << this->index( QVector<int>() <<                       x << mod( y - 1, this->s() ) );
+        neighbors << this->index( QVector<int>() << mod( x + 1, this->s() ) << mod( y - 1, this->s() ) );
+        neighbors << this->index( QVector<int>() << mod( x - 1, this->s() ) <<                       y );
+        neighbors << this->index( QVector<int>() << mod( x + 1, this->s() ) <<                       y );
+        neighbors << this->index( QVector<int>() << mod( x - 1, this->s() ) << mod( y + 1, this->s() ) );
+        neighbors << this->index( QVector<int>() <<                       x << mod( y + 1, this->s() ) );
 
         return neighbors;
     }

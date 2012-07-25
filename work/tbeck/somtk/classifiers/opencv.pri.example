@@ -1,0 +1,8 @@
+isEmpty( $$OPENCV_INCLUDEPATH ) {
+
+    OPENCV_INCLUDEPATH = "/usr/local/include"
+    OPENCV_LIBRARYPATH = "/usr/local/lib"
+
+    message( Set opencv include path to $$OPENCV_INCLUDEPATH )
+    message( Set opencv library path to $$OPENCV_LIBRARYPATH )
+}

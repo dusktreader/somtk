@@ -8,10 +8,9 @@
 #include "normalizers/minmaxnormalizer.h"
 #include "normalizers/sigmoidnormalizer.h"
 #include "grids/quadgrid.hpp"
-#include "grids/hexgrid.hpp"
 #include "grids/fasthexgrid.hpp"
 #include "grids/wraphexgrid.hpp"
-#include "tools/randmaster.h"
+#include "tools/randmaster/randmaster.h"
 
 #include <iostream>
 using namespace std;
@@ -47,7 +46,7 @@ void SomTest::visualTest()
     // Create the grid that the SOM will use
     QVector<int> gridSize;
     gridSize << 24;
-    FeatureGrid grid( new FastHexGrid<FeaturePtr>( gridSize ) );
+    FeatureGrid grid( new WrapHexGrid<FeaturePtr>( gridSize ) );
 
     // Create a new RandMaster for generating random values
     RandMaster rnd;

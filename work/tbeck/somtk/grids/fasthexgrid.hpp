@@ -12,20 +12,17 @@ namespace somtk {
 /// Defines the vertical distance between cells in the grid
 #define HG_B 0.86602540378443837
 
-/** The HexGrid class provides the basis for the spatial organization of the Self Organizing Map.  It provides a
-  * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
-  */
+/// The Fast Hex Grid class provides an implementation of a fast, non-wrapping 2d hexagonal grid
 template <class T>
 class FastHexGrid : public Grid<T>
 {
 
 public:
 
-
-    /// Constructs a hex grid with no size information
+    /// Constructs a grid with no size information
     FastHexGrid(){}
 
-    /// Constructs the hex grid with a specified size
+    /// Constructs the grid with a specified size
     FastHexGrid(
             QVector<int> size ///< The size of the new grid
             )
@@ -33,7 +30,7 @@ public:
         this->init( size );
     }
 
-    /// Constructs the hex grid with a specified size
+    /// Constructs the grid with a specified size
     FastHexGrid(
             int s ///< The length of one side of the grid
             )
@@ -43,7 +40,7 @@ public:
         this->init( size );
     }
 
-    /// Constructs the hex grid with the specified size and fills it with the supplied values
+    /// Constructs the grid with the specified size and fills it with the supplied values
     FastHexGrid(
             QVector<int> size, ///< The size of the new grid
             QVector<T> items   ///< The items with which to populate the grid
@@ -52,7 +49,7 @@ public:
         this->init( size, items );
     }
 
-    /// Constructs the hex grid with the specified size and fills it with the supplied values
+    /// Constructs the grid with the specified size and fills it with the supplied values
     FastHexGrid(
             int s,           ///< The length of one side of the grid
             QVector<T> items ///< The items with which to populate the grid
@@ -63,7 +60,7 @@ public:
         this->init( size, items );
     }
 
-    /// Destructs the HexGrid
+    /// Destructs the grid
     virtual ~FastHexGrid(){}
 
 

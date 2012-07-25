@@ -5,7 +5,6 @@
     HEADERS +=                \
         $$PWD/grid.hpp        \
         $$PWD/quadgrid.hpp    \
-        $$PWD/hexgrid.hpp     \
         $$PWD/fasthexgrid.hpp \
         $$PWD/wraphexgrid.hpp \
 }

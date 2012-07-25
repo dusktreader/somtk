@@ -186,7 +186,7 @@ void SOM::update( FeaturePtr feature )
     _normalizer->normalizeFeature( feature );
 
     // Find the neighborhood in the SOM that of the feature that is the closest to the input feature
-    QVector< QPair<int, int> > neighbors = _grid->neighborhood( weights.size(), closestFeature( feature ));
+    QVector< QPair<int, int> > neighbors = _grid->neighborhood( weights.size() - 1, closestFeature( feature ));
 
     // Iterate over all features in the neighborhood and update them to make them more similar to the training feature.
     #pragma omp parallel for

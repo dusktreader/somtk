@@ -19,14 +19,10 @@ INCLUDEPATH += $$SOMTK_ROOT
 DEPENDPATH *= $${INCLUDEPATH}
 
 include( $$SOMTK_ROOT/soms/soms.pri )
+include( $$SOMTK_ROOT/tools/randmaster/randmaster.pri )
 
-HEADERS +=                             \
-    $$SOMTK_ROOT/tools/randmaster.h    \
-    $$SOMTK_ROOT/tools/localassert.h   \
 
 SOURCES +=                             \
-    $$SOMTK_ROOT/tools/randmaster.cpp  \
-    $$SOMTK_ROOT/tools/localassert.cpp \
     tst_somtest.cpp                    \
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
