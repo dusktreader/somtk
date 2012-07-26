@@ -9,7 +9,7 @@
 #include "normalizers/normalizer.h"
 #include "suspects/suspect.h"
 #include "errors/somerror.h"
-//#include "classifiers/classifier.h"
+#include "classifiers/classifier.h"
 
 namespace somtk {
 
@@ -25,7 +25,7 @@ private:
     ClassifierPtr classifier;
 
     /// Extracts a list of features from a list of suspects
-    QVector<Feature> extractFeatures(
+    QVector<FeaturePtr> extractFeatures(
             QVector<SuspectPtr> suspects /// A list of suspects from which to extract features
             );
 
@@ -43,8 +43,8 @@ public:
 
     /// Constructs the Hybrid-SOM and supplies a SOM and an ANN for it to use
     HSOM(
-        SOMPtr som,               ///< The SOM that this HSOM will use to build histograms of suspects
-        ClassifierPtr classifier, ///< The back-end classifier used to identify incoming suspect's category
+        SOMPtr som,              ///< The SOM that this HSOM will use to build histograms of suspects
+        ClassifierPtr classifier ///< The back-end classifier used to identify incoming suspect's category
         );
 
     /// Destructs the HSOM

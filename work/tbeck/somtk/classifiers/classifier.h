@@ -11,7 +11,6 @@ namespace somtk {
 
 class Classifier
 {
-    Q_OBJECT
 
 private:
 

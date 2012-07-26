@@ -9,9 +9,9 @@ HSOM::HSOM( SOMPtr som, ClassifierPtr classifier ) :
 
 
 
-QVector<Feature> HSOM::extractFeatures( QVector<SuspectPtr> suspects )
+QVector<FeaturePtr> HSOM::extractFeatures( QVector<SuspectPtr> suspects )
 {
-    QVector<Feature> features;
+    QVector<FeaturePtr> features;
     foreach( SuspectPtr suspect, suspects )
         features << suspect->features();
     return features;
@@ -30,7 +30,7 @@ void HSOM::generateHistograms( QVector<SuspectPtr> suspects )
 void HSOM::generateHistogram( SuspectPtr suspect )
 {
     // Increment the suspect's histogram bin at the index of the closest feature for each suspect
-    foreach( Feature feature, suspect->features() )
+    foreach( FeaturePtr feature, suspect->features() )
         suspect->histogram()->increment( som->closestFeature( feature ) );
 }
 
@@ -42,10 +42,10 @@ void HSOM::train( QVector<SuspectPtr> trainingSuspects,
 {
     try
     {
-        QVector<Feature> features = extractFeatures( trainingSuspects );
+        QVector<FeaturePtr> features = extractFeatures( trainingSuspects );
         som->train( somParameters, features );
-        generateHistograms( suspects );
-        classifier->train( suspects, classifierParameters );
+        generateHistograms( trainingSuspects );
+        classifier->train( trainingSuspects, classifierParameters );
     }
     catch( SOMError err )
     {

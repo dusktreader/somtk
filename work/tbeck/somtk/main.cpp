@@ -44,15 +44,16 @@ int main(int argc, char *argv[])
     classifierParameters["inputWidth"] = somGrid->capacity();
     classifierParameters["outputWidth"] = trainingLibrary.categoryCount();
 
-    som->train( somParameters, features, true );
-
     HSOM hsom( som, classifier );
     hsom.train( trainingLibrary.suspects(), somParameters, classifierParameters );
     hsom.classify( testingLibrary.suspects() );
 
     foreach( SuspectPtr suspect, testingLibrary.suspects() )
     {
-        qDebug() << suspect->name() << ":" << suspect->predCategory();
+        qDebug() << suspect->name() << ":";
+        foreach( double d, suspect->classification() )
+            qDebug() << d << " ";
+        qDebug() << ":" << suspect->predCategory() << endl;
     }
 
     return 0;

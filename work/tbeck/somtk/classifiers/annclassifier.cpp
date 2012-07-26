@@ -96,8 +96,8 @@ void ANNClassifier::trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,
     terminationCriteria.type = 0;
     if( iterations != 0 )
         terminationCriteria.type += cv::TermCriteria::MAX_ITER;
-    //if( epsilon != 0.0 )
-    //    terminationCriteria.type += cv::TermCriteria::EPS;
+    if( epsilon != 0.0 )
+        terminationCriteria.type += cv::TermCriteria::EPS;
 
     cv::ANN_MLP_TrainParams trainingParams( terminationCriteria, CvANN_MLP_TrainParams::RPROP, iterations, epsilon );
 

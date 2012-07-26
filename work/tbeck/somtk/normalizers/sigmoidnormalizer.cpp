@@ -58,7 +58,8 @@ void SigmoidNormalizer::calculate( QVector<FeaturePtr> features )
         QVector<double>& f = *feature.data();
         for( int i = 0; i < featureSize; i++ )
         {
-            normStdv[i] += pow2( f[i] - normMean[i] );
+            double diff = f[i] - normMean[i];
+            normStdv[i] += diff * diff;
         }
     }
 

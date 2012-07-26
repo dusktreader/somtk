@@ -11,17 +11,10 @@
 #include <climits>
 #include <iostream>
 
-
 #include "features/feature.h"
 #include "grids/grid.hpp"
 #include "errors/somerror.h"
 #include "normalizers/normalizer.h"
-
-/// A slope tuning parameter for an inverse exponential function
-#define A 0.1
-
-/// Adjustment parameter for the initial width of the neighborhood function
-#define B 0.20
 
 /// A constant describing the conversion factor between FWHM and sigma
 #define FWHM_FACTOR 2.3548200450309493
