@@ -198,12 +198,12 @@ public:
 
         while( !unprocessed.isEmpty() )
         {
-            #pragma omp parallel
+            //#pragma omp parallel
             {
                 QVector<int> myUnprocessed;
                 QVector< QPair<int, int> > myNeighborhood;
 
-                #pragma omp for
+                //#pragma omp for
                 for( int i = 0; i < unprocessed.size(); i++ )
                 {
                     int myIndex = unprocessed[i];
@@ -212,30 +212,33 @@ public:
 
                     foreach( int neighborIndex, myNeighbors )
                     {
+                        bool addNeighbor = false;
                         locks[neighborIndex].lock();
                         int neighborDistance = myDistance + 1;
                         if( neighborDistance <= r && distances[neighborIndex] > neighborDistance )
                         {
                             distances[neighborIndex] = neighborDistance;
-                            myUnprocessed << neighborIndex;
+                            addNeighbor = true;
                         }
                         locks[neighborIndex].unlock();
+                        if( addNeighbor )
+                            myUnprocessed << neighborIndex;
                     }
 
                     myNeighborhood << QPair< int, int >( myIndex, myDistance );
                 }
 \
-                #pragma omp single
+                //#pragma omp single
                 {
                     unprocessed.clear();
                 }
 
-                #pragma omp critical
+                //#pragma omp critical
                 {
                     unprocessed << myUnprocessed;
                 }
 
-                #pragma omp critical
+                //#pragma omp critical
                 {
                     neighborhood << myNeighborhood;
                 }
