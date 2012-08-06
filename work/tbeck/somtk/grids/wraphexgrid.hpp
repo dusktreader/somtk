@@ -1,55 +1,31 @@
 #pragma once
 
 #include <QVector>
-#include <iostream>
 
 #include "grids/grid.hpp"
-#include "grids/fasthexgrid.hpp"
+#include "grids/hexgrid.hpp"
 #include "errors/somerror.h"
 
 namespace somtk {
 
-/// Defines the vertical distance between cells in the grid
-#define HG_B 0.86602540378443837
-
-/** The HexGrid class provides the basis for the spatial organization of the Self Organizing Map.  It provides a
-  * hexagonal grid which supports neighborhood searches, edge wrapping, and other functionality.
-  */
+/// The Fast Hex Grid class provides an implementation of a wrapping 2d hexagonal grid
 template <class T>
-class WrapHexGrid : public FastHexGrid<T>
+class WrapHexGrid : public HexGrid<T>
 {
 
 public:
 
 
     /// Constructs a hex grid with no size information
-    WrapHexGrid() : FastHexGrid<T>(){}
+    WrapHexGrid() : HexGrid<T>(){}
 
     /// Constructs the hex grid with a specified size
-    WrapHexGrid(
-            QVector<int> size ///< The size of the new grid
-            )
-        : FastHexGrid<T>(size){}
-
-    /// Constructs the hex grid with a specified size
-    WrapHexGrid(
-            int s ///< The length of one side of the grid
-            )
-        : FastHexGrid<T>(s){}
-
-    /// Constructs the hex grid with the specified size and fills it with the supplied values
-    WrapHexGrid(
-            QVector<int> size, ///< The size of the new grid
-            QVector<T> items   ///< The items with which to populate the grid
-            )
-        : FastHexGrid<T>(size,items){}
-
-    /// Constructs the hex grid with the specified size and fills it with the supplied values
-    WrapHexGrid(
-            int s,           ///< The length of one side of the grid
-            QVector<T> items ///< The items with which to populate the grid
-            )
-        : FastHexGrid<T>( s, items ){}
+    /// @see hexgrid.hpp for more documentation
+    WrapHexGrid( QVector<int> size  )
+        : HexGrid<T>()
+    {
+        this->init( size );
+    }
 
     /// Destructs the HexGrid
     virtual ~WrapHexGrid(){}
@@ -61,20 +37,24 @@ public:
 
     virtual QSharedPointer< Grid<T> > clone()
     {
-        QSharedPointer< Grid<T> > newGrid( new WrapHexGrid<T>( this->size(), this->items() ) );
+        QSharedPointer< Grid<T> > newGrid( new WrapHexGrid<T>( this->size() ) );
+        newGrid->setItems( this->items() );
         return newGrid;
     }
 
     virtual void checkSize( QVector<int> size )
     {
-        SOMError::requireCondition( size.size() == 1,
-                                    "Size vector must have exactly one element for a side of the grid" );
-        int s = size[0];
+        SOMError::requireCondition(
+                    size.size() == 1,
+                    "Size vector must have exactly one element for a side of the grid"
+                    );
+        SOMError::requireCondition( size[0] > 0, "Grid side must be greater than 0" );
+        SOMError::requireCondition( size[0] % 2 == 0, "Grid side must be even to facilitate wrapping" );
+    }
 
-        SOMError::requireCondition( s % 2 == 0,
-                                    "Grid side must be even to facilitate wrapping" );
-
-        FastHexGrid<T>::checkSize( size );
+    virtual int diagonal()
+    {
+        return ( this->s() - 1 ) * 2;
     }
 
     virtual int distance( int idx0, int idx1 )
@@ -116,13 +96,15 @@ public:
         int x = myCoords[0];
         int y = myCoords[1];
 
+        int s = this->s();
+
         QVector<int> neighbors;
-        neighbors << this->index( QVector<int>() <<                       x << mod( y - 1, this->s() ) );
-        neighbors << this->index( QVector<int>() << mod( x + 1, this->s() ) << mod( y - 1, this->s() ) );
-        neighbors << this->index( QVector<int>() << mod( x - 1, this->s() ) <<                       y );
-        neighbors << this->index( QVector<int>() << mod( x + 1, this->s() ) <<                       y );
-        neighbors << this->index( QVector<int>() << mod( x - 1, this->s() ) << mod( y + 1, this->s() ) );
-        neighbors << this->index( QVector<int>() <<                       x << mod( y + 1, this->s() ) );
+        neighbors << this->index( QVector<int>() <<               x << mod( y - 1, s ) );
+        neighbors << this->index( QVector<int>() << mod( x + 1, s ) << mod( y - 1, s ) );
+        neighbors << this->index( QVector<int>() << mod( x - 1, s ) <<               y );
+        neighbors << this->index( QVector<int>() << mod( x + 1, s ) <<               y );
+        neighbors << this->index( QVector<int>() << mod( x - 1, s ) << mod( y + 1, s ) );
+        neighbors << this->index( QVector<int>() <<               x << mod( y + 1, s ) );
 
         return neighbors;
     }

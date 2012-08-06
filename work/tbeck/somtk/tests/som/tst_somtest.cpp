@@ -45,8 +45,8 @@ void SomTest::visualTest()
 
     // Create the grid that the SOM will use
     QVector<int> gridSize;
-    gridSize << 24;
-    FeatureGrid grid( new WrapHexGrid<FeaturePtr>( gridSize ) );
+    gridSize << 100;
+    FeatureGrid grid( new FastHexGrid<FeaturePtr>( gridSize ) );
 
     // Create a new RandMaster for generating random values
     RandMaster rnd;

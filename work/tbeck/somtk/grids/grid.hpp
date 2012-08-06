@@ -16,10 +16,25 @@ namespace somtk {
 template <class T>
 class Grid
 {
+public:
+
+    enum NeighborhoodMethod
+    {
+        GLOBAL,
+        LOCAL,
+        CACHED
+    };
+
 private:
 
     /// A set of items for the slots of the grid
     QVector<T> _items;
+
+    /// A cache of computed neighborhoods for each item
+    QVector< QVector< QVector<int> > > _neighborhoodCache;
+
+    /// Describes the method used to compute the neighborhood for a given index
+    NeighborhoodMethod _method;
 
 
 
@@ -28,13 +43,10 @@ protected:
     /// A vector describing the size of the grid
     QVector<int> _size;
 
-
-
     /// Sets the size of the grid
     void setCapacity( int capacity )
     {
-        SOMError::requireCondition( capacity > 0,
-                                    "Capacity must be greater than 0");
+        SOMError::requireCondition( capacity > 0, "Capacity must be greater than 0" );
         _items  = QVector<T>( capacity );
     }
 
@@ -42,10 +54,8 @@ protected:
 
 public:
 
-    /// Constructs a hex grid with no size information
+    /// Constructs a grid with no size information
     Grid(){}
-
-
 
     /// Destructs the Grid
     virtual ~Grid(){}
@@ -58,22 +68,21 @@ public:
             )
     {
         setSize( size );
+        _method = CACHED;
+        initCachedNeighborhood();
     }
 
-
-
-    /// Initializes the hex grid with the specified size and fills it with the supplied values
+    /// Initializes the hex grid with a specified size and sets the neighborhood method
     void init(
-            QVector<int> size, ///< The size of grid to create
-            QVector<T> items   ///< The items with which to populate the grid
+            QVector<int> size,        ///< The size of the grid to create
+            NeighborhoodMethod method ///< The neighborood method to use
             )
     {
-        _items.clear();
         setSize( size );
-        setItems( items );
+        _method = method;
+        if( _method == CACHED )
+            initCachedNeighborhood();
     }
-
-
 
     /// Sets the items to the supplied items
     void setItems(
@@ -100,23 +109,11 @@ public:
         _items.fill( item );
     }
 
-
-
-    /// Fetches indices for all slots within a radius of the slot at the given point
-    QVector<int> neighborhood(
-        int r,             ///< The radius within which a cell must lie to be part of the neighborhood
-        QVector<int> point ///< The origin cell for the neighborhood ( center cell )
-        )
-    {
-        return neighborhood( r, index(point) );
-    }
-
-
-
     /// Sets the size of the hex grid
     virtual void setSize( QVector<int> size )
     {
-        this->setCapacity( this->capacityFromSize( size ) );
+        int capacity = capacityFromSize( size );
+        this->setCapacity( capacity );
         this->_size = size;
     }
 
@@ -181,9 +178,72 @@ public:
                                     .arg( idx ).arg( capacity() ) );
     }
 
+    /// Fetches indices for all slots within a radius of the slot at the given point
+    QVector< QPair<int, int> > neighborhood(
+        int r,             ///< The radius within which a cell must lie to be part of the neighborhood
+        QVector<int> point ///< The origin cell for the neighborhood ( center cell )
+        )
+    {
+        return neighborhood( r, index(point) );
+    }
 
     /// Fetches indices for all slots within a radius of the specified slot
     QVector< QPair<int, int> > neighborhood(
+        int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
+        int idx ///< The origin index for the neighborhood ( center cell )
+        )
+    {
+        QVector< QPair<int, int> > neighborhood;
+        switch( _method )
+        {
+            case GLOBAL : neighborhood = globalNeighborhood( r, idx ); break;
+            case LOCAL  : neighborhood = localNeighborhood( r, idx ); break;
+            case CACHED : neighborhood = cachedNeighborhood( r, idx ); break;
+            default: SOMError::requireCondition( false, "Invalid method" );
+        }
+        return neighborhood;
+    }
+
+    /// Calculates the neighborhood cache
+    void initCachedNeighborhood()
+    {
+        int maxDistance = diagonal();
+        int dist;
+        int n = capacity();
+
+        _neighborhoodCache = QVector< QVector< QVector<int> > >( n, QVector< QVector<int> >( maxDistance + 1 ) );
+
+        #pragma omp parallel for private( dist )
+        for( int index = 0; index < n; index++ )
+        {
+            for( int neighbor = 0; neighbor < n; neighbor++ )
+            {
+                dist = distance( index, neighbor );
+                SOMError::requireCondition(
+                            dist <= maxDistance,
+                            "Found a distance > diagonal.  SHOULD NOT HAPPEN! Check the diagonal() method"
+                            );
+                _neighborhoodCache[index][dist] << neighbor;
+            }
+        }
+    }
+
+    /// Fetches indices for all slots within a radius of the specified slot
+    QVector< QPair<int, int> > cachedNeighborhood(
+        int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
+        int idx ///< The origin index for the neighborhood ( center cell )
+        )
+    {
+        QVector< QVector<int> > cache = _neighborhoodCache[idx];
+        QVector< QPair<int, int> > neighborhood;
+        for( int dist = 0; dist <= r; dist++ )
+            foreach( int neighbor, cache[dist] )
+                neighborhood << QPair<int, int>( neighbor, dist );
+        return neighborhood;
+    }
+
+    /// Fetches indices for all slots within a radius of the specified slot
+    QVector< QPair<int, int> > localNeighborhood(
         int r,  ///< The radius within which a cell must lie to be a part of the neighborhood
         int idx ///< The origin index for the neighborhood ( center cell )
         )

@@ -14,6 +14,7 @@ public:
     WrapHexGridTest();
 
 private Q_SLOTS:
+
     void distanceTest();
     void neighborTest();
     void neighborhoodTest();
@@ -25,7 +26,9 @@ WrapHexGridTest::WrapHexGridTest()
 
 void WrapHexGridTest::distanceTest()
 {
-    WrapHexGrid<int> grid( 6 );
+    QVector<int> size;
+    size << 6;
+    WrapHexGrid<int> grid( size );
 
     int targetDistance, actualDistance;
     int idx0, idx1;
@@ -144,7 +147,9 @@ void WrapHexGridTest::neighborTest()
     //       18  19  20  21  22  23
     //         24  25  26  27  28  29
     //           30  31  32  33  34  35
-    WrapHexGrid<int> grid( 6 );
+    QVector<int> size;
+    size << 6;
+    WrapHexGrid<int> grid( size );
     QVector<int> neighbors;
     QSet<int> testNeighborIndices;
     QSet<int> trueNeighborIndices;
@@ -221,7 +226,7 @@ void WrapHexGridTest::neighborhoodTest()
     //       18  19  20  21  22  23
     //         24  25  26  27  28  29
     //           30  31  32  33  34  35
-    WrapHexGrid<int> grid( 6 );
+    WrapHexGrid<int> grid( QVector<int>() << 6 );
     QVector< QPair<int, int> > neighborhood;
     QSet<int> testNeighborhoodIndices;
     QSet<int> trueNeighborhoodIndices;

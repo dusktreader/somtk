@@ -12,7 +12,7 @@
 
 using namespace somtk;
 
-int main(int argc, char *argv[])
+int main()
 {
     QVector<int> gridSize;
     gridSize << 25;

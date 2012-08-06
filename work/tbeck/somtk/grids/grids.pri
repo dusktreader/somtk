@@ -8,3 +8,6 @@
         $$PWD/fasthexgrid.hpp \
         $$PWD/wraphexgrid.hpp \
 }
+
+HEADERS += \
+    ../../../grids/hexgrid.hpp
