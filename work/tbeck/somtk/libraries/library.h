@@ -10,7 +10,7 @@
 #include <QtXml/QDomElement>
 
 #include "errors/somerror.h"
-#include "suspects/colorsuspect.h"
+#include "suspects/sobelhususpect.h"
 #include "histograms/histogram.h"
 
 namespace somtk {

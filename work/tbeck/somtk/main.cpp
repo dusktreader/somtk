@@ -7,7 +7,8 @@
 #include "suspects/colorsuspect.h"
 #include "soms/som.h"
 #include "classifiers/annclassifier.h"
-#include "library.h"
+#include "libraries/library.h"
+
 #include "hsom.h"
 
 using namespace somtk;

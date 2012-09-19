@@ -21,7 +21,7 @@ private:
 
 protected:
 
-    void generateFeatures();
+    virtual void generateFeatures();
 
 public:
 

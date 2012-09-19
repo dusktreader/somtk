@@ -11,7 +11,6 @@ void Library::load( QString libraryXML, HistogramGrid gridTemplate )
 {
     bool ok;
     QString attribute;
-    QImage image;
     _categoryCount = 0;
 
     QFileInfo libraryXMLInfo( libraryXML );
@@ -67,9 +66,15 @@ void Library::load( QString libraryXML, HistogramGrid gridTemplate )
             QFileInfo imageInfo( imagePath );
             SOMError::requireCondition( imageInfo.exists(), "Image doesn't exist: " + imagePath );
             SOMError::requireCondition( imageInfo.isReadable(), "Image isn't readable: " + imagePath );
-            SOMError::requireCondition( image.load( imagePath ), "Couldn't load image: " + libraryDir.absoluteFilePath( imagePath )  );
 
-            SuspectPtr suspect( new ColorSuspect( image, gridTemplate ) );
+            QImage image( imageInfo.absoluteFilePath() );
+
+            SOMError::requireCondition(
+                        !image.isNull(),
+                        "Couldn't load image: " + imageInfo.absoluteFilePath()
+                        );
+
+            SuspectPtr suspect( new SobelHuSuspect( image, gridTemplate ) );
             suspect->setRealCategory( categoryId );
             suspect->setName( imageName );
             _suspects << suspect;

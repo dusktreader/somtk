@@ -40,21 +40,21 @@ void HSOM::train( QVector<SuspectPtr> trainingSuspects,
                   QMap<QString, QVariant> somParameters,
                   QMap<QString, QVariant> classifierParameters )
 {
-    try
-    {
+    //try
+    //{
         QVector<FeaturePtr> features = extractFeatures( trainingSuspects );
         som->train( somParameters, features );
         generateHistograms( trainingSuspects );
         classifier->train( trainingSuspects, classifierParameters );
-    }
-    catch( SOMError err )
-    {
-        throw err;
-    }
-    catch( ... )
-    {
-        throw;
-    }
+    //}
+    //catch( SOMError err )
+    //{
+    //    throw err;
+    //}
+    //catch( ... )
+    //{
+    //    throw;
+    //}
 }
 
 

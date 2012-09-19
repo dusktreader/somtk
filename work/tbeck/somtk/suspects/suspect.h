@@ -41,7 +41,7 @@ public:
 
     /// Construct a default suspect
     Suspect(
-            HistogramGrid girdTemplate ///< A histogram grid template used to generate this suspect's histogram
+            HistogramGrid gridTemplate ///< A histogram grid template used to generate this suspect's histogram
             );
 
     /// Fetches a vector of the features embedded in this suspect

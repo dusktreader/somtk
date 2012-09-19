@@ -6,6 +6,7 @@ ColorSuspect::ColorSuspect( QImage image, HistogramGrid gridTemplate )
     : Suspect( gridTemplate ), _image( image )
 {}
 
+
 void ColorSuspect::generateFeatures()
 {
     int steps = 4;

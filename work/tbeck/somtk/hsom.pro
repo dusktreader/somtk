@@ -8,8 +8,8 @@ QT += gui
 QT += xml
 
 TARGET = hsom
-CONFIG   += console
-CONFIG   -= app_bundle
+CONFIG   -= console
+#CONFIG   -= app_bundle
 
 TEMPLATE = app
 
@@ -23,13 +23,12 @@ include( $$SOMTK_ROOT/suspects/suspects.pri )
 include( $$SOMTK_ROOT/normalizers/normalizers.pri )
 include( $$SOMTK_ROOT/histograms/histograms.pri )
 include( $$SOMTK_ROOT/classifiers/classifiers.pri )
+include( $$SOMTK_ROOT/libraries/libraries.pri )
 
 HEADERS += \
-    library.h \
     hsom.h \
 
 SOURCES +=   \
-    library.cpp \
     main.cpp \
     hsom.cpp \
 
