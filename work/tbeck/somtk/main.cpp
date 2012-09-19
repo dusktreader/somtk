@@ -21,10 +21,10 @@ int main()
     HistogramGrid gridTemplate( new FastHexGrid<double>( gridSize ) );
 
     Library trainingLibrary;
-    trainingLibrary.load( "/data/code/data/apple_strawberry_library/training_library.xml", gridTemplate );
+    trainingLibrary.load( "/data/code/data/handwriting_library/training_library.xml", gridTemplate );
 
     Library testingLibrary;
-    testingLibrary.load( "/data/code/data/apple_strawberry_library/testing_library.xml", gridTemplate );
+    testingLibrary.load( "/data/code/data/handwriting_library/testing_library.xml", gridTemplate );
 
     NormalizerPtr normalizer( new SigmoidNormalizer() );
     QMap<QString, QVariant> normalizerParameters;
