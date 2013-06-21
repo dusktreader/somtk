@@ -6,6 +6,8 @@ Classifier::Classifier() :
     _isTrained( false )
 {}
 
+Classifier::~Classifier(){}
+
 
 
 void Classifier::train( QVector<SuspectPtr> suspects, QMap<QString, QVariant> trainingParameters )

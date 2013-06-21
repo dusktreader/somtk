@@ -1,17 +1,28 @@
-#include "sobelhususpect.h"
+#include "grayscale_suspect.h"
 
 namespace somtk {
 
-int SobelHuSuspect::dummyCounter = 0;
-
-SobelHuSuspect::SobelHuSuspect( QImage image, HistogramGrid gridTemplate)
-    : ImageSuspect( image, gridTemplate )
+GrayscaleSuspect::GrayscaleSuspect( cv::Mat image )
+    : ImageSuspect( image ),
+      _contentThreshold( 0.0 )
 {}
 
-bool SobelHuSuspect::hasContent( QRect window )
+GrayscaleSuspect::~GrayscaleSuspect()
+{}
+
+void GrayscaleSuspect::calibrate()
+{
+    // Compute the content threshold
+    cv::Scalar mean, stdv;
+    cv::meanStdDev( _image, mean, stdv );
+
+    _contentThreshold = stdv[0];
+}
+
+bool GrayscaleSuspect::hasContent( QRect window )
 {
     // If the window would fall off the side of the image, just return false
-    if( window.right() >= _filteredImage.size().width  || window.bottom() >= _filteredImage.size().height )
+    if( window.right() >= _image.size().width  || window.bottom() >= _image.size().height )
         return false;
 
     cv::Mat_<double> subImage = _filteredImage( cv::Rect( window.x(), window.y(), window.width(), window.height() ) );
@@ -32,27 +43,12 @@ bool SobelHuSuspect::hasContent( QRect window )
         return false;
 }
 
-FeaturePtr SobelHuSuspect::extractFeature( QRect window )
+FeaturePtr GrayscaleSuspect::extractFeature( QRect window )
 {
     cv::Mat_<double> subImage = _filteredImage( cv::Rect( window.x(), window.y(), window.width(), window.height() ) );
     FeaturePtr feature = FeaturePtr( new Feature( 7 ) );
     cv::HuMoments( cv::moments( subImage ), feature->data() );
     return feature;
-}
-
-void SobelHuSuspect::filterImage()
-{
-    _filteredImage = imageQrgb2CVdbl( _originalImage );
-
-    // Filter the image
-    cv::Laplacian( _filteredImage, _filteredImage, CV_64F, 7 );
-    cv::normalize( _filteredImage, _filteredImage, 0.0, 1.0, cv::NORM_MINMAX );
-
-    // Compute the content threshold
-    cv::Scalar mean, stdv;
-    cv::meanStdDev( _filteredImage, mean, stdv );
-
-    _contentThreshold = stdv[0];
 }
 
 } // namespace somtk

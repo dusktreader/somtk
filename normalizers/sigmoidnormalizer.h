@@ -36,6 +36,7 @@ private:
 public:
 
     SigmoidNormalizer();
+    virtual ~SigmoidNormalizer();
 
 
 

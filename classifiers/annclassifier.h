@@ -34,6 +34,7 @@ protected:
 public:
 
     ANNClassifier();
+    virtual ~ANNClassifier();
 };
 
 typedef QSharedPointer<ANNClassifier> ANNClassifierPtr;

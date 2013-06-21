@@ -1,13 +1,25 @@
-#include "library.h"
+#include "suspect_library.h"
 
 namespace somtk {
 
-Library::Library( QString name ) : _name( name )
-{}
+SuspectLibrary::SuspectLibrary( HistogramGrid gridTemplate, QMap<QString, QVariant> libraryParameters )
+    : _gridTemplate( gridTemplate )
+{
+    /// @todo error checking for the name library parameter
+    SOMError::requireCondition(
+                libraryParameters.contains( "name" ),
+                "Library parameters must contain a name field"
+    );
+    this->_name = libraryParameters["name"].toString();
+    SOMError::requireCondition(
+                this->_name != "",
+                "Suspect Library name may not be empty"
+    );
+}
 
+SuspectLibrary::~SuspectLibrary(){}
 
-
-void Library::load( QString libraryXML, HistogramGrid gridTemplate )
+void ImageLibrary::load( QString libraryXML )
 {
     bool ok;
     QString attribute;
@@ -19,7 +31,7 @@ void Library::load( QString libraryXML, HistogramGrid gridTemplate )
     SOMError::requireCondition( libraryXMLInfo.exists(), "Library file doesn't exist: " + absPath );
     SOMError::requireCondition( libraryXMLInfo.isReadable(), "Library file can't be read: " + absPath );
 
-    QDir libraryDir = libraryXMLInfo.absoluteDir();
+    libraryDir = libraryXMLInfo.absoluteDir();
 
     QFile file( libraryXMLInfo.absoluteFilePath() );
     file.open( QFile::ReadOnly | QFile::Text );
@@ -45,7 +57,7 @@ void Library::load( QString libraryXML, HistogramGrid gridTemplate )
     {
         QDomElement categoryElement = categoryNodes.at( i ).toElement();
 
-        int categoryId = categoryElement.attribute( "id" ).toInt( &ok );
+        int categoryId = categoryElement.attribute( "ikd" ).toInt( &ok );
         SOMError::requireCondition( ok, "Couldn't convert category id to integer" );
         SOMError::requireCondition( categoryId >= 0, "Can't add a negatie category id" );
         SOMError::requireCondition( categoryId < categoryCount, "Category id greater than allowable category ids" );
@@ -55,28 +67,16 @@ void Library::load( QString libraryXML, HistogramGrid gridTemplate )
 
         _categories[ categoryId ] = categoryName;
 
-        QDomNodeList imageNodes = categoryElement.elementsByTagName( "image" );
+        QDomNodeList suspectNodes = categoryElement.elementsByTagName( "suspects" );
 
-        for( int j = 0; j < imageNodes.size(); j++ )
+        for( int j = 0; j < suspectNodes.size(); j++ )
         {
-            QDomElement imageElement = imageNodes.at( j ).toElement();
+            QDomElement suspectElement = suspectNodes.at( j ).toElement();
 
-            QString imageName = imageElement.attribute( "path" );
-            QString imagePath = libraryDir.absoluteFilePath( imageName );
-            QFileInfo imageInfo( imagePath );
-            SOMError::requireCondition( imageInfo.exists(), "Image doesn't exist: " + imagePath );
-            SOMError::requireCondition( imageInfo.isReadable(), "Image isn't readable: " + imagePath );
+            SuspectPtr suspect = loadSuspect( suspectElement );
+            HistogramPtr histogram( new Histogram( gridTemplate ) );
+            suspect->setHistogram( histogram );
 
-            QImage image( imageInfo.absoluteFilePath() );
-
-            SOMError::requireCondition(
-                        !image.isNull(),
-                        "Couldn't load image: " + imageInfo.absoluteFilePath()
-                        );
-
-            SuspectPtr suspect( new SobelHuSuspect( image, gridTemplate ) );
-            suspect->setRealCategory( categoryId );
-            suspect->setName( imageName );
             _suspects << suspect;
         }
     }
@@ -84,34 +84,12 @@ void Library::load( QString libraryXML, HistogramGrid gridTemplate )
 
 
 
-QVector<SuspectPtr> Library::suspects( int category )
-{
-    QVector<SuspectPtr> matchingSuspects;
-    if( category == -1 )
-    {
-        matchingSuspects = _suspects;
-    }
-
-    else
-    {
-        foreach( SuspectPtr suspect, _suspects )
-        {
-            if( suspect->realCategory() == category )
-                matchingSuspects << suspect;
-        }
-    }
-
-    return matchingSuspects;
-}
-
-
-
-QMap< int, QString > Library::categories()
+QMap< int, QString > SuspectLibrary::categories()
 {
     return _categories;
 }
 
-int Library::categoryCount()
+int SuspectLibrary::categoryCount()
 {
     return _categoryCount;
 }

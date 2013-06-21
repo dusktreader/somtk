@@ -32,13 +32,21 @@ def main():
                          action='store', default=0.9, type=float,
                          help="Set the ratio of training instances to testing instances to NUM", metavar='NUM' )
 
+    parser.add_argument( '-l', '--training_limit',
+                         action='store', default=sys.maxint, type=int,
+                         help="Set a limit for the maximum number of training instances for each category to NUM", metavar='NUM' )
+
     parser.add_argument( '-v', '--verbose',
                          action='store_true',
                          help="Print too much information" )
     
     args = parser.parse_args()
     
-    
+    if args.split_ratio <= 0.0 or args.split_ratio >= 1.0:
+        parser.error("The split ratio must be greater than 0.0 and less than 1.0")
+
+    if args.training_limit < 0:
+        parser.error("The training limit may not be less than 0")
     
     image_dir = os.path.normpath( args.image_dir )
     datafile_dir = ''
@@ -77,17 +85,15 @@ def main():
             print >> sys.stderr, "Found {item_count} category items".format( item_count=item_count )
         
         min_count = min( min_count, item_count )
-        
+
     if args.force_balance:
-    
+        args.training_limit = min(args.training_limit, min_count)
+
+    if args.training_limit < sys.maxint:
         if args.verbose:
-            print >> sys.stderr, "Truncating item list for each category to {min_count} (minimum)".format( min_count=min_count )
-        
+            print >> sys.stderr, "Truncating item list for each category to {training_limit} (minimum)".format(training_limit=args.training_limit)
         for category in category_list:
-            category_dict[ category ] = category_dict[ category ][ : min_count ]
-    
-    
-    
+            category_dict[category] = category_dict[category][:args.training_limit]
     
     if args.verbose:
         print >> sys.stderr, "Creating output library files in {datafile_dir}".format( datafile_dir = datafile_dir )

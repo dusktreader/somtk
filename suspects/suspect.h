@@ -3,7 +3,7 @@
 #include <QSharedPointer>
 #include <cfloat>
 
-#include "tools/localassert.h"
+#include "tools/local_assert/local_assert.h"
 #include "features/feature.h"
 #include "histograms/histogram.h"
 
@@ -40,9 +40,10 @@ protected:
 public:
 
     /// Construct a default suspect
-    Suspect(
-            HistogramGrid gridTemplate ///< A histogram grid template used to generate this suspect's histogram
-            );
+    Suspect();
+
+    /// Destroy the suspect
+    virtual ~Suspect();
 
     /// Fetches a vector of the features embedded in this suspect
     QVector<FeaturePtr> features();

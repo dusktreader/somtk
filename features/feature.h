@@ -33,6 +33,9 @@ public:
     /// Constructs the Feature from a data vector
     Feature( QVector<double> other );
 
+    /// Destroys the Feature
+    virtual ~Feature();
+
 
 
     /// Checks to see if the feature has been normalized yet

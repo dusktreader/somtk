@@ -12,14 +12,14 @@
     include( $$SOMTK_ROOT/histograms/histograms.pri )
     include( $$SOMTK_ROOT/tools/cvq/cvq.pri )
 
-    HEADERS +=                 \
-        $$PWD/suspect.h        \
-        $$PWD/imagesuspect.h   \
-        $$PWD/sobelhususpect.h \
+    HEADERS +=                    \
+        $$PWD/suspect.h           \
+        $$PWD/imagesuspect.h      \
+        $$PWD/grayscale_suspect.h \
 
-    SOURCES +=                   \
-        $$PWD/suspect.cpp        \
-        $$PWD/imagesuspect.cpp   \
-        $$PWD/sobelhususpect.cpp \
+    SOURCES +=                      \
+        $$PWD/suspect.cpp           \
+        $$PWD/imagesuspect.cpp      \
+        $$PWD/grayscale_suspect.cpp \
 
 }

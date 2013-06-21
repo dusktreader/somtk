@@ -6,6 +6,8 @@ ANNClassifier::ANNClassifier() :
     _ann( NULL )
 {}
 
+ANNClassifier::~ANNClassifier(){}
+
 
 /*
 void ANNClassifier::readClassifierData( QDomElement& element )

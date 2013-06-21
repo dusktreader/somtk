@@ -8,6 +8,8 @@ Feature::Feature( int size ) : QVector<double>( size ), normalized(false){}
 
 Feature::Feature( QVector<double> other ) : QVector<double>( other ), normalized(false){}
 
+Feature::~Feature(){}
+
 
 
 bool Feature::isNormalized()

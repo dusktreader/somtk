@@ -2,14 +2,14 @@
 
 namespace somtk {
 
-Suspect::Suspect( HistogramGrid gridTemplate )
+Suspect::Suspect()
 {
     _predCategory = -1;
     _realCategory = -1;
     _name = "unnamed";
-
-    _histogram = HistogramPtr( new Histogram( gridTemplate ) );
 }
+
+Suspect::~Suspect(){}
 
 QVector<FeaturePtr> Suspect::features()
 {

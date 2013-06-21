@@ -23,7 +23,7 @@ public:
 
     virtual const char* what() const throw()
     {
-        return _message.toAscii();
+        return _message.toUtf8();
     }
 
     QString message() const

@@ -5,9 +5,13 @@
     include( $$SOMTK_ROOT/suspects/suspects.pri )
     include( $$SOMTK_ROOT/features/features.pri )
 
-    HEADERS +=                   \
-        $$PWD/library.h          \
+    HEADERS +=                     \
+        $$PWD/suspect_library.h    \
+        $$PWD/image_library.h      \
+        $$PWD/sobel_hu_library.h   \
 
-    SOURCES +=                   \
-        $$PWD/library.cpp        \
+    SOURCES +=                     \
+        $$PWD/suspect_library.cpp  \
+        $$PWD/image_library.cpp    \
+        $$PWD/sobel_hu_library.cpp \
 }

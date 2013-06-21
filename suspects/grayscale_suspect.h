@@ -7,24 +7,26 @@
 
 #include "suspects/suspect.h"
 #include "suspects/imagesuspect.h"
-#include "tools/cvq/cvq.h"
 
 namespace somtk {
 
-class SobelHuSuspect : public ImageSuspect
+class GrayscaleSuspect : public ImageSuspect
 {
 
-protected:
-    static int dummyCounter;
+private:
 
-    cv::Mat_<double> _filteredImage;
+    /// @todo: doc
+    double _contentThreshold;
+
+protected:
 
     virtual bool hasContent( QRect window );
     virtual FeaturePtr extractFeature( QRect window );
-    virtual void filterImage();
 
 public:
-    SobelHuSuspect( QImage image, HistogramGrid gridTemplate );
+
+    GrayscaleSuspect( cv::Mat image );
+    virtual ~GrayscaleSuspect();
 
 };
 

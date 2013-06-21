@@ -38,6 +38,9 @@ public:
     /// Constructs a Normalizer
     Normalizer();
 
+    /// Destroys a Normalizer
+    virtual ~Normalizer();
+
     /** @brief Computes the normalization statisticts to be used for future normalizations
       * @note  This function calls the virtual calculate function.  The calculateNormalizer function should
       *         never be called explicitly.

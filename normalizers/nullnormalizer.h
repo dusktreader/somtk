@@ -13,6 +13,7 @@ class NullNormalizer : public Normalizer
 public:
 
     NullNormalizer();
+    virtual ~NullNormalizer();
 
 
 

@@ -25,10 +25,13 @@ protected:
 
 public:
 
-    /// Constructs the Histogram with a supplied grid
+    /// Constructs the Histogram with a supplied grid template
     Histogram(
-        HistogramGrid grid ///< The grid that this Histogram will use
+        HistogramGrid gridTemplate ///< A template used to create the grid that this Histogram will use
         );
+
+    /// Destroys a Histogram
+    virtual ~Histogram();
 
     /// Resets this Histogram's bins to 0
     void reset();

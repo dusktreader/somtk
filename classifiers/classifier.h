@@ -44,6 +44,9 @@ public:
     /// Constructs a classifier base instance
     Classifier();
 
+    /// Destroys a classifier
+    virtual ~Classifier();
+
     /// Trains the classifier using a collection of known suspects
     void train(
             QVector<SuspectPtr> suspects,             ///< The list of suspects with which to train this classifier

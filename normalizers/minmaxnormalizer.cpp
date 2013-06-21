@@ -4,6 +4,8 @@ namespace somtk {
 
 MinMaxNormalizer::MinMaxNormalizer() : Normalizer(){}
 
+MinMaxNormalizer::~MinMaxNormalizer(){}
+
 
 
 void MinMaxNormalizer::initialize( QMap<QString, QVariant> nomalizerParameters )

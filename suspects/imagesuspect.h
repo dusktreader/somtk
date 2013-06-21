@@ -1,27 +1,22 @@
-#ifndef IMAGESUSPECT_H
-#define IMAGESUSPECT_H
+#pragma once
 
 #include "opencv2/core/core.hpp"
-#include "opencv2/highgui/highgui.hpp"
 
 #include "suspects/suspect.h"
 
 namespace somtk {
+
 class ImageSuspect : public Suspect
 {
 
 protected:
 
-    QImage _originalImage;
+    cv::Mat _image;
 
-    virtual void generateFeatures();
+    /// Calibrate the suspect for determining if windows have content
+    virtual void calibrate();
 
-    double _contentThreshold;
-
-    /// Filters an input image to prepare it for feature extraction
-    virtual void filterImage();
-
-    /// Indicaes whether an image window has any content from which to generate a feature
+    /// Indicates whether an image window has any content from which to generate a feature
     virtual bool hasContent(
             QRect window /// The image window in which to check for content
             ) = 0;
@@ -35,9 +30,8 @@ protected:
 
 public:
 
-    ImageSuspect( QImage image, HistogramGrid gridTemplate );
+    ImageSuspect( cv::Mat image );
+    virtual ~ImageSuspect();
 };
 
 } // namespace somtk
-
-#endif // IMAGESUSPECT_H

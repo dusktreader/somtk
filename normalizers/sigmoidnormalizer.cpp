@@ -4,6 +4,8 @@ namespace somtk {
 
 SigmoidNormalizer::SigmoidNormalizer() : Normalizer(){}
 
+SigmoidNormalizer::~SigmoidNormalizer(){}
+
 
 
 void SigmoidNormalizer::initialize( QMap<QString, QVariant> nomalizerParameters )

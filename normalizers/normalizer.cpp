@@ -4,6 +4,8 @@ namespace somtk {
 
 Normalizer::Normalizer() : _isCalculated( false ) {}
 
+Normalizer::~Normalizer(){}
+
 
 
 void Normalizer::calculateNormalizer( QVector<FeaturePtr> features )

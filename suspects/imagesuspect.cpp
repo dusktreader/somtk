@@ -2,15 +2,18 @@
 
 namespace somtk {
 
-ImageSuspect::ImageSuspect( QImage image, HistogramGrid gridTemplate )
-    : Suspect( gridTemplate ), _originalImage( image ), _contentThreshold( 0 )
+ImageSuspect::ImageSuspect( cv::Mat image )
+    : Suspect(), _image( image )
 {}
 
-void ImageSuspect::filterImage(){}
+ImageSuspect::~ImageSuspect(){}
+
+void ImageSuspect::calibrate()
+{}
 
 void ImageSuspect::generateFeatures()
 {
-    filterImage();
+    calibrate();
 
     // These will be parametrically defined soon
     double windowRatio = 0.1;
@@ -27,10 +30,10 @@ void ImageSuspect::generateFeatures()
                 .arg( windowOverlap )
                 );
 
-    int windowSide = ( int )round( qMin( _originalImage.size().width(), _originalImage.size().height() ) * windowRatio );
+    int windowSide = ( int )round( qMin( _suspectImage.size().width(), _suspectImage.size().height() ) * windowRatio );
     int windowStep = ( int )round( windowOverlap * windowSide );
-    int horizontalSteps = _originalImage.size().width() / windowStep;
-    int verticalSteps = _originalImage.size().height() / windowStep;
+    int horizontalSteps = _suspectImage.size().width() / windowStep;
+    int verticalSteps = _suspectImage.size().height() / windowStep;
     int N = horizontalSteps * verticalSteps;
 
     _features = QVector<FeaturePtr>();
@@ -45,9 +48,9 @@ void ImageSuspect::generateFeatures()
             int y = i / horizontalSteps * windowStep;
 
             QRect window( QPoint( x, y ), QSize( windowSide, windowSide ) );
-            if( window.right() > _originalImage.width() )
+            if( window.right() > _suspectImage.width() )
                 continue;
-            if( window.bottom() > _originalImage.height() )
+            if( window.bottom() > _suspectImage.height() )
                 continue;
 
             if( hasContent( window ) )

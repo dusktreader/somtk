@@ -48,7 +48,7 @@ public:
         );
 
     /// Destructs the HSOM
-    virtual ~HSOM(){}
+    virtual ~HSOM();
 
     /// Trains the HSOM
     void train(
