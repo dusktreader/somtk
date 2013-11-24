@@ -8,6 +8,7 @@
 #include "soms/som.h"
 #include "normalizers/normalizer.h"
 #include "suspects/suspect.h"
+#include "libraries/suspect_library.h"
 #include "errors/somerror.h"
 #include "classifiers/classifier.h"
 
@@ -23,16 +24,6 @@ private:
 
     /// The back-end classifier
     ClassifierPtr classifier;
-
-    /// Extracts a list of features from a list of suspects
-    QVector<FeaturePtr> extractFeatures(
-            QVector<SuspectPtr> suspects /// A list of suspects from which to extract features
-            );
-
-    /// Generates the Histograms for all the training suspects
-    void generateHistograms(
-            QVector<SuspectPtr> suspects ///< The list of suspects for which to generate histograms
-            );
 
     /// Generates a Histogram for a training suspect assuming the SOM is fully trained
     void generateHistogram( SuspectPtr suspect );
@@ -52,15 +43,10 @@ public:
 
     /// Trains the HSOM
     void train(
-        QVector<SuspectPtr> trainingSuspects,        ///< The suspects to use for training
+        SuspectLibraryPtr       suspectLibrary,      ///< The library of suspects to train against
         QMap<QString, QVariant> somParamters,        ///< The training parameters to be used for the som
         QMap<QString, QVariant> classifierParameters ///< The training parameters to be used for the classifier
         );
-
-    /// Classifies suspects
-    void classify(
-            QVector<SuspectPtr> suspects ///< The suspects to train with this HSOm
-            );
 
     /// Classifies a single suspect
     void classify(

@@ -6,7 +6,7 @@ ImageLibrary::ImageLibrary( HistogramGrid gridTemplate, QMap< QString, QVariant 
     : SuspectLibrary( gridTemplate, libraryParameters )
 {}
 
-void ImageLibrary::loadSuspect( QDomElement suspectElement )
+SuspectPtr ImageLibrary::loadSuspect( QDomElement suspectElement )
 {
     QString imageName = suspectElement.attribute( "path" );
     QString imagePath = libraryDir.absoluteFilePath( imageName );
@@ -14,18 +14,16 @@ void ImageLibrary::loadSuspect( QDomElement suspectElement )
     SOMError::requireCondition( imageInfo.exists(), "Image doesn't exist: " + imagePath );
     SOMError::requireCondition( imageInfo.isReadable(), "Image isn't readable: " + imagePath );
 
-    QImage rawImage( imageInfo.absoluteFilePath() );
+    cv::Mat rawImage = cv::imread( imageInfo.absoluteFilePath().toStdString(), CV_LOAD_IMAGE_COLOR );
     SOMError::requireCondition(
-                !rawImage.isNull(),
+                !rawImage.empty(),
                 "Couldn't load image: " + imageInfo.absoluteFilePath()
                 );
 
-    SuspectPtr suspect = generateSuspect( rawImage );
-
-    /// @todo move these into the base class?
-    suspect->setRealCategory( categoryId );
+    ImageSuspectPtr imageSuspect = generateSuspect( rawImage );
+    SuspectPtr suspect( imageSuspect );
     suspect->setName( imageName );
+    return suspect;
 }
 
-
-// namespace somtk
+} // namespace somtk

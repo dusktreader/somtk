@@ -7,7 +7,7 @@
 #include "suspects/colorsuspect.h"
 #include "soms/som.h"
 #include "classifiers/annclassifier.h"
-#include "libraries/library.h"
+#include "libraries/sobel_hu_library.h"
 
 #include "hsom.h"
 
@@ -23,12 +23,14 @@ int main()
     HistogramGrid gridTemplate( new FastHexGrid<double>( gridSize ) );
 
     qDebug() << "Creating Training Library" << endl;
-    Library trainingLibrary;
-    trainingLibrary.load( "/home/dusktreader/image_library/training_library.xml", gridTemplate );
+    QMap< QString, QVariant > trainingLibraryParameters;
+    SuspectLibraryPtr trainingLibrary( new SobelHuLibrary( gridTemplate, trainingLibraryParameters ) );
+    trainingLibrary->load( "/home/dusktreader/image_library/training_library.xml" );
 
     qDebug() << "Creating Testing Library" << endl;
-    Library testingLibrary;
-    testingLibrary.load( "/home/dusktreader/image_library/testing_library.xml", gridTemplate );
+    QMap< QString, QVariant > testingLibraryParameters;
+    SuspectLibraryPtr testingLibrary( new SobelHuLibrary( gridTemplate, testingLibraryParameters ) );
+    testingLibrary->load( "/home/dusktreader/image_library/testing_library.xml" );
 
     qDebug() << "Creating and initializing Normalizer" << endl;
     NormalizerPtr normalizer( new SigmoidNormalizer() );
@@ -51,17 +53,17 @@ int main()
 
     QMap<QString, QVariant> classifierParameters;
     classifierParameters["inputWidth"] = somGrid->capacity();
-    classifierParameters["outputWidth"] = trainingLibrary.categoryCount();
+    classifierParameters["outputWidth"] = trainingLibrary->categoryCount();
 
     qDebug() << "Creating and initializing HSOM" << endl;
     HSOM hsom( som, classifier );
     qDebug() << "Training HSOM" << endl;
-    hsom.train( trainingLibrary.suspects(), somParameters, classifierParameters );
+    hsom.train( trainingLibrary, somParameters, classifierParameters );
     qDebug() << "Testing HSOM" << endl;
-    hsom.classify( testingLibrary.suspects() );
 
-    foreach( SuspectPtr suspect, testingLibrary.suspects() )
+    foreach( SuspectPtr suspect, testingLibrary->suspects() )
     {
+        hsom.classify( suspect );
         qDebug() << suspect->name() << ":";
         foreach( double d, suspect->classification() )
             qDebug() << d << " ";

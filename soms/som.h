@@ -15,6 +15,7 @@
 #include "grids/grid.hpp"
 #include "errors/somerror.h"
 #include "normalizers/normalizer.h"
+#include "libraries/suspect_library.h"
 
 /// A constant describing the conversion factor between FWHM and sigma
 #define FWHM_FACTOR 2.3548200450309493

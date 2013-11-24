@@ -2,7 +2,7 @@
 
 namespace somtk {
 
-Histogram::Histogram( HistogramGrid gridTemplate ) : _grid( grid->clone() ){}
+Histogram::Histogram( HistogramGrid gridTemplate ) : _grid( gridTemplate->clone() ){}
 
 Histogram::~Histogram(){}
 

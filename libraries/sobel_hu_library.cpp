@@ -2,24 +2,23 @@
 
 namespace somtk {
 
-SobelHuLibrary( HistogramGrid gridTemplate, QMap< QString, QVariant > libraryParameters )
+SobelHuLibrary::SobelHuLibrary( HistogramGrid gridTemplate, QMap< QString, QVariant > libraryParameters )
     : ImageLibrary( gridTemplate, libraryParameters )
 {}
 
 SobelHuLibrary::~SobelHuLibrary()
 {}
 
-SuspectPtr SobelHuLibrary::generateSuspect( QImage rawImage )
+ImageSuspectPtr SobelHuLibrary::generateSuspect( cv::Mat rawImage )
 {
-    cv::Mat filteredImage = imageQrgb2CVdbl( rawImage );
-
     /// @todo parameterize the shit here
-    // Filter the image
+    ImageSuspectPtr suspect( new GrayscaleSuspect() );
+
+    cv::Mat filteredImage;
+    cv::cvtColor( rawImage, filteredImage, CV_RGB2GRAY );
     cv::Laplacian( filteredImage, filteredImage, CV_64F, 7 );
     cv::normalize( filteredImage, filteredImage, 0.0, 1.0, cv::NORM_MINMAX );
-
-
-    SuspectPtr suspect( new GrayscaleSuspect( filteredImage ) );
+    suspect->setImage( filteredImage );
     return suspect;
 }
 

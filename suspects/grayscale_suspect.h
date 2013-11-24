@@ -18,15 +18,21 @@ private:
     /// @todo: doc
     double _contentThreshold;
 
+
+
 protected:
 
     virtual bool hasContent( QRect window );
     virtual FeaturePtr extractFeature( QRect window );
+    virtual void calibrate();
+
+
 
 public:
 
-    GrayscaleSuspect( cv::Mat image );
+    GrayscaleSuspect();
     virtual ~GrayscaleSuspect();
+    virtual void setImage( cv::Mat image );
 
 };
 

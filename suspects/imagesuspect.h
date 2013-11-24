@@ -3,6 +3,7 @@
 #include "opencv2/core/core.hpp"
 
 #include "suspects/suspect.h"
+#include "errors/somerror.h"
 
 namespace somtk {
 
@@ -12,6 +13,7 @@ class ImageSuspect : public Suspect
 protected:
 
     cv::Mat _image;
+    virtual void generateFeatures();
 
     /// Calibrate the suspect for determining if windows have content
     virtual void calibrate();
@@ -27,11 +29,14 @@ protected:
             ) = 0;
 
 
-
 public:
 
-    ImageSuspect( cv::Mat image );
+    ImageSuspect();
     virtual ~ImageSuspect();
+    void setImage( cv::Mat image );
+    cv::Mat image();
 };
+
+typedef QSharedPointer< ImageSuspect > ImageSuspectPtr;
 
 } // namespace somtk

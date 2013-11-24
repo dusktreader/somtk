@@ -2,9 +2,8 @@
 
 namespace somtk {
 
-GrayscaleSuspect::GrayscaleSuspect( cv::Mat image )
-    : ImageSuspect( image ),
-      _contentThreshold( 0.0 )
+GrayscaleSuspect::GrayscaleSuspect()
+    : _contentThreshold( 0.0 )
 {}
 
 GrayscaleSuspect::~GrayscaleSuspect()
@@ -25,7 +24,7 @@ bool GrayscaleSuspect::hasContent( QRect window )
     if( window.right() >= _image.size().width  || window.bottom() >= _image.size().height )
         return false;
 
-    cv::Mat_<double> subImage = _filteredImage( cv::Rect( window.x(), window.y(), window.width(), window.height() ) );
+    cv::Mat_<double> subImage = _image( cv::Rect( window.x(), window.y(), window.width(), window.height() ) );
     cv::Mat mask( subImage.size(), CV_8UC1, cv::Scalar( 0 ) );
     cv::Point center( window.width() / 2, window.height() / 2 );
     int radius = window.width() / 4;
@@ -35,8 +34,8 @@ bool GrayscaleSuspect::hasContent( QRect window )
     double val = stdv[0];
     if( val > _contentThreshold )
     {
-        QString featureName = QString( "ouput/%1_%2_%3.png" ).arg( _name ).arg( window.x() ).arg( window.y() );
-        imageCVdbl2Qrgb( subImage ).save( featureName );
+        // QString featureName = QString( "ouput/%1_%2_%3.png" ).arg( _name ).arg( window.x() ).arg( window.y() );
+        // imageCVdbl2Qrgb( subImage ).save( featureName );
         return true;
     }
     else
@@ -45,10 +44,16 @@ bool GrayscaleSuspect::hasContent( QRect window )
 
 FeaturePtr GrayscaleSuspect::extractFeature( QRect window )
 {
-    cv::Mat_<double> subImage = _filteredImage( cv::Rect( window.x(), window.y(), window.width(), window.height() ) );
+    cv::Mat_<double> subImage = _image( cv::Rect( window.x(), window.y(), window.width(), window.height() ) );
     FeaturePtr feature = FeaturePtr( new Feature( 7 ) );
     cv::HuMoments( cv::moments( subImage ), feature->data() );
     return feature;
+}
+
+void GrayscaleSuspect::setImage( cv::Mat image )
+{
+    /// @todo:  Error checking to make sure that it is indeed a grayscale image
+    ImageSuspect::setImage( image );
 }
 
 } // namespace somtk

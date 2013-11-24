@@ -10,10 +10,10 @@ Classifier::~Classifier(){}
 
 
 
-void Classifier::train( QVector<SuspectPtr> suspects, QMap<QString, QVariant> trainingParameters )
+void Classifier::train( SuspectLibraryPtr suspectLibrary, QMap<QString, QVariant> trainingParameters )
 {
     _trainingParameters = trainingParameters;
-    trainClassifier( suspects, trainingParameters );
+    trainClassifier( suspectLibrary, trainingParameters );
     _isTrained = true;
 }
 

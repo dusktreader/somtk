@@ -19,7 +19,7 @@ SuspectLibrary::SuspectLibrary( HistogramGrid gridTemplate, QMap<QString, QVaria
 
 SuspectLibrary::~SuspectLibrary(){}
 
-void ImageLibrary::load( QString libraryXML )
+void SuspectLibrary::load( QString libraryXML )
 {
     bool ok;
     QString attribute;
@@ -57,7 +57,7 @@ void ImageLibrary::load( QString libraryXML )
     {
         QDomElement categoryElement = categoryNodes.at( i ).toElement();
 
-        int categoryId = categoryElement.attribute( "ikd" ).toInt( &ok );
+        int categoryId = categoryElement.attribute( "id" ).toInt( &ok );
         SOMError::requireCondition( ok, "Couldn't convert category id to integer" );
         SOMError::requireCondition( categoryId >= 0, "Can't add a negatie category id" );
         SOMError::requireCondition( categoryId < categoryCount, "Category id greater than allowable category ids" );
@@ -72,11 +72,10 @@ void ImageLibrary::load( QString libraryXML )
         for( int j = 0; j < suspectNodes.size(); j++ )
         {
             QDomElement suspectElement = suspectNodes.at( j ).toElement();
-
             SuspectPtr suspect = loadSuspect( suspectElement );
-            HistogramPtr histogram( new Histogram( gridTemplate ) );
+            HistogramPtr histogram( new Histogram( _gridTemplate ) );
             suspect->setHistogram( histogram );
-
+            suspect->setRealCategory( categoryId );
             _suspects << suspect;
         }
     }
@@ -89,14 +88,27 @@ QMap< int, QString > SuspectLibrary::categories()
     return _categories;
 }
 
+QVector< SuspectPtr > SuspectLibrary::suspects()
+{
+    return _suspects;
+}
+
 int SuspectLibrary::categoryCount()
 {
     return _categoryCount;
 }
 
-QString Library::name()
+QString SuspectLibrary::name()
 {
     return _name;
+}
+
+QVector<FeaturePtr> SuspectLibrary::extractFeatures()
+{
+    QVector<FeaturePtr> features;
+    foreach( SuspectPtr suspect, _suspects )
+        features << suspect->features();
+    return features;
 }
 
 } // namespace somtk

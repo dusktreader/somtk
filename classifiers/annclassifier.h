@@ -26,7 +26,7 @@ private:
 protected:
 
     // The Classifier API
-    virtual void trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,QVariant> trainingParameters );
+    virtual void trainClassifier( SuspectLibraryPtr suspects, QMap<QString,QVariant> trainingParameters );
     virtual void classifySuspect( SuspectPtr suspect );
 
 

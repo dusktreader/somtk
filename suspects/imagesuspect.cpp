@@ -2,8 +2,8 @@
 
 namespace somtk {
 
-ImageSuspect::ImageSuspect( cv::Mat image )
-    : Suspect(), _image( image )
+ImageSuspect::ImageSuspect()
+    : Suspect()
 {}
 
 ImageSuspect::~ImageSuspect(){}
@@ -11,8 +11,19 @@ ImageSuspect::~ImageSuspect(){}
 void ImageSuspect::calibrate()
 {}
 
+void ImageSuspect::setImage( cv::Mat image )
+{
+    _image = image;
+}
+
+cv::Mat ImageSuspect::image()
+{
+    return _image;
+}
+
 void ImageSuspect::generateFeatures()
 {
+    SOMError::requireCondition( _image.empty() == false, "Cannot generate features with an empty image" );
     calibrate();
 
     // These will be parametrically defined soon
@@ -30,10 +41,12 @@ void ImageSuspect::generateFeatures()
                 .arg( windowOverlap )
                 );
 
-    int windowSide = ( int )round( qMin( _suspectImage.size().width(), _suspectImage.size().height() ) * windowRatio );
+    int imageWidth = _image.cols;
+    int imageHeight = _image.rows;
+    int windowSide = ( int )round( qMin( imageWidth, imageHeight ) * windowRatio );
     int windowStep = ( int )round( windowOverlap * windowSide );
-    int horizontalSteps = _suspectImage.size().width() / windowStep;
-    int verticalSteps = _suspectImage.size().height() / windowStep;
+    int horizontalSteps = imageWidth / windowStep;
+    int verticalSteps = imageHeight / windowStep;
     int N = horizontalSteps * verticalSteps;
 
     _features = QVector<FeaturePtr>();
@@ -48,9 +61,9 @@ void ImageSuspect::generateFeatures()
             int y = i / horizontalSteps * windowStep;
 
             QRect window( QPoint( x, y ), QSize( windowSide, windowSide ) );
-            if( window.right() > _suspectImage.width() )
+            if( window.right() > imageWidth )
                 continue;
-            if( window.bottom() > _suspectImage.height() )
+            if( window.bottom() > imageHeight )
                 continue;
 
             if( hasContent( window ) )

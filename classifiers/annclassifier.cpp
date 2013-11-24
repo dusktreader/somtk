@@ -34,7 +34,7 @@ void ANNClassifier::writeClassifierData( QDomElement& element )
 */
 
 
-void ANNClassifier::trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,QVariant> trainingParameters )
+void ANNClassifier::trainClassifier( SuspectLibraryPtr suspectLibrary, QMap<QString,QVariant> trainingParameters )
 {
     bool ok = true;
 
@@ -71,6 +71,7 @@ void ANNClassifier::trainClassifier( QVector<SuspectPtr> suspects, QMap<QString,
         SOMError::requireCondition( epsilon > 0.0, "Invalid epsilon value" );
     }
 
+    QVector< SuspectPtr > suspects = suspectLibrary->suspects();
     /* Make an input matrix for training the back-end MLPANN.
      * This is a matrix composed of vectors the length of the SOM's area ( width x height )
      */

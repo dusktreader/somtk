@@ -6,6 +6,7 @@
 #include <QSharedPointer>
 
 #include "suspects/suspect.h"
+#include "libraries/suspect_library.h"
 
 namespace somtk {
 
@@ -28,7 +29,7 @@ protected:
 
     /// Performs specific training algorithm for a classifier
     virtual void trainClassifier(
-            QVector<SuspectPtr> suspects,             ///< The list of suspects with which to train this classifier
+            SuspectLibraryPtr suspects,               ///< The library of suspects with which to train this classifier
             QMap<QString,QVariant> trainingParameters ///< The tuning parameters used to train this classifier
             ) = 0;
 
@@ -49,7 +50,7 @@ public:
 
     /// Trains the classifier using a collection of known suspects
     void train(
-            QVector<SuspectPtr> suspects,             ///< The list of suspects with which to train this classifier
+            SuspectLibraryPtr suspectLibrary,         ///< The list of suspects with which to train this classifier
             QMap<QString,QVariant> trainingParameters ///< The tuning parameters used to train this classifier
             );
 

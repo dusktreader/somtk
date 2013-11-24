@@ -20,7 +20,7 @@ public:
     SobelHuLibrary( HistogramGrid gridTemplate, QMap< QString, QVariant > libraryParameters );
     virtual ~SobelHuLibrary();
 
-    virtual SuspectPtr generateSuspet( QImage rawImage );
+    virtual ImageSuspectPtr generateSuspect( cv::Mat rawImage );
 };
 
 } // namespace somtk
